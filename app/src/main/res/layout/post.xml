@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/read_post_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="爱生活，爱 Ruby"
+        android:textSize="25sp" />
+
+    <org.rubychinaandroid.view.RichTextView
+        android:id="@+id/read_post_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="其实我更爱香肠"
+        android:textSize="15sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/read_post_author_avatar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.7"
+            android:adjustViewBounds="true"
+            android:padding="10dp"
+            android:src="@drawable/avatar_doge_mm" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5.375"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/read_post_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="6dp"
+                android:text="Kabosu 酱"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/read_post_publish_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="6dp"
+                android:text="时不我待"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_width="0dp"
+            android:layout_weight="2.5"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            card_view:cardBackgroundColor="#303030"
+            card_view:cardCornerRadius="4dp">
+
+            <TextView
+                android:id="@+id/read_post_node_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="坐标：汪星球" />
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</LinearLayout>

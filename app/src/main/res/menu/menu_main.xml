@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/menu_login"
+        android:enabled="true"
+        android:orderInCategory="100"
+        android:title="@string/login"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_logout"
+        android:enabled="false"
+        android:orderInCategory="100"
+        android:title="@string/logout"
+        app:showAsAction="never" />
+</menu>

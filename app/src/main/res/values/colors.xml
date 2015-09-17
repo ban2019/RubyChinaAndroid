@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ColorPrimary">#22292C</color>
+    <color name="ColorPrimaryDark">#22292C</color>
+    <color name="ColorPrimaryLight">#FFFFFF</color>
+    <color name="tabsScrollColor">#757575</color>
+
+    <color name="darker_gray">#BDBDBD</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="photo_crop_dim_color">#cc000000</color>
+    <color name="photo_crop_highlight_color">#fff</color>
+</resources>
+
+<!--
+    green:
+    #00897B
+    #00695C
+    #004D40
+
+    grey:
+    #BDBDBD
+    #757575
+    -->
