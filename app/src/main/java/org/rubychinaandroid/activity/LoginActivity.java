@@ -1,7 +1,9 @@
 package org.rubychinaandroid.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,6 +41,9 @@ public class LoginActivity extends SwipeBackActivity {
         mToolbar.setTitle("登录");
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        int color = 0xFFEB5424; // red
+        mProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        mProgressBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
         final OAuthService service = RubyChinaOAuthService.getInstance().getOAuthService();
 
@@ -92,9 +97,16 @@ public class LoginActivity extends SwipeBackActivity {
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
                 mProgressBar.setProgress(progress);
+                if (progress == 100) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }, 5000);
+                }
             }
         });
-
         webView.loadUrl(service.getAuthorizationUrl(EMPTY_TOKEN));
     }
 
