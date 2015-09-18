@@ -49,6 +49,7 @@ public class PhotoViewActivity extends SwipeBackActivity
         intent.putExtra(EXTRA_PHOTO_INDEX, position);
         intent.putExtra(EXTRA_PHOTO_DATAS, photoUrls);
         context.startActivity(intent);
+        assert(context instanceof Activity);
         Activity activity = (Activity) context;
         activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
     }
