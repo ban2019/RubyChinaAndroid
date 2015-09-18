@@ -6,11 +6,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.utils.oauth.RubyChinaOAuthService;
 import org.scribe.model.Token;
@@ -22,6 +27,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 public class LoginActivity extends SwipeBackActivity {
     private String LOG_TAG = "LoginActivity";
     private static final Token EMPTY_TOKEN = null;
+    private ProgressBar mProgressBar;
     private Toolbar mToolbar;
 
     @Override
@@ -35,14 +41,17 @@ public class LoginActivity extends SwipeBackActivity {
         //setActionBar(mToolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
         final OAuthService service = RubyChinaOAuthService.getInstance().getOAuthService();
 
-        WebView webView = (WebView) findViewById(R.id.login_web_oauth);
+        final WebView webView = (WebView) findViewById(R.id.login_web_oauth);
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
 
         webView.getSettings().setJavaScriptEnabled(true);
+
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
@@ -77,7 +86,24 @@ public class LoginActivity extends SwipeBackActivity {
                 }
                 return true;
             }
+
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Utility.showToast("webView errorCode" + Integer.toString(errorCode));
+            }
         });
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
+                // Activities and WebViews measure progress with different scales.
+                // The progress meter will automatically disappear when we reach 100%
+                setProgress(progress * 100);
+                mProgressBar.setProgress(progress);
+                if (progress == 100) {
+                    mProgressBar.setProgress(0);
+                }
+            }
+        });
+
         webView.loadUrl(service.getAuthorizationUrl(EMPTY_TOKEN));
     }
 
