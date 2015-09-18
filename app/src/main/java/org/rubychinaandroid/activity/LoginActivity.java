@@ -37,9 +37,6 @@ public class LoginActivity extends SwipeBackActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("登录");
-        //setSupportActionBar(mToolbar);
-        //setActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
@@ -94,13 +91,7 @@ public class LoginActivity extends SwipeBackActivity {
 
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                // Activities and WebViews measure progress with different scales.
-                // The progress meter will automatically disappear when we reach 100%
-                setProgress(progress * 100);
                 mProgressBar.setProgress(progress);
-                if (progress == 100) {
-                    mProgressBar.setProgress(0);
-                }
             }
         });
 

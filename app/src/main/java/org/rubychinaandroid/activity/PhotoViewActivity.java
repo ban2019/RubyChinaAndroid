@@ -60,10 +60,6 @@ public class PhotoViewActivity extends SwipeBackActivity
         setContentView(R.layout.activity_photo_view);
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setHomeButtonEnabled(true);
-
 
         final Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_PHOTO_DATAS)) {

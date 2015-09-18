@@ -41,8 +41,6 @@ public class ReplyActivity extends SwipeBackActivity implements SwipeRefreshLayo
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("回复");
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // keep the soft input keyboard away from covering the reply list
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);

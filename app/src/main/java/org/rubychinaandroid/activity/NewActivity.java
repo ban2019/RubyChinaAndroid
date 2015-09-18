@@ -73,8 +73,6 @@ public class NewActivity extends SwipeBackActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("发表新帖");
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mTitleTextView = (TextView) findViewById(R.id.title);
         mContentTextView = (TextView) findViewById(R.id.content);

@@ -50,8 +50,6 @@ public class PostActivity extends SwipeBackActivity {
         // Creating The Toolbar and setting it as the Toolbar for the activity
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("话题内容");
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         View postLayout = findViewById(R.id.post_layout);
 
