@@ -58,19 +58,27 @@ public class ReplyActivity extends SwipeBackActivity implements SwipeRefreshLayo
 
         mReplyListView.setAdapter(mAdapter);
 
-        RubyChinaApiWrapper.getPostReplies(mTopicId, new ReplyHttpCallbackListener());
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                refreshReplies();
+            }
+        });
     }
 
     public class ReplyHttpCallbackListener implements RubyChinaApiListener<ArrayList<ReplyModel>> {
 
         @Override
         public void onSuccess(ArrayList<ReplyModel> data) {
+
+            mSwipeRefreshLayout.setRefreshing(false);
 
             mReplyList.clear();
             for (ReplyModel reply : data) {
@@ -82,6 +90,9 @@ public class ReplyActivity extends SwipeBackActivity implements SwipeRefreshLayo
 
         @Override
         public void onFailure(String error) {
+
+            mSwipeRefreshLayout.setRefreshing(false);
+
             Utility.showToast("加载回复失败");
         }
     }
@@ -89,7 +100,6 @@ public class ReplyActivity extends SwipeBackActivity implements SwipeRefreshLayo
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                mSwipeRefreshLayout.setRefreshing(false);
                 refreshReplies();
             }
         }, 500);

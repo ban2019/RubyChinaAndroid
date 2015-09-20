@@ -3,10 +3,10 @@ package org.rubychinaandroid.activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +70,6 @@ public class PostActivity extends SwipeBackActivity implements SwipeRefreshLayou
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
 
-
         final Intent intent = getIntent();
         mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
 
@@ -87,11 +86,13 @@ public class PostActivity extends SwipeBackActivity implements SwipeRefreshLayou
 
         // trigger the swipe refresh layout's animation
         mSwipeRefreshLayout.post(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 mSwipeRefreshLayout.setRefreshing(true);
+                refreshTopic();
             }
         });
-        refreshTopic();
+
     }
 
     @Override
@@ -144,6 +145,10 @@ public class PostActivity extends SwipeBackActivity implements SwipeRefreshLayou
 
             @Override
             public void onFailure(String error) {
+
+                // stop the swipe refresh layout's animation
+                mSwipeRefreshLayout.setRefreshing(false);
+
                 Utility.showToast("加载帖子失败");
             }
         });
