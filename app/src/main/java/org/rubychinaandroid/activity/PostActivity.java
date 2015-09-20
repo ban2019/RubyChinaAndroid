@@ -1,6 +1,8 @@
 package org.rubychinaandroid.activity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +31,7 @@ import java.util.Date;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
-public class PostActivity extends SwipeBackActivity {
+public class PostActivity extends SwipeBackActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Button mButtonDisplayReply;
 
@@ -39,8 +41,11 @@ public class PostActivity extends SwipeBackActivity {
     private TextView mAuthor;
     private TextView mTime;
     private TextView mNode;
+    private String mTopicId;
 
-    Toolbar mToolbar;
+    private Toolbar mToolbar;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,25 +64,67 @@ public class PostActivity extends SwipeBackActivity {
         mAuthor = (TextView) postLayout.findViewById(R.id.read_post_author);
         mTime = (TextView) postLayout.findViewById(R.id.read_post_publish_time);
         mNode = (TextView) postLayout.findViewById(R.id.read_post_node_name);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
+                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+
 
         final Intent intent = getIntent();
-        final String topicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
+        mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
 
         mButtonDisplayReply = (Button) findViewById(R.id.button_display_reply);
         mButtonDisplayReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentForReplyActivity = new Intent(PostActivity.this, ReplyActivity.class);
-                intentForReplyActivity.putExtra(RubyChinaConstants.TOPIC_ID, topicId);
+                intentForReplyActivity.putExtra(RubyChinaConstants.TOPIC_ID, mTopicId);
                 startActivity(intentForReplyActivity);
                 overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             }
         });
 
-        RubyChinaApiWrapper.getPostContent(topicId, new RubyChinaApiListener<PostModel>() {
+        // trigger the swipe refresh layout's animation
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
+        refreshTopic();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshTopic() {
+
+        RubyChinaApiWrapper.getPostContent(mTopicId, new RubyChinaApiListener<PostModel>() {
 
             @Override
             public void onSuccess(PostModel data) {
+
+                // stop the swipe refresh layout's animation
+                mSwipeRefreshLayout.setRefreshing(false);
+
                 mTitle.setText(data.getTopic().getTitle());
 
                 boolean displayImage = true;
@@ -102,24 +149,11 @@ public class PostActivity extends SwipeBackActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                refreshTopic();
+            }
+        }, 500);
     }
 }
