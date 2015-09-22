@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +42,8 @@ public class TabFragment extends Fragment implements View.OnClickListener, Swipe
 
     private MainActivity mParentActivity;
 
-    private ListView mListView;
+    RecyclerView mRecyclerView;
+
     private TextView mBlankTextView;
     private TopicItemAdapter mTopicItemAdapter;
     private int mCurrentPage = 0;
@@ -75,22 +78,11 @@ public class TabFragment extends Fragment implements View.OnClickListener, Swipe
         prevButton.setEnabled(false);
         nextButton.setEnabled(false);
 
-        mListView = (ListView) view.findViewById(R.id.fragment_tab_list_view);
-        mListView.addFooterView(footViewLayout);
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mParentActivity, PostActivity.class);
-                intent.putExtra(RubyChinaConstants.TOPIC_ID, mTopicList.get(position).getTopicId());
-                startActivity(intent);
-                mParentActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-            }
-        });
-
         mTopicList = new ArrayList<TopicModel>();
-        mTopicItemAdapter = new TopicItemAdapter(mParentActivity, R.layout.topic_item, mTopicList);
-        mListView.setAdapter(mTopicItemAdapter);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mParentActivity));
+        mRecyclerView.setAdapter(new TopicItemAdapter(mParentActivity, mTopicList));
 
         mBlankTextView = (TextView) view.findViewById(R.id.fragment_tab_text_view);
 
@@ -100,15 +92,17 @@ public class TabFragment extends Fragment implements View.OnClickListener, Swipe
         // Save each tabFragment's mCachedPages instance to different files
         mCachedPages = pref.getInt(Integer.toString(mCategory.getValue()) + "mCachedPages", 0);
 
-        refreshTabTopics();
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
 
-        mParentActivity.getFloatingActionButton().attachToListView(mListView);
+        mParentActivity.getFloatingActionButton().attachToRecyclerView(mRecyclerView);
+
+        mSwipeRefreshLayout.setRefreshing(true);
+        refreshTabTopics();
+
         return view;
     }
 
@@ -121,16 +115,14 @@ public class TabFragment extends Fragment implements View.OnClickListener, Swipe
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
 
-            mListView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
+
             mBlankTextView.setVisibility(View.GONE);
-            
+
             mTopicList.clear();
             for (TopicModel topic : topicModelList) {
                 mTopicList.add(topic);
             }
-
-            mTopicItemAdapter.notifyDataSetChanged();
-            mListView.setSelection(0);
 
             /* UPDATE the topic list in database */
             RubyChinaDBManager.getInstance(mParentActivity)
@@ -181,7 +173,6 @@ public class TabFragment extends Fragment implements View.OnClickListener, Swipe
                     .loadTopics(mCategory, mCurrentPage);
 
             if (mTopicList == null && cachedTopics.size() == 0) {
-                mListView.setVisibility(View.GONE);
                 mBlankTextView.setVisibility(View.VISIBLE);
                 return;
             }
@@ -190,9 +181,6 @@ public class TabFragment extends Fragment implements View.OnClickListener, Swipe
             for (TopicModel topic : cachedTopics) {
                 mTopicList.add(topic);
             }
-
-            mTopicItemAdapter.notifyDataSetChanged();
-            mListView.setSelection(0);
         }
     }
 
@@ -214,13 +202,12 @@ public class TabFragment extends Fragment implements View.OnClickListener, Swipe
     public void refreshTabTopics() {
         RubyChinaApiWrapper.getTopics(mCurrentPage, mCategory,
                 new TopicListHttpCallbackListener());
-        mListView.setSelection(0);
     }
 
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                mSwipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(true);
                 refreshTabTopics();
             }
         }, 500);

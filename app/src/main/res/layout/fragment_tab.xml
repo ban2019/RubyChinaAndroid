@@ -9,14 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/fragment_tab_list_view"
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="0dp"
-            android:layout_weight="1"
-            android:dividerHeight="1dp"
-            android:padding="0dp" />
+            android:layout_height="match_parent"
+            android:id="@+id/recycler_view"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
