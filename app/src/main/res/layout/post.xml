@@ -71,8 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:padding="5dp"
-                android:text="坐标：汪星球" />
+                android:padding="5dp" />
 
         </android.support.v7.widget.CardView>
 
