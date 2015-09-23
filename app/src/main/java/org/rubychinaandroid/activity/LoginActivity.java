@@ -47,7 +47,7 @@ public class LoginActivity extends SwipeBackActivity {
 
         final OAuthService service = RubyChinaOAuthService.getInstance().getOAuthService();
 
-        final WebView webView = (WebView) findViewById(R.id.login_web_oauth);
+        final WebView webView = (WebView) findViewById(R.id.web_view);
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();

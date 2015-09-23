@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.MainActivity;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 
 import java.util.ArrayList;
@@ -26,16 +26,18 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     private ArrayList<TopicModel> mTopicList;
+    private OnScrollToBottomListener mListener;
 
-    public TopicItemAdapter(Context context, ArrayList<TopicModel> topicList) {
+    public TopicItemAdapter(Context context, ArrayList<TopicModel> topicList, OnScrollToBottomListener listener) {
         mTopicList = topicList;
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
+        mListener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mLayoutInflater.inflate(R.layout.topic_item, parent, false));
+        return new ViewHolder(mLayoutInflater.inflate(R.layout.item_topic, parent, false));
     }
 
     @Override
@@ -64,6 +66,10 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
                 activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             }
         });
+
+        if (mTopicList.size() - position <= 1 && mListener != null) {
+            mListener.onLoadMore();
+        }
     }
 
     @Override

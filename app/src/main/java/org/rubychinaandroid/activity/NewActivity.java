@@ -77,7 +77,7 @@ public class NewActivity extends SwipeBackActivity {
         mTitleTextView = (TextView) findViewById(R.id.title);
         mContentTextView = (TextView) findViewById(R.id.content);
 
-        mPublishButton = (Button) findViewById(R.id.publish_button);
+        mPublishButton = (Button) findViewById(R.id.publish);
         mPublishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,7 +120,7 @@ public class NewActivity extends SwipeBackActivity {
             }
         });
 
-        mPreviewButton = (Button) findViewById(R.id.preview_button);
+        mPreviewButton = (Button) findViewById(R.id.preview);
         mPreviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

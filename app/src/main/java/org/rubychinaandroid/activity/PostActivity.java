@@ -56,14 +56,14 @@ public class PostActivity extends SwipeBackActivity implements SwipeRefreshLayou
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("话题内容");
 
-        View postLayout = findViewById(R.id.post_layout);
+        View postLayout = findViewById(R.id.post);
 
-        mTitle = (TextView) postLayout.findViewById(R.id.read_post_title);
-        mContent = (RichTextView) postLayout.findViewById(R.id.read_post_content);
-        mAvatar = (ImageView) postLayout.findViewById(R.id.read_post_author_avatar);
-        mAuthor = (TextView) postLayout.findViewById(R.id.read_post_author);
-        mTime = (TextView) postLayout.findViewById(R.id.read_post_publish_time);
-        mNode = (TextView) postLayout.findViewById(R.id.read_post_node_name);
+        mTitle = (TextView) postLayout.findViewById(R.id.title);
+        mContent = (RichTextView) postLayout.findViewById(R.id.content);
+        mAvatar = (ImageView) postLayout.findViewById(R.id.avatar);
+        mAuthor = (TextView) postLayout.findViewById(R.id.author);
+        mTime = (TextView) postLayout.findViewById(R.id.time);
+        mNode = (TextView) postLayout.findViewById(R.id.node);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -73,7 +73,7 @@ public class PostActivity extends SwipeBackActivity implements SwipeRefreshLayou
         final Intent intent = getIntent();
         mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
 
-        mButtonDisplayReply = (Button) findViewById(R.id.button_display_reply);
+        mButtonDisplayReply = (Button) findViewById(R.id.display_reply);
         mButtonDisplayReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

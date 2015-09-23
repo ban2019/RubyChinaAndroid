@@ -54,7 +54,7 @@ public class ReplyActivity extends SwipeBackActivity implements SwipeRefreshLayo
 
         mReplyListView = (ListView) findViewById(R.id.reply_list_view);
 
-        mAdapter = new ReplyItemAdapter(ReplyActivity.this, R.layout.reply_item, mReplyList);
+        mAdapter = new ReplyItemAdapter(ReplyActivity.this, R.layout.item_reply, mReplyList);
 
         mReplyListView.setAdapter(mAdapter);
 

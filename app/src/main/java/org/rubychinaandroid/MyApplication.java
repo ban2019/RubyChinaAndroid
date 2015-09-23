@@ -25,7 +25,7 @@ public class MyApplication extends Application {
 
     /* ImageLoader and options for avatar loading in getView() */
     public static DisplayImageOptions imageLoaderOptions = new DisplayImageOptions.Builder()
-            .showImageOnFail(R.drawable.action_bar_holo_dark_style)
+            .showImageOnFail(R.drawable.avatar_doge_mm)
             .imageScaleType(ImageScaleType.EXACTLY)
             .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565)
             .displayer(new RoundedBitmapDisplayer(10))

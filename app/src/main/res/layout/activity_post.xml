@@ -34,11 +34,11 @@
                 android:showDividers="middle">
 
                 <include
-                    android:id="@+id/post_layout"
+                    android:id="@+id/post"
                     layout="@layout/post" />
 
                 <Button
-                    android:id="@+id/button_display_reply"
+                    android:id="@+id/display_reply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
