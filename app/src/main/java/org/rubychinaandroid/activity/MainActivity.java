@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(String err) {
+                public void onFailure(String error) {
                     Utility.showToast("注销失败");
                 }
             });
