@@ -15,5 +15,10 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <!--android:name="org.rubychinaandroid.fragments.PostFragment"-->
+
+    <FrameLayout
+        android:id="@+id/reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>

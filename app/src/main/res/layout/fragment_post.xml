@@ -1,38 +1,31 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <ScrollView
+        <FrameLayout
+            android:id="@+id/frame_post"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider"
+            android:dividerPadding="2dp"
+            android:showDividers="middle"
+            android:visibility="invisible">
 
-            <FrameLayout
-                android:id="@+id/frame_post"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/divider"
-                android:dividerPadding="2dp"
-                android:showDividers="middle"
-                android:visibility="invisible">
+            <include
+                android:id="@+id/id_post"
+                layout="@layout/post" />
 
-                <include
-                    android:id="@+id/id_post"
-                    layout="@layout/post" />
+        </FrameLayout>
 
-            </FrameLayout>
+    </ScrollView>
 
-        </ScrollView>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-</LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
