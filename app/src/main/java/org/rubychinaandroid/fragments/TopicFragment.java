@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
 
+        Log.d("TopicFragment", "onCreateView");
         mParentActivity = (MainActivity) getActivity();
 
         SharedPreferences pref = mParentActivity

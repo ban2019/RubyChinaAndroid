@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
                 assert (mContext instanceof MainActivity);
                 MainActivity activity = (MainActivity) mContext;
                 Intent intent = new Intent(activity, PostActivity.class);
+                Log.d("TopicItemAdapter", topic.getTopicId());
                 intent.putExtra(RubyChinaConstants.TOPIC_ID, topic.getTopicId());
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
