@@ -52,8 +52,8 @@ public class ReplyFragment extends Fragment {
         Intent intent = activity.getIntent();
         mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
 
-        ReplyInputBox replyBar = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
-        replyBar.setTopicId(mTopicId);
+        //ReplyInputBox replyBar = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
+        //replyBar.setTopicId(mTopicId);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -24,6 +24,7 @@ import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
+import org.rubychinaandroid.view.RichTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,27 +55,12 @@ public class ReplyItemAdapter extends RecyclerView.Adapter<ReplyItemAdapter.View
 
         final ReplyModel reply = mReplyList.get(position);
 
-        holder.content.setText(reply.getBodyHtml());
-
-        /* 2. load author and publish time */
+        holder.replier.setText("".equals(reply.getUserName()) ? reply.getUserLogin() : reply.getUserName());
+        holder.content.setRichText(reply.getBodyHtml(), true);
         holder.time.setText(reply.getCreatedTime());
 
-        /* 3. load avatar */
         String userAvatarUrl = reply.getUserAvatarUrl();
         ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar, MyApplication.imageLoaderOptions);
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                assert (mContext instanceof MainActivity);
-                MainActivity activity = (MainActivity) mContext;
-                Intent intent = new Intent(activity, PostActivity.class);
-                Log.d("ReplyItemAdapter", reply.getTopicId());
-                intent.putExtra(RubyChinaConstants.TOPIC_ID, reply.getTopicId());
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-            }
-        });
 
         if (mReplyList.size() - position <= 1 && mListener != null) {
             mListener.onLoadMore();
@@ -87,57 +73,18 @@ public class ReplyItemAdapter extends RecyclerView.Adapter<ReplyItemAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public CardView cardView;
         public TextView replier;
         public ImageView avatar;
-        public TextView content;
+        public RichTextView content;
         public TextView time;
 
         ViewHolder(View view) {
             super(view);
 
-            cardView = (CardView) view.findViewById(R.id.card_container);
             avatar = (ImageView) view.findViewById(R.id.avatar);
             replier = (TextView) view.findViewById(R.id.replier);
-            content = (TextView) view.findViewById(R.id.content);
+            content = (RichTextView) view.findViewById(R.id.content);
             time = (TextView) view.findViewById(R.id.time);
         }
     }
-
-    /*
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ReplyModel reply = getItem(position);
-        View view;
-        ViewHolder viewHolder;
-
-        if (convertView == null) {
-            view = LayoutInflater.from(getContext()).inflate(mResourceId, null);
-            viewHolder = new ViewHolder();
-            viewHolder.avatar = (ImageView) view.findViewById(R.id.reply_avatar);
-            viewHolder.replier = (TextView) view.findViewById(R.id.reply_replier);
-            viewHolder.replyTime = (TextView) view.findViewById(R.id.reply_time);
-            viewHolder.replyContent = (TextView) view.findViewById(R.id.reply_content);
-            view.setTag(viewHolder);
-        } else {
-            view = convertView;
-            viewHolder = (ViewHolder) view.getTag();
-        }
-
-
-        ImageLoader.getInstance().displayImage(reply.getUserAvatarUrl(), viewHolder.avatar, MyApplication.imageLoaderOptions);
-
-
-        String replier = reply.getUserName();
-        replier = ("".equals(replier) ? reply.getUserLogin() : replier);
-        viewHolder.replier.setText(replier);
-
-
-        viewHolder.replyTime.setText("创建于 " + reply.getCreatedTime());
-
-
-        viewHolder.replyContent.setText(Html.fromHtml(reply.getBodyHtml()));
-
-        return view;
-    }
-    */
 }
