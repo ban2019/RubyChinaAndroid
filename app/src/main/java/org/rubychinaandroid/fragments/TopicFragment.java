@@ -41,7 +41,7 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     RecyclerView mRecyclerView;
 
     HeaderViewRecyclerAdapter mHeaderAdapter;
-    RecyclerView.Adapter mRecyclerViewAdapter;
+    TopicItemAdapter mRecyclerViewAdapter;
     private int mCurrentPage = 0;
     private int mCachedPages = 0;
     private ArrayList<TopicModel> mTopicList;

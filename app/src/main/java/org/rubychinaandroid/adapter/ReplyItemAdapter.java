@@ -1,7 +1,11 @@
 package org.rubychinaandroid.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +17,94 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.activity.MainActivity;
+import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.model.ReplyModel;
+import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.utils.Utility;
+import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ReplyItemAdapter extends ArrayAdapter<ReplyModel> {
+public class ReplyItemAdapter extends RecyclerView.Adapter<ReplyItemAdapter.ViewHolder> {
 
-    private int mResourceId;
+    private final LayoutInflater mLayoutInflater;
+    private final Context mContext;
+    private ArrayList<ReplyModel> mReplyList;
+    private OnScrollToBottomListener mListener;
 
-    public ReplyItemAdapter(Context context, int textViewResourceId, List<ReplyModel> replyList) {
-        super(context, textViewResourceId, replyList);
-        mResourceId = textViewResourceId;
+    public ReplyItemAdapter(Context context, ArrayList<ReplyModel> replyList, OnScrollToBottomListener listener) {
+        mContext = context;
+        mReplyList = replyList;
+        mLayoutInflater = LayoutInflater.from(context);
+        mListener = listener;
     }
 
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(mLayoutInflater.inflate(R.layout.item_reply, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        final ReplyModel reply = mReplyList.get(position);
+
+        holder.content.setText(reply.getBodyHtml());
+
+        /* 2. load author and publish time */
+        holder.time.setText(reply.getCreatedTime());
+
+        /* 3. load avatar */
+        String userAvatarUrl = reply.getUserAvatarUrl();
+        ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar, MyApplication.imageLoaderOptions);
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                assert (mContext instanceof MainActivity);
+                MainActivity activity = (MainActivity) mContext;
+                Intent intent = new Intent(activity, PostActivity.class);
+                Log.d("ReplyItemAdapter", reply.getTopicId());
+                intent.putExtra(RubyChinaConstants.TOPIC_ID, reply.getTopicId());
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+            }
+        });
+
+        if (mReplyList.size() - position <= 1 && mListener != null) {
+            mListener.onLoadMore();
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mReplyList == null ? 0 : mReplyList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public CardView cardView;
+        public TextView replier;
+        public ImageView avatar;
+        public TextView content;
+        public TextView time;
+
+        ViewHolder(View view) {
+            super(view);
+
+            cardView = (CardView) view.findViewById(R.id.card_container);
+            avatar = (ImageView) view.findViewById(R.id.avatar);
+            replier = (TextView) view.findViewById(R.id.replier);
+            content = (TextView) view.findViewById(R.id.content);
+            time = (TextView) view.findViewById(R.id.time);
+        }
+    }
+
+    /*
     public View getView(int position, View convertView, ViewGroup parent) {
         ReplyModel reply = getItem(position);
         View view;
@@ -47,27 +123,21 @@ public class ReplyItemAdapter extends ArrayAdapter<ReplyModel> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        /* 1. load avatar */
+
         ImageLoader.getInstance().displayImage(reply.getUserAvatarUrl(), viewHolder.avatar, MyApplication.imageLoaderOptions);
 
-        /* 2. load replier name */
+
         String replier = reply.getUserName();
         replier = ("".equals(replier) ? reply.getUserLogin() : replier);
         viewHolder.replier.setText(replier);
 
-        /* 3. load reply time */
+
         viewHolder.replyTime.setText("创建于 " + reply.getCreatedTime());
 
-        /* 4. load the content */
+
         viewHolder.replyContent.setText(Html.fromHtml(reply.getBodyHtml()));
 
         return view;
     }
-
-    class ViewHolder {
-        ImageView avatar;
-        TextView replier;
-        TextView replyTime;
-        TextView replyContent;
-    }
+    */
 }
