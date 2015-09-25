@@ -16,19 +16,19 @@ import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
 
-public class ReplyBar extends LinearLayout {
+public class ReplyInputBox extends LinearLayout {
 
     private final String LOG_TAG = "BottomReplyBar";
     private String mTopicId;
 
-    public ReplyBar(Context context, AttributeSet attrs) {
+    public ReplyInputBox(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.reply_bar, this);
 
         final EditText mBottomReplyEditText = (EditText) findViewById(R.id.bottom_reply_edit_text);
         final Button mSendButton = (Button) findViewById(R.id.bottom_reply_send_button);
 
-        mBottomReplyEditText.addTextChangedListener(new ReplyBarTextChangeListener() {
+        mBottomReplyEditText.addTextChangedListener(new ReplyInputBoxTextChangeListener() {
 
             @Override
             public void afterTextChanged(Editable s) {

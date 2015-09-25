@@ -12,14 +12,10 @@ import android.widget.ListView;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.adapter.ReplyItemAdapter;
-import org.rubychinaandroid.api.RubyChinaApiListener;
-import org.rubychinaandroid.api.RubyChinaApiWrapper;
-import org.rubychinaandroid.fragments.PostFragment;
 import org.rubychinaandroid.fragments.ReplyFragment;
 import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.utils.RubyChinaConstants;
-import org.rubychinaandroid.utils.Utility;
-import org.rubychinaandroid.view.ReplyBar;
+
 
 import java.util.ArrayList;
 

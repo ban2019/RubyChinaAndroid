@@ -23,7 +23,7 @@ import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.utils.Utility;
-import org.rubychinaandroid.view.ReplyBar;
+import org.rubychinaandroid.view.ReplyInputBox;
 
 import java.util.ArrayList;
 
@@ -51,11 +51,11 @@ public class ReplyFragment extends Fragment {
         Intent intent = activity.getIntent();
         mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
 
-        ReplyBar replyBar = (ReplyBar) view.findViewById(R.id.reply_bar);
+        ReplyInputBox replyBar = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
         //ReplyBar replyBar = new ReplyBar(activity, null);
         //replyBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         // inform reply bar of the topic id
-        //replyBar.setTopicId(mTopicId);
+        replyBar.setTopicId(mTopicId);
         //mReplyLinearLayout.addView(replyBar);
 
         mReplyListView = (ListView) view.findViewById(R.id.reply_list_view);

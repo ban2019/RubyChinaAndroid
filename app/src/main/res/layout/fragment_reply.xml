@@ -14,10 +14,12 @@
         <ListView
             android:id="@+id/reply_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        </ListView>
 
-        <org.rubychinaandroid.view.ReplyBar
-            android:id="@+id/reply_bar"
+        <org.rubychinaandroid.view.ReplyInputBox
+            android:id="@+id/reply_input_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
