@@ -23,10 +23,10 @@ public class ReplyInputBox extends LinearLayout {
 
     public ReplyInputBox(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.reply_bar, this);
+        LayoutInflater.from(context).inflate(R.layout.reply_input_box, this);
 
-        final EditText mBottomReplyEditText = (EditText) findViewById(R.id.bottom_reply_edit_text);
-        final Button mSendButton = (Button) findViewById(R.id.bottom_reply_send_button);
+        final EditText mBottomReplyEditText = (EditText) findViewById(R.id.edit_text);
+        final Button mSendButton = (Button) findViewById(R.id.send_button);
 
         mBottomReplyEditText.addTextChangedListener(new ReplyInputBoxTextChangeListener() {
 
