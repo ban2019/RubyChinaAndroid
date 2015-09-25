@@ -1,5 +1,6 @@
 package org.rubychinaandroid.fragments;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,15 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.activity.ReplyActivity;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.PostModel;
@@ -70,6 +72,16 @@ public class PostFragment extends Fragment {
         });
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+
+        Button button = (Button) view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ReplyActivity.class);
+                intent.putExtra(RubyChinaConstants.TOPIC_ID, mTopicId);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }

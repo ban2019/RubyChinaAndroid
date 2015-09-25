@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.PostFragment;
+import org.rubychinaandroid.fragments.ReplyFragment;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
@@ -35,7 +36,6 @@ public class PostActivity extends SwipeBackActivity {
         Bundle args = new Bundle();
         args.putString(RubyChinaConstants.TOPIC_ID, topicId);
         postFragment.setArguments(args);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.content, postFragment).commit();
     }
 

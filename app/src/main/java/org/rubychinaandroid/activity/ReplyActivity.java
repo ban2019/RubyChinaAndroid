@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -14,6 +14,8 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.adapter.ReplyItemAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
+import org.rubychinaandroid.fragments.PostFragment;
+import org.rubychinaandroid.fragments.ReplyFragment;
 import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.utils.Utility;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 
-public class ReplyActivity extends SwipeBackActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ReplyActivity extends SwipeBackActivity {
 
     Toolbar mToolbar;
     ListView mReplyListView;
@@ -42,71 +44,15 @@ public class ReplyActivity extends SwipeBackActivity implements SwipeRefreshLayo
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("回复");
 
-        // keep the soft input keyboard away from covering the reply list
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        final Intent intent = getIntent();
+        String topicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
 
-        Intent intent = getIntent();
-        mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
+        ReplyFragment replyFragment = new ReplyFragment();
 
-        ReplyBar replyBar = (ReplyBar) findViewById(R.id.reply_bar);
-        // inform reply bar of the topic id
-        replyBar.setTopicId(mTopicId);
-
-        mReplyListView = (ListView) findViewById(R.id.reply_list_view);
-
-        mAdapter = new ReplyItemAdapter(ReplyActivity.this, R.layout.item_reply, mReplyList);
-
-        mReplyListView.setAdapter(mAdapter);
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-
-        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
-
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                refreshReplies();
-            }
-        });
-    }
-
-    public class ReplyHttpCallbackListener implements RubyChinaApiListener<ArrayList<ReplyModel>> {
-
-        @Override
-        public void onSuccess(ArrayList<ReplyModel> data) {
-
-            mSwipeRefreshLayout.setRefreshing(false);
-
-            mReplyList.clear();
-            for (ReplyModel reply : data) {
-                mReplyList.add(reply);
-            }
-
-            mAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onFailure(String error) {
-
-            mSwipeRefreshLayout.setRefreshing(false);
-
-            Utility.showToast("加载回复失败");
-        }
-    }
-
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                refreshReplies();
-            }
-        }, 500);
-    }
-
-    private void refreshReplies() {
-        RubyChinaApiWrapper.getPostReplies(mTopicId, new ReplyHttpCallbackListener());
+        Bundle args = new Bundle();
+        args.putString(RubyChinaConstants.TOPIC_ID, topicId);
+        replyFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.reply, replyFragment).commit();
     }
 
     @Override
