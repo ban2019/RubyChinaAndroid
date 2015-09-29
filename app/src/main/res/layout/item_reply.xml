@@ -1,55 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/avatar_normal_size"
+        android:layout_height="@dimen/avatar_normal_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_margin="10dp"
-        android:layout_weight="1"
-        android:adjustViewBounds="true"
-        android:src="@drawable/action_bar_holo_dark_style" />
+        android:src="@drawable/avatar_doge_mm" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/replier"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="5.375"
-        android:orientation="vertical">
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/avatar"
+        android:padding="10dp"
+        android:text="这里是用户名"
+        android:textSize="12sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/replier"
+        android:padding="10dp"
+        android:text="这里是发布时间"
+        android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/replier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="这里是用户名"
-                android:textSize="10sp" />
+    <org.rubychinaandroid.view.RichTextView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/avatar"
+        android:layout_toRightOf="@id/avatar"
+        android:padding="5dp"
+        android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="这里是发布时间"
-                android:textSize="10sp" />
+    <ImageView
+        android:id="@+id/divide_reply"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/content"
+        android:layout_toRightOf="@+id/avatar"
+        android:background="#DCDCDA" />
 
-        </LinearLayout>
-
-        <org.rubychinaandroid.view.RichTextView
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="15sp" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

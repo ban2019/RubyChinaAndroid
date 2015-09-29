@@ -10,4 +10,6 @@
     <dimen name="photo_crop_width">280dp</dimen>
     <dimen name="photo_crop_stroke_width">1dp</dimen>
     <dimen name="photo_page_margin">10dp</dimen>
+
+    <dimen name="avatar_normal_size">36dp</dimen>
 </resources>
