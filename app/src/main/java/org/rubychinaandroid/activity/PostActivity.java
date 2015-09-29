@@ -6,6 +6,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ObservableScrollView;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.PostFragment;
@@ -17,6 +21,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 public class PostActivity extends SwipeBackActivity {
 
     private Toolbar mToolbar;
+    private FloatingActionButton mReplyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +33,19 @@ public class PostActivity extends SwipeBackActivity {
         mToolbar.setTitle("话题内容");
 
         final Intent intent = getIntent();
-        String topicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
+        final String topicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
         Log.d("PostActivity", topicId);
+
+        mReplyButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
+        mReplyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostActivity.this, ReplyActivity.class);
+                intent.putExtra(RubyChinaConstants.TOPIC_ID, topicId);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+            }
+        });
 
         PostFragment postFragment = new PostFragment();
 
@@ -58,5 +74,9 @@ public class PostActivity extends SwipeBackActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public FloatingActionButton getFloatingActionButton() {
+        return mReplyButton;
     }
 }

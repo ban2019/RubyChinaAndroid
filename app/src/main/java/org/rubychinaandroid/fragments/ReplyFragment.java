@@ -68,7 +68,6 @@ public class ReplyFragment extends Fragment {
                 */
             }
         });
-        //mRecyclerView.setAdapter();
 
         mRecyclerViewAdapter = new ReplyItemAdapter(getActivity(), mReplyList, null);
         HeaderViewRecyclerAdapter mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
@@ -76,7 +75,7 @@ public class ReplyFragment extends Fragment {
         mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(getActivity()), new FootUpdate.LoadMore() {
             @Override
             public void loadMore() {
-                //requestMoreTopics();
+                //requestMoreReplies();
             }
         });
 
@@ -102,8 +101,6 @@ public class ReplyFragment extends Fragment {
                 refreshReplies();
             }
         });
-
-
 
         return view;
     }

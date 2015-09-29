@@ -13,12 +13,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ObservableScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.activity.ReplyActivity;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
@@ -58,6 +63,7 @@ public class PostFragment extends Fragment {
         mNode = (TextView) postLayout.findViewById(R.id.node);
 
         mFrameLayout = (FrameLayout) view.findViewById(R.id.frame_post);
+        ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -73,15 +79,8 @@ public class PostFragment extends Fragment {
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
 
-        Button button = (Button) view.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ReplyActivity.class);
-                intent.putExtra(RubyChinaConstants.TOPIC_ID, mTopicId);
-                startActivity(intent);
-            }
-        });
+        PostActivity activity = (PostActivity) getActivity();
+        activity.getFloatingActionButton().attachToScrollView(scrollView);
 
         return view;
     }
