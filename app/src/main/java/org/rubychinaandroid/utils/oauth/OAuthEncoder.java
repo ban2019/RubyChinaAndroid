@@ -1,12 +1,15 @@
 package org.rubychinaandroid.utils.oauth;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.regex.*;
-
-import org.scribe.exceptions.*;
+import org.scribe.exceptions.OAuthException;
 import org.scribe.utils.Preconditions;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author Pablo Fernandez

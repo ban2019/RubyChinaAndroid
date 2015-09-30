@@ -20,13 +20,15 @@ public class ReplyInputBox extends LinearLayout {
 
     private final String LOG_TAG = "BottomReplyBar";
     private String mTopicId;
+    private EditText mBottomReplyEditText;
+    private Button mSendButton;
 
     public ReplyInputBox(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.reply_input_box, this);
 
-        final EditText mBottomReplyEditText = (EditText) findViewById(R.id.edit_text);
-        final Button mSendButton = (Button) findViewById(R.id.send_button);
+        mBottomReplyEditText = (EditText) findViewById(R.id.edit_text);
+        mSendButton = (Button) findViewById(R.id.send_button);
 
         mBottomReplyEditText.addTextChangedListener(new ReplyInputBoxTextChangeListener() {
 
@@ -70,5 +72,11 @@ public class ReplyInputBox extends LinearLayout {
 
     public void setTopicId(String topicId) {
         this.mTopicId = topicId;
+    }
+
+    public void hintReplyTo(int floor, String name) {
+        String text = "#" + floor + "楼" + " " + "@" + name + " ";
+        mBottomReplyEditText.setText(text);
+        mBottomReplyEditText.setSelection(text.length());
     }
 }

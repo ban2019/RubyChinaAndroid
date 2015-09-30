@@ -3,7 +3,6 @@ package org.rubychinaandroid.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.MainActivity;
@@ -30,6 +27,8 @@ import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
+
+import java.util.ArrayList;
 
 public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
 
@@ -113,7 +112,7 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 mNoMore = true;
             }
 
-            // stop anim
+            // stop refresh anim
             mSwipeRefreshLayout.setRefreshing(false);
 
             // clear topic list
@@ -208,6 +207,7 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         new Handler().postDelayed(new Runnable() {
             public void run() {
+                // start refresh anim
                 mSwipeRefreshLayout.setRefreshing(true);
                 requestTopics();
             }
@@ -220,6 +220,4 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             requestMoreTopics();
         }
     }
-
-
 }

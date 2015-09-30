@@ -7,13 +7,11 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
-
 import org.rubychinaandroid.model.NodeModel;
 import org.rubychinaandroid.model.PostModel;
 import org.rubychinaandroid.model.ReplyModel;
-import org.rubychinaandroid.utils.RubyChinaTypes;
-
 import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.utils.RubyChinaTypes;
 import org.rubychinaandroid.utils.Utility;
 
 import java.util.ArrayList;

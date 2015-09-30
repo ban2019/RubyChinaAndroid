@@ -23,7 +23,6 @@ import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
-import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import org.rubychinaandroid.view.ReplyInputBox;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ public class ReplyFragment extends Fragment {
     private ArrayList<ReplyModel> mReplyList = new ArrayList<ReplyModel>();
     private ReplyItemAdapter mRecyclerViewAdapter;
     private String mTopicId;
+    private ReplyInputBox mReplyInputBox;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -44,7 +44,7 @@ public class ReplyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reply, container, false);
 
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
 
         // keep the soft input keyboard away from covering the reply list
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -52,24 +52,19 @@ public class ReplyFragment extends Fragment {
         Intent intent = activity.getIntent();
         mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
 
-        ReplyInputBox replyInputBox = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
-        replyInputBox.setTopicId(mTopicId);
+        mReplyInputBox = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
+        mReplyInputBox.setTopicId(mTopicId);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mRecyclerViewAdapter = new ReplyItemAdapter(activity, mReplyList, new OnScrollToBottomListener() {
+        mRecyclerViewAdapter = new ReplyItemAdapter(getActivity(), mReplyList, new ReplyItemOnClickListener() {
             @Override
-            public void onLoadMore() {
-                /*
-                if (!mNoMore) {
-                    requestMoreReplies();
-                }
-                */
+            public void onClick(int floor, String userLogin) {
+                mReplyInputBox.hintReplyTo(floor, userLogin);
             }
         });
 
-        mRecyclerViewAdapter = new ReplyItemAdapter(getActivity(), mReplyList, null);
         HeaderViewRecyclerAdapter mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
         mRecyclerView.setAdapter(mHeaderAdapter);
         mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(getActivity()), new FootUpdate.LoadMore() {

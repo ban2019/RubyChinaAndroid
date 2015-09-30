@@ -1,30 +1,24 @@
 package org.rubychinaandroid.fragments;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.Scroller;
 import android.widget.TextView;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ObservableScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.PostActivity;
-import org.rubychinaandroid.activity.ReplyActivity;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.PostModel;

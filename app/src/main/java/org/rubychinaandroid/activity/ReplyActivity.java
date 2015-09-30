@@ -2,22 +2,12 @@ package org.rubychinaandroid.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.ListView;
 
 import org.rubychinaandroid.R;
-import org.rubychinaandroid.adapter.ReplyItemAdapter;
 import org.rubychinaandroid.fragments.ReplyFragment;
-import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.utils.RubyChinaConstants;
-
-
-import java.util.ArrayList;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -25,12 +15,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 public class ReplyActivity extends SwipeBackActivity {
 
     Toolbar mToolbar;
-    ListView mReplyListView;
-    ArrayList<ReplyModel> mReplyList = new ArrayList<ReplyModel>();
-    ReplyItemAdapter mAdapter;
-    String mTopicId;
 
-    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

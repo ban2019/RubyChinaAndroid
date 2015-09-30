@@ -9,11 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.melnykov.fab.ObservableScrollView;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.PostFragment;
-import org.rubychinaandroid.fragments.ReplyFragment;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;

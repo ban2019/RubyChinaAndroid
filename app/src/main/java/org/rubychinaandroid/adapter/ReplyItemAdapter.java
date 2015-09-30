@@ -2,14 +2,10 @@ package org.rubychinaandroid.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,32 +13,27 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
-import org.rubychinaandroid.activity.MainActivity;
 import org.rubychinaandroid.activity.PostActivity;
+import org.rubychinaandroid.activity.ReplyActivity;
+import org.rubychinaandroid.fragments.ReplyItemOnClickListener;
 import org.rubychinaandroid.model.ReplyModel;
-import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.RubyChinaConstants;
-import org.rubychinaandroid.utils.Utility;
-import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import org.rubychinaandroid.view.RichTextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class ReplyItemAdapter extends RecyclerView.Adapter<ReplyItemAdapter.ViewHolder> {
 
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     private ArrayList<ReplyModel> mReplyList;
-    private OnScrollToBottomListener mListener;
+    private ReplyItemOnClickListener mClickListener;
 
-    public ReplyItemAdapter(Context context, ArrayList<ReplyModel> replyList, OnScrollToBottomListener listener) {
+    public ReplyItemAdapter(Context context, ArrayList<ReplyModel> replyList, ReplyItemOnClickListener onClickListener) {
         mContext = context;
         mReplyList = replyList;
         mLayoutInflater = LayoutInflater.from(context);
-        mListener = listener;
+        mClickListener = onClickListener;
     }
 
     @Override
@@ -62,9 +53,13 @@ public class ReplyItemAdapter extends RecyclerView.Adapter<ReplyItemAdapter.View
         String userAvatarUrl = reply.getUserAvatarUrl();
         ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar, MyApplication.imageLoaderOptions);
 
-        if (mReplyList.size() - position <= 1 && mListener != null) {
-            mListener.onLoadMore();
-        }
+        final int floor = position + 1;
+        holder.content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClickListener.onClick(floor, reply.getUserLogin());
+            }
+        });
     }
 
     @Override

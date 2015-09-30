@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-
 import org.rubychinaandroid.activity.PhotoViewActivity;
 import org.rubychinaandroid.utils.AsyncImageGetter;
 

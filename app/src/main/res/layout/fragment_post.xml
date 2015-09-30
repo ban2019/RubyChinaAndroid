@@ -16,7 +16,6 @@
             android:id="@+id/frame_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@drawable/divider"
             android:dividerPadding="2dp"
             android:showDividers="middle"
             android:visibility="invisible">

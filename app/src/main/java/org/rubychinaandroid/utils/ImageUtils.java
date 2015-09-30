@@ -19,7 +19,6 @@ package org.rubychinaandroid.utils;
 
 import android.os.Build;
 
-
 import org.rubychinaandroid.MyApplication;
 
 import java.util.regex.Pattern;

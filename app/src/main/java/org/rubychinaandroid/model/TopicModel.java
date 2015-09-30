@@ -1,17 +1,10 @@
 package org.rubychinaandroid.model;
 
 
-import android.util.Log;
-
-import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.rubychinaandroid.utils.RubyChinaTypes;
 import org.rubychinaandroid.utils.Utility;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /* JSON Model */
 public class TopicModel extends BaseModel {

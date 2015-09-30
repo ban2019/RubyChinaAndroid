@@ -18,8 +18,8 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.MainActivity;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.model.TopicModel;
-import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 
 import java.util.ArrayList;
 
