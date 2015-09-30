@@ -28,7 +28,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
         mContext = context;
         mContainer = container;
         mMaxWidth = ScreenUtils.getDisplayWidth(mContext) - ScreenUtils.dp(mContext, 100);
-        mDefaultDrawable = context.getResources().getDrawable(R.drawable.action_bar_holo_dark_style);
+        mDefaultDrawable = context.getResources().getDrawable(R.drawable.avatar_doge_mm);
     }
 
     @Override
