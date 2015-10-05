@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/favourite"
+            android:icon="@drawable/ic_favourite"
+            android:title="我的收藏" />
+        <item
+            android:id="@+id/notification"
+            android:icon="@drawable/ic_notify"
+            android:title="我的消息" />
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/ic_settings"
+            android:title="设置"/>
+    </group>
+
+</menu>
