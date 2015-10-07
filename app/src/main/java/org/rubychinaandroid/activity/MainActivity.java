@@ -13,9 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.adapter.ViewPagerAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
@@ -42,12 +45,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mDrawerAvatar;
     private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
+    private TextView mDrawerUsername;
 
     private final String Titles[] = {"精华贴", "无人问津", "最后回复", "最近创建"};
     private final int NumOfTabs = Titles.length;
-
-    private MenuItem mLogin;
-    private MenuItem mLogout;
 
     // REQUEST CODES used to recognize the result returned by different activity
     private final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
@@ -98,11 +99,38 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mDrawerAvatar = (ImageView) findViewById(R.id.avatar);
+        mDrawerUsername = (TextView) findViewById(R.id.username);
+
+        if (OAuthManager.getInstance().getLoggedInState()) {
+            RubyChinaApiWrapper.getUserProfile(OAuthManager.getInstance().getUserLogin(), new RubyChinaApiListener<UserModel>() {
+                @Override
+                public void onSuccess(UserModel data) {
+                    mDrawerUsername.setText(data.getName());
+                    //email.setText(data.getEmail());
+                    ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar, MyApplication.imageLoaderOptions);
+                }
+
+                @Override
+                public void onFailure(String data) {
+                }
+            });
+        }
+
         mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                Intent intent;
+                if (OAuthManager.getInstance().getLoggedInState()) {
+                    intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                } else {
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                }
+
+                mDrawerLayout.closeDrawers();
             }
         });
 
@@ -125,11 +153,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        mLogin = menu.getItem(0);
-        mLogout = menu.getItem(1);
-
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -138,44 +162,6 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.menu_login) {
-
-            mLogin.setEnabled(false);
-
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
-            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-
-            return true;
-
-        } else if (id == R.id.menu_logout) {
-            mLogout.setEnabled(false);
-
-            OAuthManager.getInstance().saveLoggedInState(false);
-
-            RubyChinaApiWrapper.revoke(new RubyChinaApiListener() {
-                @Override
-                public void onSuccess(Object data) {
-                    Utility.showToast("注销成功");
-                }
-
-                @Override
-                public void onFailure(String error) {
-                    Utility.showToast("注销失败");
-                }
-            });
-
-            OAuthManager.getInstance().revokeAccessToken();
-
-            mLogin.setEnabled(true);
-
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -191,14 +177,16 @@ public class MainActivity extends AppCompatActivity {
                     // Save access token persistently
                     OAuthManager.getInstance().saveAccessTokenString(accessToken.getToken());
                     OAuthManager.getInstance().saveLoggedInState(true);
-                    mLogout.setEnabled(true);
 
                     // request the user login and store it
                     RubyChinaApiWrapper.hello(new RubyChinaApiListener<UserModel>() {
                         @Override
                         public void onSuccess(UserModel data) {
-
                             OAuthManager.getInstance().saveUserLogin(data.getUserLogin());
+
+                            // Update the drawer.
+                            mDrawerUsername.setText(data.getName());
+                            ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar, MyApplication.imageLoaderOptions);
                             Log.d(LOG_TAG, data.getUserLogin());
                         }
 
@@ -209,13 +197,8 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    // re-enable the login button to allow the user try again
-                    mLogin.setEnabled(true);
-                    mLogout.setEnabled(false);
-
                     OAuthManager.getInstance().saveLoggedInState(false);
-
-                    Log.d(LOG_TAG, "Failed to login.");
+                    Utility.showToast("登录失败");
                 }
                 break;
 
