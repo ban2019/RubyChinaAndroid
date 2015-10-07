@@ -2,10 +2,13 @@ package org.rubychinaandroid.utils.oauth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.rubychinaandroid.MyApplication;
 
 public class OAuthManager {
+
+    private static String TAG = "OAuthManager";
 
     // For convenience, the key name 'access_token' is kept identical to the parameter of HTTP request
     // used when accessing protected resource.
@@ -15,37 +18,67 @@ public class OAuthManager {
     private static String SHARED_PREFERENCE_FILE_NAME = "oauth";
     private static String STATE_LOGGED_IN = "logged_in";
 
-    private OAuthManager() {}
+    private static String LOGIN = "user_login";
+
+    private static SharedPreferences.Editor mEditor;
+    private static SharedPreferences mPref;
+
+    private static OAuthManager mOAuthManager;
+
+    private OAuthManager() {
+        Log.d(TAG, "construct");
+        mEditor = MyApplication.gAppContext
+                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
+        mPref = MyApplication.gAppContext
+                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static synchronized OAuthManager getInstance() {
+        if (mOAuthManager == null) {
+            mOAuthManager = new OAuthManager();
+        }
+        return mOAuthManager;
+    }
+
+    public static synchronized SharedPreferences.Editor getEditor() {
+        Log.d(TAG, "getEditor()");
+        if (mEditor == null) {
+            mEditor = MyApplication.gAppContext
+                    .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
+        }
+        return mEditor;
+    }
 
     public static void saveLoggedInState(boolean loggedIn) {
-        SharedPreferences.Editor editor = MyApplication.gAppContext
-                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
-        editor.putBoolean(STATE_LOGGED_IN, loggedIn);
-        editor.commit();
+        getEditor().putBoolean(STATE_LOGGED_IN, loggedIn);
+        getEditor().commit();
     }
 
     public static boolean getLoggedInState() {
-        SharedPreferences pref = MyApplication.gAppContext
-                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
-        return pref.getBoolean(STATE_LOGGED_IN, false);
+        return mPref.getBoolean(STATE_LOGGED_IN, false);
     }
 
     public static void saveAccessTokenString(String accessTokenString) {
-        SharedPreferences.Editor editor = MyApplication.gAppContext
-                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(ACCESS_TOKEN, accessTokenString);
-        editor.commit();
+        getEditor().putString(ACCESS_TOKEN, accessTokenString);
+        getEditor().commit();
     }
 
     public static String getAccessTokenString() {
-        SharedPreferences pref = MyApplication.gAppContext
-                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
-        return pref.getString(ACCESS_TOKEN, "");
+        return mPref.getString(ACCESS_TOKEN, "");
     }
 
     public static void revokeAccessToken() {
-        SharedPreferences.Editor editor = MyApplication.gAppContext
-                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(ACCESS_TOKEN, EMPTY_TOKEN);
+        getEditor().putString(ACCESS_TOKEN, EMPTY_TOKEN);
+        getEditor().commit();
+    }
+
+    public static void saveUserLogin(String login) {
+        getEditor().putString(LOGIN, login);
+        getEditor().commit();
+        Log.d(TAG + " save ", login);
+    }
+
+    public static String getUserLogin() {
+        return mPref.getString(LOGIN, "");
     }
 }

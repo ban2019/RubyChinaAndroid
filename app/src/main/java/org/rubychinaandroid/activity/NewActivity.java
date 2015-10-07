@@ -81,7 +81,7 @@ public class NewActivity extends SwipeBackActivity {
             public void onClick(View v) {
                 mPublishButton.setEnabled(false);
 
-                if (!OAuthManager.getLoggedInState()) {
+                if (!OAuthManager.getInstance().getLoggedInState()) {
                     Utility.showToast("还没有在主页面登录哦");
                     mPublishButton.setEnabled(true);
                     return;

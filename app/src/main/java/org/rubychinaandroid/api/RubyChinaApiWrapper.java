@@ -11,6 +11,7 @@ import org.rubychinaandroid.model.NodeModel;
 import org.rubychinaandroid.model.PostModel;
 import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.model.UserModel;
 import org.rubychinaandroid.utils.RubyChinaTypes;
 import org.rubychinaandroid.utils.Utility;
 
@@ -35,11 +36,13 @@ public class RubyChinaApiWrapper {
 
     private static final String API_NODES_URL = API_BASE_URL + "/nodes.json";
 
-    //private static final String API_REPLY_URL = API_BASE_URL + "/replies/%s.json";
+    private static final String API_HELLO = API_BASE_URL + "/hello.json";
 
-    //private static final String API_GET_ONE_TOPIC_URL = API_BASE_URL + "/topics/6807.json";
+    private static final String API_PROFILE = API_BASE_URL + "/users/%s.json";
 
-    public static final String LOG_TAG = "RubyChinaManager";
+    private static final String API_USER_TOPICS = API_BASE_URL + "/users/%s/topics.json";
+
+    public static final String LOG_TAG = "RubyChinaApiWrapper";
 
     private static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
@@ -76,7 +79,7 @@ public class RubyChinaApiWrapper {
                                 e.printStackTrace();
                             }
                         } else {
-                            Log.d(LOG_TAG + " getPostContent", "rawResponse is null");
+                            Log.d(LOG_TAG, "rawResponse is null");
                         }
                     }
 
@@ -115,7 +118,7 @@ public class RubyChinaApiWrapper {
                     }
 
                     @Override
-                    public void onFailure(int i, Header[] headers, String s, Throwable throwable) {
+                    public void onFailure(int statusCode, Header[] headers, String rawResponse, Throwable throwable) {
                         listener.onFailure(null);
                     }
                 });
@@ -130,7 +133,7 @@ public class RubyChinaApiWrapper {
                     }
 
                     @Override
-                    public void onFailure(int i, Header[] headers, String s, Throwable throwable) {
+                    public void onFailure(int statusCode, Header[] headers, String rawResponse, Throwable throwable) {
                         listener.onFailure(null);
                     }
                 });
@@ -149,8 +152,61 @@ public class RubyChinaApiWrapper {
                     }
 
                     @Override
-                    public void onFailure(int i, Header[] headers, String s, Throwable throwable) {
+                    public void onFailure(int statusCode, Header[] headers, String rawResponse, Throwable throwable) {
                         listener.onFailure(null);
+                    }
+                });
+    }
+
+    public static void hello(final RubyChinaApiListener<UserModel> listener) {
+        Log.d(LOG_TAG, "hello called");
+        asyncHttpClient.get(String.format(API_HELLO),
+                new ApiParams().withToken(),
+                new TextHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String rawResponse) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(rawResponse);
+                            UserModel userModel = new UserModel();
+                            userModel.parse(jsonObject);
+                            listener.onSuccess(userModel);
+                            Log.d(LOG_TAG, userModel.getUserLogin());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d(LOG_TAG, "json exception");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String rawResponse, Throwable throwable) {
+                        listener.onFailure(null);
+                        Log.d("hello", "onFailure");
+                    }
+                });
+    }
+
+    public static void getUserProfile(String userLogin, final RubyChinaApiListener<UserModel> listener) {
+
+        asyncHttpClient.get(String.format(API_PROFILE, userLogin),
+                new ApiParams().with("login", userLogin),
+                new TextHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String rawResponse) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(rawResponse);
+                            UserModel userModel = new UserModel();
+                            userModel.parse(jsonObject);
+                            listener.onSuccess(userModel);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String rawResponse, Throwable throwable) {
+                        Log.d("getUserProfile", "onFailure, code=" + statusCode);
                     }
                 });
     }

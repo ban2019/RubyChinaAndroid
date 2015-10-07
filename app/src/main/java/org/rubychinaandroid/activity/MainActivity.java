@@ -1,6 +1,7 @@
 package org.rubychinaandroid.activity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -16,10 +18,14 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.adapter.ViewPagerAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
+import org.rubychinaandroid.model.UserModel;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.SlidingTabLayout;
 import org.scribe.model.Token;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mPager;
     private ViewPagerAdapter mAdapter;
     private SlidingTabLayout mTabs;
-    FloatingActionButton mAddButton;
+    private FloatingActionButton mAddButton;
+    private ImageView mDrawerAvatar;
 
     private final String Titles[] = {"精华贴", "无人问津", "最后回复", "最近创建"};
     private final int NumOfTabs = Titles.length;
@@ -43,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
 
         // Creating The Toolbar and setting it as the Toolbar for the activity
@@ -84,6 +89,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, NewActivity.class);
                 startActivityForResult(intent, NEW_ACTIVITY_REQUEST_CODE);
                 overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+            }
+        });
+
+        mDrawerAvatar = (ImageView) findViewById(R.id.avatar);
+        mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -139,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            OAuthManager.revokeAccessToken();
+            OAuthManager.getInstance().revokeAccessToken();
 
             mLogin.setEnabled(true);
 
@@ -159,16 +173,31 @@ public class MainActivity extends AppCompatActivity {
                     Token accessToken = (Token) data.getSerializableExtra(OAuthManager.ACCESS_TOKEN);
 
                     // Save access token persistently
-                    OAuthManager.saveAccessTokenString(accessToken.getToken());
-                    OAuthManager.saveLoggedInState(true);
+                    OAuthManager.getInstance().saveAccessTokenString(accessToken.getToken());
+                    OAuthManager.getInstance().saveLoggedInState(true);
                     mLogout.setEnabled(true);
+
+                    // request the user login and store it
+                    RubyChinaApiWrapper.hello(new RubyChinaApiListener<UserModel>() {
+                        @Override
+                        public void onSuccess(UserModel data) {
+
+                            OAuthManager.getInstance().saveUserLogin(data.getUserLogin());
+                            Log.d(LOG_TAG, data.getUserLogin());
+                        }
+
+                        @Override
+                        public void onFailure(String data) {
+                            Log.d(LOG_TAG, "onFailure");
+                        }
+                    });
 
                 } else {
                     // re-enable the login button to allow the user try again
                     mLogin.setEnabled(true);
                     mLogout.setEnabled(false);
 
-                    OAuthManager.saveLoggedInState(false);
+                    OAuthManager.getInstance().saveLoggedInState(false);
 
                     Log.d(LOG_TAG, "Failed to login.");
                 }

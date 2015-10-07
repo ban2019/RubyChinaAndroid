@@ -10,7 +10,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
 
         <!-- Theme.AppCompat -->
         <activity
@@ -46,7 +46,10 @@
             android:name=".activity.PhotoViewActivity"
             android:label="@string/title_activity_photoview" >
         </activity>
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:label="@string/title_activity_profile" >
+        </activity>
     </application>
-
 
 </manifest>
