@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView mDrawerAvatar;
     private NavigationView mDrawer;
     private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
     private TextView mDrawerUsername;
 
     private final String Titles[] = {"精华贴", "无人问津", "最后回复", "最近创建"};
@@ -59,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("Ruby China");
         setSupportActionBar(mToolbar);
+
+        // Set the toolbar to display burger icon animation when drawer is closed or opened.
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, 0, 0);
+        mDrawerToggle.syncState();
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, NumOfTabs);
