@@ -16,15 +16,4 @@ public class ApiParams extends RequestParams {
         put(OAuthManager.ACCESS_TOKEN, OAuthManager.getInstance().getAccessTokenString());
         return this;
     }
-
-    public ApiParams withFile(String key, File file) {
-        /*
-        try {
-            put(key, file);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }*/
-        return this;
-    }
 }

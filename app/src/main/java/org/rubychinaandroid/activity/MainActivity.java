@@ -3,7 +3,9 @@ package org.rubychinaandroid.activity;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private ViewPagerAdapter mAdapter;
     private SlidingTabLayout mTabs;
     private FloatingActionButton mAddButton;
+
     private ImageView mDrawerAvatar;
+    private NavigationView mDrawer;
+    private DrawerLayout mDrawerLayout;
 
     private final String Titles[] = {"精华贴", "无人问津", "最后回复", "最近创建"};
     private final int NumOfTabs = Titles.length;
@@ -100,6 +105,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        mDrawer = (NavigationView) findViewById(R.id.drawer);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        mDrawerLayout.closeDrawers();
+                        return true;
+                    }
+                });
     }
 
     public FloatingActionButton getFloatingActionButton() {
@@ -139,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.menu_logout) {
             mLogout.setEnabled(false);
 
-            OAuthManager.saveLoggedInState(false);
+            OAuthManager.getInstance().saveLoggedInState(false);
 
             RubyChinaApiWrapper.revoke(new RubyChinaApiListener() {
                 @Override
