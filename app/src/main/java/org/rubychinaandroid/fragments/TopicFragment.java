@@ -49,7 +49,6 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private FootUpdate mFootUpdate = new FootUpdate();
-
     private boolean mNoMore = false;
 
     @Override

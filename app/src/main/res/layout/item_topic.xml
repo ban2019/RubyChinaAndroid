@@ -10,8 +10,8 @@
     android:layout_marginRight="8dp"
     android:layout_marginTop="4dp"
     android:orientation="horizontal"
-    card_view:cardCornerRadius="5dp"
-    card_view:cardBackgroundColor="@color/white">
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="5dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:text="hello"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <TextView
@@ -50,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="2015"
+                android:textColor="@color/black"
                 android:textSize="10sp" />
 
         </LinearLayout>

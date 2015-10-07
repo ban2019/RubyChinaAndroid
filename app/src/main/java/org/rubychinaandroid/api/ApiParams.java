@@ -4,8 +4,6 @@ import com.loopj.android.http.RequestParams;
 
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
-import java.io.File;
-
 public class ApiParams extends RequestParams {
     public ApiParams with(String key, String value) {
         put(key, value);

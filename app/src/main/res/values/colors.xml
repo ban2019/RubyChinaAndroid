@@ -7,6 +7,8 @@
 
     <color name="darker_gray">#BDBDBD</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
 
     <color name="photo_crop_dim_color">#cc000000</color>
     <color name="photo_crop_highlight_color">#fff</color>

@@ -24,6 +24,8 @@ import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import java.util.ArrayList;
 
 public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.ViewHolder> {
+    private String TAG = "TopicItemAdapter";
+
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     private ArrayList<TopicModel> mTopicList;
@@ -48,6 +50,8 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
 
         /* 1. load title */
         holder.title.setText(topic.getTitle());
+
+        Log.d(TAG, topic.getTitle());
 
         /* 2. load author and publish time */
         holder.time.setText(topic.getDetail());

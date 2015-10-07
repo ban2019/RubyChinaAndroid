@@ -46,6 +46,7 @@ public class RubyChinaApiWrapper {
 
     private static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
+    // Page is zero-based, 20 topics in one page.
     public static void getTopics(int page, final RubyChinaTypes.TOPIC_CATEGORY category,
                                  final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
 
@@ -147,7 +148,6 @@ public class RubyChinaApiWrapper {
                 new TextHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawResponse) {
-                        Log.d(LOG_TAG, "succeed to reply");
                         listener.onSuccess(null);
                     }
 
@@ -159,7 +159,6 @@ public class RubyChinaApiWrapper {
     }
 
     public static void hello(final RubyChinaApiListener<UserModel> listener) {
-        Log.d(LOG_TAG, "hello called");
         asyncHttpClient.get(String.format(API_HELLO),
                 new ApiParams().withToken(),
                 new TextHttpResponseHandler() {
@@ -170,11 +169,9 @@ public class RubyChinaApiWrapper {
                             UserModel userModel = new UserModel();
                             userModel.parse(jsonObject);
                             listener.onSuccess(userModel);
-                            Log.d(LOG_TAG, userModel.getUserLogin());
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Log.d(LOG_TAG, "json exception");
                         }
                     }
 
@@ -209,6 +206,18 @@ public class RubyChinaApiWrapper {
                         Log.d("getUserProfile", "onFailure, code=" + statusCode);
                     }
                 });
+    }
+
+    // Page is zero-based, 20 topics in one page.
+    public static void getUserTopics(int page, String userLogin,
+                                     final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
+        String jsonObjName = "topics";
+
+        asyncHttpClient.get(String.format(API_USER_TOPICS, userLogin),
+                new ApiParams()
+                        .with("login", userLogin)
+                        .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
+                new WrappedTextHttpResponseHandler<TopicModel>(TopicModel.class, jsonObjName, listener));
     }
 }
 

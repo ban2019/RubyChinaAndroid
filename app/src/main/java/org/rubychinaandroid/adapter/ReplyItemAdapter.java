@@ -1,7 +1,6 @@
 package org.rubychinaandroid.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
-import org.rubychinaandroid.activity.PostActivity;
-import org.rubychinaandroid.activity.ReplyActivity;
 import org.rubychinaandroid.fragments.ReplyItemOnClickListener;
 import org.rubychinaandroid.model.ReplyModel;
-import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.view.RichTextView;
 
 import java.util.ArrayList;

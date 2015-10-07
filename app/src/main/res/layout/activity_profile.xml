@@ -14,7 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.4"
         android:background="@drawable/blur_background"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -27,17 +27,18 @@
             android:layout_height="70dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/avatar_doge_mm" />
+            android:src="@drawable/avatar_default" />
 
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/avatar"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/avatar"
-            android:text="用户名"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/email"
@@ -47,18 +48,49 @@
             android:layout_marginLeft="30dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/avatar"
-            android:text="email" />
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/www_location"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_worldwide_location" />
+
+        <ImageView
+            android:id="@+id/github"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@id/www_location"
+            android:layout_marginRight="22dp"
+            android:layout_toLeftOf="@id/www_location"
+            android:src="@drawable/ic_github" />
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignTop="@id/github"
+            android:layout_marginRight="22dp"
+            android:layout_toLeftOf="@id/github"
+            android:src="@drawable/ic_twitter" />
+
     </RelativeLayout>
 
-    <!--
-    <android.support.v7.widget.RecyclerView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" />
-        -->
+        android:layout_weight="3">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin" />
+
+    </FrameLayout>
 
 </LinearLayout>
