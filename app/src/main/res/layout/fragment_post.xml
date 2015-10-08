@@ -18,10 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:orientation="horizontal"
+            android:visibility="invisible"
             card_view:cardBackgroundColor="@color/white"
             card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="0dp"
-            android:visibility="invisible">
+            card_view:cardElevation="0dp">
             <!--
             'padding = 100dp' is an arbitrary value. When setting padding to match_parent,
             the CardView is not complete.
