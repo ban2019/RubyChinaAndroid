@@ -22,12 +22,12 @@
         android:id="@+id/floating_action_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:src="@drawable/ic_action_reply"
         fab:fab_colorNormal="@color/darker_gray"
         fab:fab_colorPressed="@color/white"
-        fab:fab_shadow="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        fab:fab_shadow="true" />
 
 </RelativeLayout>

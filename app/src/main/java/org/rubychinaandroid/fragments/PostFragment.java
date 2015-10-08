@@ -38,6 +38,7 @@ public class PostFragment extends Fragment {
     private TextView mNode;
     private String mTopicId;
     private FrameLayout mFrameLayout;
+    private CardView mCardView;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -56,6 +57,7 @@ public class PostFragment extends Fragment {
         mAuthor = (TextView) postLayout.findViewById(R.id.author);
         mTime = (TextView) postLayout.findViewById(R.id.time);
         mNode = (TextView) postLayout.findViewById(R.id.node);
+        mCardView = (CardView) view.findViewById(R.id.card_container);
 
         mFrameLayout = (FrameLayout) view.findViewById(R.id.frame_post);
         ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view);
@@ -106,6 +108,7 @@ public class PostFragment extends Fragment {
             @Override
             public void onSuccess(PostModel data) {
 
+                mCardView.setVisibility(View.VISIBLE);
                 mFrameLayout.setVisibility(View.VISIBLE);
 
                 // stop the swipe refresh layout's animation
