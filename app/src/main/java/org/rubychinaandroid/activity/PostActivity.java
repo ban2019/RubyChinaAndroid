@@ -55,6 +55,7 @@ public class PostActivity extends SwipeBackActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         return true;
     }
 
