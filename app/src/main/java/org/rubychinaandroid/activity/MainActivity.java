@@ -81,7 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Assigning the Sliding Tab Layout View
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        mTabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+        // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+        mTabs.setDistributeEvenly(true);
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
         mTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -103,52 +104,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mDrawerAvatar = (ImageView) findViewById(R.id.avatar);
-        mDrawerUsername = (TextView) findViewById(R.id.username);
-
-        if (OAuthManager.getInstance().getLoggedInState()) {
-            RubyChinaApiWrapper.getUserProfile(OAuthManager.getInstance().getUserLogin(), new RubyChinaApiListener<UserModel>() {
-                @Override
-                public void onSuccess(UserModel data) {
-                    mDrawerUsername.setText(data.getName());
-                    //email.setText(data.getEmail());
-                    ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar, MyApplication.imageLoaderOptions);
-                }
-
-                @Override
-                public void onFailure(String data) {
-                }
-            });
-        }
-
-        mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent;
-                if (OAuthManager.getInstance().getLoggedInState()) {
-                    intent = new Intent(MainActivity.this, ProfileActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-                } else {
-                    intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
-                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-                }
-
-                mDrawerLayout.closeDrawers();
-            }
-        });
-
-        mDrawer = (NavigationView) findViewById(R.id.drawer);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawer.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        mDrawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
+        configDrawer();
     }
 
     public FloatingActionButton getFloatingActionButton() {
@@ -219,5 +175,58 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    private void configDrawer() {
+        mDrawerAvatar = (ImageView) findViewById(R.id.avatar);
+        mDrawerUsername = (TextView) findViewById(R.id.username);
+
+        if (OAuthManager.getInstance().getLoggedInState()) {
+            RubyChinaApiWrapper.getUserProfile(OAuthManager.getInstance().getUserLogin(), new RubyChinaApiListener<UserModel>() {
+                @Override
+                public void onSuccess(UserModel data) {
+                    mDrawerUsername.setText(data.getName());
+                    ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar, MyApplication.imageLoaderOptions);
+                }
+
+                @Override
+                public void onFailure(String data) {
+                }
+            });
+        }
+
+        mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                if (OAuthManager.getInstance().getLoggedInState()) {
+                    intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                } else {
+                    intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
+                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                }
+
+                mDrawerLayout.closeDrawers();
+            }
+        });
+
+        mDrawer = (NavigationView) findViewById(R.id.drawer);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        if (menuItem.getItemId() == R.id.favourite) {
+                            Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
+                        }
+
+                        mDrawerLayout.closeDrawers();
+
+                        return true;
+                    }
+                });
     }
 }

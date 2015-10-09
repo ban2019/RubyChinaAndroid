@@ -15,4 +15,5 @@
     <string name="title_activity_photoview">PhotoViewActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="favorite">收藏</string>
+    <string name="title_activity_favourite">FavouriteActivity</string>
 </resources>
