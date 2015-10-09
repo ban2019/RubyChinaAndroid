@@ -36,11 +36,13 @@ public class RubyChinaApiWrapper {
 
     private static final String API_NODES_URL = API_BASE_URL + "/nodes.json";
 
-    private static final String API_HELLO = API_BASE_URL + "/hello.json";
+    private static final String API_HELLO_URL = API_BASE_URL + "/hello.json";
 
-    private static final String API_PROFILE = API_BASE_URL + "/users/%s.json";
+    private static final String API_PROFILE_URL = API_BASE_URL + "/users/%s.json";
 
-    private static final String API_USER_TOPICS = API_BASE_URL + "/users/%s/topics.json";
+    private static final String API_USER_TOPICS_URL = API_BASE_URL + "/users/%s/topics.json";
+
+    private static final String API_FAVOURITE_TOPIC_URL = API_BASE_URL + "/topics/%s/favorite.json";
 
     public static final String LOG_TAG = "RubyChinaApiWrapper";
 
@@ -159,7 +161,7 @@ public class RubyChinaApiWrapper {
     }
 
     public static void hello(final RubyChinaApiListener<UserModel> listener) {
-        asyncHttpClient.get(String.format(API_HELLO),
+        asyncHttpClient.get(String.format(API_HELLO_URL),
                 new ApiParams().withToken(),
                 new TextHttpResponseHandler() {
                     @Override
@@ -185,7 +187,7 @@ public class RubyChinaApiWrapper {
 
     public static void getUserProfile(String userLogin, final RubyChinaApiListener<UserModel> listener) {
 
-        asyncHttpClient.get(String.format(API_PROFILE, userLogin),
+        asyncHttpClient.get(String.format(API_PROFILE_URL, userLogin),
                 new ApiParams().with("login", userLogin),
                 new TextHttpResponseHandler() {
                     @Override
@@ -213,11 +215,28 @@ public class RubyChinaApiWrapper {
                                      final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
         String jsonObjName = "topics";
 
-        asyncHttpClient.get(String.format(API_USER_TOPICS, userLogin),
+        asyncHttpClient.get(String.format(API_USER_TOPICS_URL, userLogin),
                 new ApiParams()
                         .with("login", userLogin)
                         .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
                 new WrappedTextHttpResponseHandler<TopicModel>(TopicModel.class, jsonObjName, listener));
+    }
+
+    public static void favouriteTopic(String topicId, final RubyChinaApiListener listener) {
+        asyncHttpClient.post(String.format(API_FAVOURITE_TOPIC_URL, topicId), new ApiParams()
+                        .with("id", topicId)
+                        .withToken(),
+                new TextHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String rawResponse) {
+                        listener.onSuccess(null);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String rawResponse, Throwable throwable) {
+                        listener.onFailure(null);
+                    }
+                });
     }
 }
 
