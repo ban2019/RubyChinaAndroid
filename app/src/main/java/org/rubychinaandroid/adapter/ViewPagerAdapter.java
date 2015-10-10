@@ -5,7 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import org.rubychinaandroid.fragments.TopicFragment;
+import org.rubychinaandroid.fragments.TopicsFragment;
+import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.utils.RubyChinaTypes;
 
@@ -26,13 +27,13 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        TopicFragment TopicFragment = new TopicFragment();
+        TopicsFragment TopicsFragment = new TopicsFragment();
 
         Bundle args = new Bundle();
-        args.putInt(RubyChinaConstants.TOPIC_CATEGORY, RubyChinaTypes.TOPIC_CATEGORY.excellent.getValue() + position);
-        TopicFragment.setArguments(args);
+        args.putInt(RubyChinaConstants.TOPIC_CATEGORY, new RubyChinaCategory(position).getValue());
+        TopicsFragment.setArguments(args);
 
-        return TopicFragment;
+        return TopicsFragment;
     }
 
     // This method return the titles for the Tabs in the Tab Strip

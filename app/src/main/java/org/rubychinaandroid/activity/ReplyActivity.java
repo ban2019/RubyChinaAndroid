@@ -3,7 +3,6 @@ package org.rubychinaandroid.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.ReplyFragment;
@@ -15,7 +14,6 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 public class ReplyActivity extends SwipeBackActivity {
 
     Toolbar mToolbar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

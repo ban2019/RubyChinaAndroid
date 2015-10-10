@@ -21,6 +21,7 @@ import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.db.RubyChinaDBManager;
 import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.RubyChinaConstants;
 import org.rubychinaandroid.utils.RubyChinaTypes;
 import org.rubychinaandroid.utils.Utility;
@@ -30,10 +31,10 @@ import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 
 import java.util.ArrayList;
 
-public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
+public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
 
     private final String ACTIVITY_NAME = "MainActivity";
-    private final String LOG_TAG = "TopicFragment";
+    private final String LOG_TAG = "TopicsFragment";
 
     private MainActivity mParentActivity;
 
@@ -44,7 +45,7 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private int mCurrentPage = 0;
     private int mCachedPages = 0;
     private ArrayList<TopicModel> mTopicList;
-    private RubyChinaTypes.TOPIC_CATEGORY mCategory;
+    private RubyChinaCategory mCategory;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -56,7 +57,7 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
 
-        Log.d("TopicFragment", "onCreateView");
+        Log.d("TopicsFragment", "onCreateView");
         mParentActivity = (MainActivity) getActivity();
 
         SharedPreferences pref = mParentActivity
@@ -68,9 +69,9 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mParentActivity));
 
         Bundle args = getArguments();
-        mCategory = RubyChinaTypes.TOPIC_CATEGORY.valueOf(args.getInt(RubyChinaConstants.TOPIC_CATEGORY));
+        mCategory = new RubyChinaCategory(args.getInt(RubyChinaConstants.TOPIC_CATEGORY));
 
-        // Save each TopicFragment's mCachedPages instance to different files
+        // Save each TopicsFragment's mCachedPages instance to different files
         mCachedPages = pref.getInt(Integer.toString(mCategory.getValue()) + "mCachedPages", 0);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
@@ -158,11 +159,12 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void requestTopics() {
         mCurrentPage = 0;
-        RubyChinaApiWrapper.getTopics(mCurrentPage, mCategory,
-                new TopicListHttpCallbackListener());
+        mCachedPages = 0;
+        RubyChinaApiWrapper.getTopicsByCategory(mCategory, mCurrentPage, new TopicListHttpCallbackListener());
     }
 
     private void requestMoreTopics() {
+        /*
         ++mCurrentPage;
         RubyChinaApiWrapper.getTopics(mCurrentPage, mCategory,
                 new RubyChinaApiListener<ArrayList<TopicModel>>() {
@@ -194,6 +196,7 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     public void onFailure(String error) {
                     }
                 });
+                */
     }
 
     public void onRefresh() {
@@ -213,5 +216,20 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (!mNoMore) {
             requestMoreTopics();
         }
+    }
+
+    private void requestTopicsByCategory() {
+    }
+
+    private void requestTopicsByUserLogin() {
+
+    }
+
+    private void requestTopicsByNode() {
+
+    }
+
+    private void requestTopicsFavourite() {
+
     }
 }

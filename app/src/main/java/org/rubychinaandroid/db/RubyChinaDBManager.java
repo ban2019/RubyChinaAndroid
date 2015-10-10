@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.RubyChinaTypes;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class RubyChinaDBManager {
         return rubyChinaDBManager;
     }
 
-    public void saveTopic(TopicModel topic, RubyChinaTypes.TOPIC_CATEGORY category, int page) {
+    public void saveTopic(TopicModel topic, RubyChinaCategory category, int page) {
         if (topic != null) {
             ContentValues values = new ContentValues();
             values.put("title", topic.getTitle());
@@ -46,7 +47,7 @@ public class RubyChinaDBManager {
         }
     }
 
-    public List<TopicModel> loadTopics(RubyChinaTypes.TOPIC_CATEGORY category, int page) {
+    public List<TopicModel> loadTopics(RubyChinaCategory category, int page) {
         List<TopicModel> list = new ArrayList<TopicModel>();
         Cursor cursor = db.query("Topic", null, null, null, null, null, null);
 

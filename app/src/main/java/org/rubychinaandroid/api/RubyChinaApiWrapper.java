@@ -12,6 +12,7 @@ import org.rubychinaandroid.model.PostModel;
 import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.model.UserModel;
+import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.RubyChinaTypes;
 import org.rubychinaandroid.utils.Utility;
 
@@ -49,16 +50,32 @@ public class RubyChinaApiWrapper {
     private static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     // Page is zero-based, 20 topics in one page.
-    public static void getTopics(int page, final RubyChinaTypes.TOPIC_CATEGORY category,
+    public static void getTopics(String url, ApiParams params,
                                  final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
 
         final String jsonObjName = "topics";
+        asyncHttpClient.get(url, params,
+                new WrappedTextHttpResponseHandler<>(TopicModel.class, jsonObjName, listener));
+    }
 
-        asyncHttpClient.get(API_TOPICS_URL,
+    public static void getTopicsByCategory(RubyChinaCategory category, int page,
+                                           final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
+        getTopics(API_TOPICS_URL,
                 new ApiParams()
                         .with("type", category.getExpr())
                         .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
-                new WrappedTextHttpResponseHandler<TopicModel>(TopicModel.class, jsonObjName, listener));
+                listener);
+    }
+
+    // Page is zero-based, 20 topics in one page.
+    public static void getUserTopics(int page, String userLogin,
+                                     final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
+
+        getTopics(String.format(API_USER_TOPICS_URL, userLogin),
+                new ApiParams()
+                        .with("login", userLogin)
+                        .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
+                listener);
     }
 
     public static void getPostContent(final String topicId,
@@ -210,17 +227,6 @@ public class RubyChinaApiWrapper {
                 });
     }
 
-    // Page is zero-based, 20 topics in one page.
-    public static void getUserTopics(int page, String userLogin,
-                                     final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
-        String jsonObjName = "topics";
-
-        asyncHttpClient.get(String.format(API_USER_TOPICS_URL, userLogin),
-                new ApiParams()
-                        .with("login", userLogin)
-                        .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
-                new WrappedTextHttpResponseHandler<TopicModel>(TopicModel.class, jsonObjName, listener));
-    }
 
     public static void favouriteTopic(String topicId, final RubyChinaApiListener listener) {
         asyncHttpClient.post(String.format(API_FAVOURITE_TOPIC_URL, topicId), new ApiParams()
