@@ -98,11 +98,6 @@ public class TopicFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return view;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     public class TopicListHttpCallbackListener implements RubyChinaApiListener<ArrayList<TopicModel>> {
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
