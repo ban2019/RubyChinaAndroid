@@ -120,26 +120,45 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public class TopicListHttpCallbackListener implements RubyChinaApiListener<ArrayList<TopicModel>> {
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
-
+            // If it run out of topics, no more topics can be received.
             if (topicModelList.size() == 0) {
                 mNoMore = true;
             }
 
-            // stop refresh anim
+            // Stop refresh anim.
             mSwipeRefreshLayout.setRefreshing(false);
 
-            // clear topic list
-            for (int i = 0; i <= mCachedPages; i++) {
-                RubyChinaDBManager.getInstance(mParentActivity)
-                        .removeOnePageTopics(i, mCategory.getValue());
-            }
+            // Update the displayed topics
             mTopicList.clear();
-
             for (TopicModel topic : topicModelList) {
                 mTopicList.add(topic);
             }
             mRecyclerViewAdapter.notifyDataSetChanged();
 
+            // If getting topics by category, update the db.
+            if (mGetTopicsByWhat == BY_CATEGORY) {
+                updateDB();
+            }
+        }
+
+        @Override
+        public void onFailure(String error) {
+            Utility.showToast("加载话题列表失败");
+            mSwipeRefreshLayout.setRefreshing(false);
+
+            mTopicList.clear();
+            for (TopicModel topic : loadFromDB()) {
+                mTopicList.add(topic);
+            }
+            mRecyclerViewAdapter.notifyDataSetChanged();
+        }
+
+        void updateDB() {
+            // clear topic list
+            for (int i = 0; i <= mCachedPages; i++) {
+                RubyChinaDBManager.getInstance(mParentActivity)
+                        .removeOnePageTopics(i, mCategory.getValue());
+            }
             for (TopicModel topic : mTopicList) {
                 RubyChinaDBManager.getInstance(mParentActivity)
                         .saveTopic(topic, mCategory, mCurrentPage);
@@ -155,22 +174,11 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         }
 
-        @Override
-        public void onFailure(String error) {
-
-            mSwipeRefreshLayout.setRefreshing(false);
-
-            Utility.showToast("加载话题列表失败");
-
+        ArrayList<TopicModel> loadFromDB() {
             ArrayList<TopicModel> cachedTopics = (ArrayList<TopicModel>) RubyChinaDBManager
                     .getInstance(mParentActivity)
                     .loadTopics(mCategory, mCurrentPage);
-
-            mTopicList.clear();
-            for (TopicModel topic : cachedTopics) {
-                mTopicList.add(topic);
-            }
-            mRecyclerViewAdapter.notifyDataSetChanged();
+            return cachedTopics;
         }
     }
 
