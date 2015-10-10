@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import org.rubychinaandroid.fragments.TopicsFragment;
 import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.RubyChinaConstants;
-import org.rubychinaandroid.utils.RubyChinaTypes;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

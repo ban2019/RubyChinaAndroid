@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.RubyChinaCategory;
-import org.rubychinaandroid.utils.RubyChinaTypes;
 
 import java.util.ArrayList;
 import java.util.List;

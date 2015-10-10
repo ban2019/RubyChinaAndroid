@@ -9,4 +9,6 @@ public class RubyChinaConstants {
 
     // File storing favourite topic ids
     public static final String MY_FAVOURITES = "MyFavourites.txt";
+    public static final String USER_LOGIN = "user_login";
+    public static final String NODE = "tab";
 }

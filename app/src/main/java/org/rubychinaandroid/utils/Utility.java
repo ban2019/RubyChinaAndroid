@@ -7,7 +7,6 @@ import android.widget.Toast;
 import org.rubychinaandroid.MyApplication;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

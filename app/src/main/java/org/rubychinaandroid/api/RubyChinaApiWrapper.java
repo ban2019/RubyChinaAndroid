@@ -13,7 +13,6 @@ import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.model.UserModel;
 import org.rubychinaandroid.utils.RubyChinaCategory;
-import org.rubychinaandroid.utils.RubyChinaTypes;
 import org.rubychinaandroid.utils.Utility;
 
 import java.util.ArrayList;
