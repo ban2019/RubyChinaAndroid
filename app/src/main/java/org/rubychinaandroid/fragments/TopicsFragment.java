@@ -38,38 +38,39 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private MainActivity mParentActivity;
 
     RecyclerView mRecyclerView;
-
     HeaderViewRecyclerAdapter mHeaderAdapter;
     TopicItemAdapter mRecyclerViewAdapter;
     private int mCurrentPage = 0;
     private int mCachedPages = 0;
+    private SharedPreferences mPref;
     private ArrayList<TopicModel> mTopicList;
-
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private FootUpdate mFootUpdate = new FootUpdate();
+    // Whether no more topics can be provided.
     private boolean mNoMore = false;
+    // Used to prevent onLoadMore being called again and again when
+    // the selection stays at the end.
+    private boolean isFailToLoadMore = false;
 
-    // These members should be assigned by parameters passed by parent activity, if any.
+    // These member variables should be assigned by parameters passed by parent activity,
+    // and at most one of the three is not null.
     private RubyChinaCategory mCategory;
     private String mUserLogin;
     private String mNode;
-    private SharedPreferences mPref;
 
-
+    private int mGetTopicsByWhat;
     private final int BY_CATEGORY = 0;
     private final int BY_USER = 1;
     private final int BY_NODE = 2;
-    private int mGetTopicsByWhat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
         mParentActivity = (MainActivity) getActivity();
-
-
+        
         // Parse parameters.
         Bundle args = getArguments();
         // There is history only for the topics under some category, none for topics by user,
@@ -79,7 +80,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mCategory = new RubyChinaCategory(value);
         mUserLogin = args.getString(RubyChinaConstants.USER_LOGIN);
         mNode = args.getString(RubyChinaConstants.NODE);
-
+        
         if (value < 0) {
             mPref = mParentActivity.getSharedPreferences(ACTIVITY_NAME, Context.MODE_PRIVATE);
             // Different TopicsFragment's mCachedPages instance is saved in separate files.
@@ -90,10 +91,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         } else if (mNode != null) {
             mGetTopicsByWhat = BY_NODE;
         }
-
-
+        
         mTopicList = new ArrayList<TopicModel>();
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mParentActivity));
         mRecyclerViewAdapter = new TopicItemAdapter(mParentActivity, mTopicList, this);
@@ -120,6 +119,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public class TopicListHttpCallbackListener implements RubyChinaApiListener<ArrayList<TopicModel>> {
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
+
             // If it run out of topics, no more topics can be received.
             if (topicModelList.size() == 0) {
                 mNoMore = true;
@@ -129,7 +129,9 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mSwipeRefreshLayout.setRefreshing(false);
 
             // Update the displayed topics
-            mTopicList.clear();
+            if (mCachedPages > 0) {
+                clearDBByCategory();
+            }
             for (TopicModel topic : topicModelList) {
                 mTopicList.add(topic);
             }
@@ -137,8 +139,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             // If getting topics by category, update the db.
             if (mGetTopicsByWhat == BY_CATEGORY) {
-                updateDB();
+                saveToDBByCategory();
             }
+
+            isFailToLoadMore = false;
         }
 
         @Override
@@ -146,19 +150,14 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             Utility.showToast("加载话题列表失败");
             mSwipeRefreshLayout.setRefreshing(false);
 
-            mTopicList.clear();
-            for (TopicModel topic : loadFromDB()) {
+            for (TopicModel topic : loadFromDBByCategory()) {
                 mTopicList.add(topic);
             }
             mRecyclerViewAdapter.notifyDataSetChanged();
+            isFailToLoadMore = true;
         }
 
-        void updateDB() {
-            // clear topic list
-            for (int i = 0; i <= mCachedPages; i++) {
-                RubyChinaDBManager.getInstance(mParentActivity)
-                        .removeOnePageTopics(i, mCategory.getValue());
-            }
+        private void saveToDBByCategory() {
             for (TopicModel topic : mTopicList) {
                 RubyChinaDBManager.getInstance(mParentActivity)
                         .saveTopic(topic, mCategory, mCurrentPage);
@@ -166,7 +165,6 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             if (mCurrentPage > mCachedPages) {
                 mCachedPages = mCurrentPage;
-
                 SharedPreferences.Editor editor = mParentActivity
                         .getSharedPreferences(ACTIVITY_NAME, Context.MODE_PRIVATE).edit();
                 editor.putInt(Integer.toString(mCategory.getValue()) + "mCachedPages", mCachedPages);
@@ -174,53 +172,25 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         }
 
-        ArrayList<TopicModel> loadFromDB() {
+        private ArrayList<TopicModel> loadFromDBByCategory() {
             ArrayList<TopicModel> cachedTopics = (ArrayList<TopicModel>) RubyChinaDBManager
                     .getInstance(mParentActivity)
                     .loadTopics(mCategory, mCurrentPage);
             return cachedTopics;
         }
+
+        private void clearDBByCategory() {
+            for (int i = 0; i <= mCachedPages; i++) {
+                RubyChinaDBManager.getInstance(mParentActivity)
+                        .removeOnePageTopics(i, mCategory.getValue());
+            }
+            mCachedPages = 0;
+        }
     }
 
-    private void requestMoreTopics() {
-        /*
-        ++mCurrentPage;
-        RubyChinaApiWrapper.getTopics(mCurrentPage, mCategory,
-                new RubyChinaApiListener<ArrayList<TopicModel>>() {
-                    @Override
-                    public void onSuccess(ArrayList<TopicModel> topicModelList) {
-
-                        for (TopicModel topic : topicModelList) {
-                            mTopicList.add(topic);
-                        }
-                        mRecyclerViewAdapter.notifyDataSetChanged();
-
-                        for (TopicModel topic : mTopicList) {
-                            RubyChinaDBManager.getInstance(mParentActivity)
-                                    .saveTopic(topic, mCategory, mCurrentPage);
-                        }
-
-                        if (mCurrentPage > mCachedPages) {
-                            mCachedPages = mCurrentPage;
-
-                            SharedPreferences.Editor editor = mParentActivity
-                                    .getSharedPreferences(ACTIVITY_NAME, Context.MODE_PRIVATE).edit();
-
-                            editor.putInt(Integer.toString(mCategory.getValue()) + "mCachedPages", mCachedPages);
-                            editor.commit();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                    }
-                });
-                */
-    }
-
+    @Override
     public void onRefresh() {
         mNoMore = false;
-
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 // start refresh anim
@@ -232,14 +202,14 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onLoadMore() {
-        if (!mNoMore) {
+        if (!mNoMore && !isFailToLoadMore) {
             requestMoreTopics();
         }
     }
 
     private void requestTopics() {
         mCurrentPage = 0;
-        mCachedPages = 0;
+        mTopicList.clear();
 
         if (mGetTopicsByWhat == BY_CATEGORY) {
             requestTopicsByCategory();
@@ -252,19 +222,22 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         }
     }
 
+    private void requestMoreTopics() {
+        ++mCurrentPage;
+        if (mGetTopicsByWhat == BY_CATEGORY) {
+            requestTopicsByCategory();
+        } else if (mGetTopicsByWhat == BY_USER) {
+        } else if (mGetTopicsByWhat == BY_NODE) {
+        }
+    }
+
     private void requestTopicsByCategory() {
         RubyChinaApiWrapper.getTopicsByCategory(mCategory, mCurrentPage, new TopicListHttpCallbackListener());
     }
-
     private void requestTopicsByUserLogin() {
-
     }
-
     private void requestTopicsByNode() {
-
     }
-
     private void requestTopicsFavourite() {
-
     }
 }
