@@ -31,8 +31,7 @@ import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import java.util.ArrayList;
 
 public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
-
-    private final String ACTIVITY_NAME = "MainActivity";
+    private final String CLASS_NAME = "TopicsFragment";
     private final String LOG_TAG = "TopicsFragment";
 
     private MainActivity mParentActivity;
@@ -70,19 +69,18 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
         mParentActivity = (MainActivity) getActivity();
-        
+
         // Parse parameters.
         Bundle args = getArguments();
         // There is history only for the topics under some category, none for topics by user,
         // so when request user's topics, there is no need to load shared preference.
-        // (Only negative values are valid for category.)
         int value = args.getInt(RubyChinaConstants.TOPIC_CATEGORY);
         mCategory = new RubyChinaCategory(value);
         mUserLogin = args.getString(RubyChinaConstants.USER_LOGIN);
         mNode = args.getString(RubyChinaConstants.NODE);
-        
+
         if (value < 0) {
-            mPref = mParentActivity.getSharedPreferences(ACTIVITY_NAME, Context.MODE_PRIVATE);
+            mPref = mParentActivity.getSharedPreferences(CLASS_NAME, Context.MODE_PRIVATE);
             // Different TopicsFragment's mCachedPages instance is saved in separate files.
             mCachedPages = mPref.getInt(Integer.toString(mCategory.getValue()) + "mCachedPages", 0);
             mGetTopicsByWhat = BY_CATEGORY;
@@ -91,7 +89,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         } else if (mNode != null) {
             mGetTopicsByWhat = BY_NODE;
         }
-        
+
         mTopicList = new ArrayList<TopicModel>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mParentActivity));
@@ -119,7 +117,6 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public class TopicListHttpCallbackListener implements RubyChinaApiListener<ArrayList<TopicModel>> {
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
-
             // If it run out of topics, no more topics can be received.
             if (topicModelList.size() == 0) {
                 mNoMore = true;
@@ -137,8 +134,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
             mRecyclerViewAdapter.notifyDataSetChanged();
 
-            // If getting topics by category, update the db.
             if (mGetTopicsByWhat == BY_CATEGORY) {
+                // Save topicModelList to DB.
                 saveToDBByCategory();
             }
 
@@ -154,6 +151,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mTopicList.add(topic);
             }
             mRecyclerViewAdapter.notifyDataSetChanged();
+
             isFailToLoadMore = true;
         }
 
@@ -166,7 +164,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             if (mCurrentPage > mCachedPages) {
                 mCachedPages = mCurrentPage;
                 SharedPreferences.Editor editor = mParentActivity
-                        .getSharedPreferences(ACTIVITY_NAME, Context.MODE_PRIVATE).edit();
+                        .getSharedPreferences(CLASS_NAME, Context.MODE_PRIVATE).edit();
                 editor.putInt(Integer.toString(mCategory.getValue()) + "mCachedPages", mCachedPages);
                 editor.commit();
             }
