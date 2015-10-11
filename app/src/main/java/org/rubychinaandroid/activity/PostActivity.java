@@ -86,12 +86,14 @@ public class PostActivity extends SwipeBackActivity {
 
         ArrayList<String> topicIds = Utility.readTopicsFromFile(RubyChinaConstants.MY_FAVOURITES);
 
+        final int INDEX_FAVOURITE_MENU_ITEM = 0;
+
         if (topicIds.size() > 0) {
-            Log.d(TAG, topicIds.get(0));
+            Log.d(TAG, topicIds.get(INDEX_FAVOURITE_MENU_ITEM));
         }
 
         if (topicIds.contains(topicId)) {
-            mToolbar.getMenu().getItem(0).setIcon(R.drawable.ic_post_favourite_active);
+            mToolbar.getMenu().getItem(INDEX_FAVOURITE_MENU_ITEM).setIcon(R.drawable.ic_post_favourite_active);
         }
 
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
