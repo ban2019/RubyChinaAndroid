@@ -13,7 +13,7 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.fragments.PostFragment;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
@@ -40,7 +40,7 @@ public class PostActivity extends SwipeBackActivity {
         mToolbar.inflateMenu(R.menu.menu_post);
 
         final Intent intent = getIntent();
-        final String topicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
+        final String topicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
 
         // Set the favourite menu item's state according to history and logging state and
         // set click listener correspondingly.
@@ -51,7 +51,7 @@ public class PostActivity extends SwipeBackActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostActivity.this, ReplyActivity.class);
-                intent.putExtra(RubyChinaConstants.TOPIC_ID, topicId);
+                intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topicId);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             }
@@ -60,7 +60,7 @@ public class PostActivity extends SwipeBackActivity {
         PostFragment postFragment = new PostFragment();
 
         Bundle args = new Bundle();
-        args.putString(RubyChinaConstants.TOPIC_ID, topicId);
+        args.putString(RubyChinaArgKeys.TOPIC_ID, topicId);
         postFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.content, postFragment).commit();
     }
@@ -84,7 +84,7 @@ public class PostActivity extends SwipeBackActivity {
             return;
         }
 
-        ArrayList<String> topicIds = Utility.readTopicsFromFile(RubyChinaConstants.MY_FAVOURITES);
+        ArrayList<String> topicIds = Utility.readTopicsFromFile(RubyChinaArgKeys.MY_FAVOURITES);
 
         final int INDEX_FAVOURITE_MENU_ITEM = 0;
 
@@ -110,7 +110,7 @@ public class PostActivity extends SwipeBackActivity {
                             @Override
                             public void onSuccess(Object data) {
                                 Utility.showToast("已收藏");
-                                Utility.storeTopicsToFile(RubyChinaConstants.MY_FAVOURITES, topicId);
+                                Utility.storeTopicsToFile(RubyChinaArgKeys.MY_FAVOURITES, topicId);
                             }
 
                             @Override

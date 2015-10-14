@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.ReplyFragment;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -24,12 +24,12 @@ public class ReplyActivity extends SwipeBackActivity {
         mToolbar.setTitle("回复");
 
         final Intent intent = getIntent();
-        String topicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
+        String topicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
 
         ReplyFragment replyFragment = new ReplyFragment();
 
         Bundle args = new Bundle();
-        args.putString(RubyChinaConstants.TOPIC_ID, topicId);
+        args.putString(RubyChinaArgKeys.TOPIC_ID, topicId);
         replyFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.reply, replyFragment).commit();
     }

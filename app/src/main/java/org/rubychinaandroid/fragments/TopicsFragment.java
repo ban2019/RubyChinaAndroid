@@ -22,7 +22,7 @@ import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.db.RubyChinaDBManager;
 import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.RubyChinaCategory;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
@@ -67,17 +67,17 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_topic, container, false);
+        View view = inflater.inflate(R.layout.fragment_topics, container, false);
         mParentActivity = (MainActivity) getActivity();
 
         // Parse parameters.
         Bundle args = getArguments();
         // There is history only for the topics under some category, none for topics by user,
         // so when request user's topics, there is no need to load shared preference.
-        int value = args.getInt(RubyChinaConstants.TOPIC_CATEGORY);
+        int value = args.getInt(RubyChinaArgKeys.TOPIC_CATEGORY);
         mCategory = new RubyChinaCategory(value);
-        mUserLogin = args.getString(RubyChinaConstants.USER_LOGIN);
-        mNode = args.getString(RubyChinaConstants.NODE);
+        mUserLogin = args.getString(RubyChinaArgKeys.USER_LOGIN);
+        mNode = args.getString(RubyChinaArgKeys.NODE);
 
         if (value < 0) {
             mPref = mParentActivity.getSharedPreferences(CLASS_NAME, Context.MODE_PRIVATE);

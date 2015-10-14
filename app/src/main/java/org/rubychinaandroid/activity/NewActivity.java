@@ -17,7 +17,7 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.NodeModel;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
@@ -121,7 +121,7 @@ public class NewActivity extends SwipeBackActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewActivity.this, PreviewActivity.class);
-                intent.putExtra(RubyChinaConstants.POST_CONTENT, mContentTextView.getText().toString());
+                intent.putExtra(RubyChinaArgKeys.POST_CONTENT, mContentTextView.getText().toString());
                 startActivity(intent);
             }
         });

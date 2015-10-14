@@ -3,7 +3,7 @@ package org.rubychinaandroid.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 import us.feras.mdv.MarkdownView;
@@ -20,7 +20,7 @@ public class PreviewActivity extends SwipeBackActivity {
         setContentView(markdownView);
 
         Intent intent = getIntent();
-        String content = intent.getStringExtra(RubyChinaConstants.POST_CONTENT);
+        String content = intent.getStringExtra(RubyChinaArgKeys.POST_CONTENT);
         markdownView.loadMarkdown(content);
     }
 }

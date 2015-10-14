@@ -23,7 +23,7 @@ import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.PostModel;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.RichTextView;
 
@@ -87,7 +87,7 @@ public class PostFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         Bundle args = getArguments();
-        mTopicId = args.getString(RubyChinaConstants.TOPIC_ID);
+        mTopicId = args.getString(RubyChinaArgKeys.TOPIC_ID);
 
         Log.d("PostFragment", "onActivityCreated");
 

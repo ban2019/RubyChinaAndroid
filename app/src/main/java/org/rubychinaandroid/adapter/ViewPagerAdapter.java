@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.rubychinaandroid.fragments.TopicsFragment;
 import org.rubychinaandroid.utils.RubyChinaCategory;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -29,7 +29,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         TopicsFragment TopicsFragment = new TopicsFragment();
 
         Bundle args = new Bundle();
-        args.putInt(RubyChinaConstants.TOPIC_CATEGORY, new RubyChinaCategory(position).getValue());
+        args.putInt(RubyChinaArgKeys.TOPIC_CATEGORY, new RubyChinaCategory(position).getValue());
         TopicsFragment.setArguments(args);
 
         return TopicsFragment;

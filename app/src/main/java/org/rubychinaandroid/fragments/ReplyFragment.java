@@ -19,7 +19,7 @@ import org.rubychinaandroid.adapter.ReplyItemAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.ReplyModel;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
@@ -50,7 +50,7 @@ public class ReplyFragment extends Fragment {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         Intent intent = activity.getIntent();
-        mTopicId = intent.getStringExtra(RubyChinaConstants.TOPIC_ID);
+        mTopicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
 
         mReplyInputBox = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
         mReplyInputBox.setTopicId(mTopicId);

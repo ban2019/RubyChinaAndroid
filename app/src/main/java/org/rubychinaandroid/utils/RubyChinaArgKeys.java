@@ -1,7 +1,7 @@
 package org.rubychinaandroid.utils;
 
 
-public class RubyChinaConstants {
+public class RubyChinaArgKeys {
     // Activity Intents
     public static final String POST_CONTENT = "post_content";
     public static final String TOPIC_ID = "topic_id";

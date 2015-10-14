@@ -18,7 +18,7 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.MainActivity;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.model.TopicModel;
-import org.rubychinaandroid.utils.RubyChinaConstants;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
                 MainActivity activity = (MainActivity) mContext;
                 Intent intent = new Intent(activity, PostActivity.class);
                 Log.d("TopicItemAdapter", topic.getTopicId());
-                intent.putExtra(RubyChinaConstants.TOPIC_ID, topic.getTopicId());
+                intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             }
