@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.favourite) {
                             Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
+                            startActivity(intent);
                         }
 
                         mDrawerLayout.closeDrawers();

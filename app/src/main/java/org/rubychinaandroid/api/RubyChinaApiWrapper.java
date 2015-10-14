@@ -27,22 +27,15 @@ public class RubyChinaApiWrapper {
 
     /* API URL */
     private static final String API_BASE_URL = "https://ruby-china.org/api/v3";
-
     private static final String API_TOPICS_URL = API_BASE_URL + "/topics.json";
-
     private static final String API_TOPICS_CONTENT_URL = API_BASE_URL + "/topics/%s.json";
-
     private static final String API_TOPICS_REPLY_URL = API_BASE_URL + "/topics/%s/replies.json";
-
     private static final String API_NODES_URL = API_BASE_URL + "/nodes.json";
-
     private static final String API_HELLO_URL = API_BASE_URL + "/hello.json";
-
     private static final String API_PROFILE_URL = API_BASE_URL + "/users/%s.json";
-
     private static final String API_USER_TOPICS_URL = API_BASE_URL + "/users/%s/topics.json";
-
     private static final String API_FAVOURITE_TOPIC_URL = API_BASE_URL + "/topics/%s/favorite.json";
+    private static final String API_USER_FAVOURITE_TOPICS_URL = API_BASE_URL + "/users/%s/favorites.json";
 
     public static final String LOG_TAG = "RubyChinaApiWrapper";
 
@@ -67,10 +60,19 @@ public class RubyChinaApiWrapper {
     }
 
     // Page is zero-based, 20 topics in one page.
-    public static void getUserTopics(int page, String userLogin,
+    public static void getUserTopics(String userLogin, int page,
                                      final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
 
         getTopics(String.format(API_USER_TOPICS_URL, userLogin),
+                new ApiParams()
+                        .with("login", userLogin)
+                        .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
+                listener);
+    }
+
+    public static void getFavouriteTopics(String userLogin, int page,
+                                          final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
+        getTopics(String.format(API_USER_FAVOURITE_TOPICS_URL, userLogin),
                 new ApiParams()
                         .with("login", userLogin)
                         .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),

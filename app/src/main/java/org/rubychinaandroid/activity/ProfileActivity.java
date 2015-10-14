@@ -27,6 +27,7 @@ public class ProfileActivity extends SwipeBackActivity {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString(RubyChinaArgKeys.USER_LOGIN, OAuthManager.getInstance().getUserLogin());
+        bundle.putBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY, false);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }

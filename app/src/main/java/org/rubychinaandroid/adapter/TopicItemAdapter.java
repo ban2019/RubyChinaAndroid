@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.activity.FavouriteActivity;
 import org.rubychinaandroid.activity.MainActivity;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.activity.ProfileActivity;
@@ -23,6 +24,8 @@ import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 
 import java.util.ArrayList;
+
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.ViewHolder> {
     private String TAG = "TopicItemAdapter";
@@ -46,17 +49,12 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         final TopicModel topic = mTopicList.get(position);
-
         /* 1. load title */
         holder.title.setText(topic.getTitle());
-
         Log.d(TAG, topic.getTitle());
-
         /* 2. load author and publish time */
         holder.time.setText(topic.getDetail());
-
         /* 3. load avatar */
         String userAvatarUrl = topic.getUserAvatarUrl();
         ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar, MyApplication.imageLoaderOptions);
@@ -65,24 +63,28 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
             @Override
             public void onClick(View v) {
                 assert (mContext instanceof MainActivity ||
-                        mContext instanceof ProfileActivity);
+                        mContext instanceof ProfileActivity ||
+                        mContext instanceof FavouriteActivity);
 
                 Intent intent;
                 MainActivity mainActivity;
-                ProfileActivity profileActivity;
+                SwipeBackActivity swipeActivity;
                 if (mContext instanceof MainActivity) {
                     mainActivity = (MainActivity) mContext;
                     intent = new Intent(mainActivity, PostActivity.class);
                     intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
                     mainActivity.startActivity(intent);
                     mainActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-                } else if (mContext instanceof ProfileActivity) {
-                    profileActivity = (ProfileActivity) mContext;
-                    intent = new Intent(profileActivity, PostActivity.class);
-                    intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
-                    profileActivity.startActivity(intent);
-                    profileActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else {
+                    if (mContext instanceof ProfileActivity) {
+                        swipeActivity = (ProfileActivity) mContext;
+                    } else {
+                        swipeActivity = (FavouriteActivity) mContext;
+                    }
+                    intent = new Intent(swipeActivity, PostActivity.class);
+                    intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
+                    swipeActivity.startActivity(intent);
+                    swipeActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 }
             }
         });
