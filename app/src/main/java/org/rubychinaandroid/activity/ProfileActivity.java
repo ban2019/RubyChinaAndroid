@@ -42,9 +42,10 @@ public class ProfileActivity extends SwipeBackActivity {
         mToolbar.setTitle("用户资料");
 
         ProfileFragment fragment = new ProfileFragment();
-        //Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
         //bundle.putString(RubyChinaArgKeys.USER_LOGIN, OAuthManager.getInstance().getUserLogin());
-        //fragment.setArguments(bundle);
+        bundle.putString(RubyChinaArgKeys.USER_LOGIN, "juanito");
+        fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 }

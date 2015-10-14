@@ -29,7 +29,7 @@ import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 
 import java.util.ArrayList;
 
-public class ProfileFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
+public class ProfileFragment extends TopicsFragment/* implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener*/ {
     private String TAG = "ProfileFragment";
 
     private View mProfileHeaderView;
@@ -38,22 +38,23 @@ public class ProfileFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView mEmail;
 
     private View mTopicsRootView;
-    private ArrayList<TopicModel> mUserTopics;
-    private RecyclerView mRecyclerView;
-    private TopicItemAdapter mRecyclerViewAdapter;
+    //private ArrayList<TopicModel> mUserTopics;
+    //private RecyclerView mRecyclerView;
+    //private TopicItemAdapter mRecyclerViewAdapter;
     private HeaderViewRecyclerAdapter mHeaderAdapter;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    //private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private String mUserLogin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        mTopicsRootView = inflater.inflate(R.layout.fragment_topics, container, false);
-        //mTopicsRootView = super.onCreateView(inflater, container, savedInstanceState);
-        mRecyclerView = (RecyclerView) mTopicsRootView.findViewById(R.id.recycler_view);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) mTopicsRootView.findViewById(R.id.swipe_refresh);
+        //mTopicsRootView = inflater.inflate(R.layout.fragment_topics, container, false);
+        mTopicsRootView = super.onCreateView(inflater, container, savedInstanceState);
+
+        //mRecyclerView = (RecyclerView) mTopicsRootView.findViewById(R.id.recycler_view);
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) mTopicsRootView.findViewById(R.id.swipe_refresh);
 
         // Set header's height according to ratio.
         mProfileHeaderView = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -85,19 +86,20 @@ public class ProfileFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         });
 
-        mUserTopics = new ArrayList<TopicModel>();
+        //mUserTopics = new ArrayList<TopicModel>();
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerViewAdapter = new TopicItemAdapter(getActivity().getApplicationContext(), mUserTopics, this);
+        //mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //mRecyclerViewAdapter = new TopicItemAdapter(getActivity().getApplicationContext(), mUserTopics, this);
         mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
         mHeaderAdapter.addHeaderView(mProfileHeaderView);
         mRecyclerView.setAdapter(mHeaderAdapter);
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        //mSwipeRefreshLayout.setOnRefreshListener(this);
 
         return mTopicsRootView;
     }
 
+    /*
     @Override
     public void onLoadMore() {
     }
@@ -129,5 +131,5 @@ public class ProfileFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 });
             }
         }, 500);
-    }
+    }*/
 }
