@@ -18,14 +18,13 @@ import android.view.ViewGroup;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.MainActivity;
-import org.rubychinaandroid.activity.ProfileActivity;
 import org.rubychinaandroid.adapter.TopicItemAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.db.RubyChinaDBManager;
 import org.rubychinaandroid.model.TopicModel;
-import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
+import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
