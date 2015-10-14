@@ -17,6 +17,7 @@ import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.MainActivity;
 import org.rubychinaandroid.activity.PostActivity;
+import org.rubychinaandroid.activity.ProfileActivity;
 import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
@@ -63,13 +64,26 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                assert (mContext instanceof MainActivity);
-                MainActivity activity = (MainActivity) mContext;
-                Intent intent = new Intent(activity, PostActivity.class);
-                Log.d("TopicItemAdapter", topic.getTopicId());
-                intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                assert (mContext instanceof MainActivity ||
+                        mContext instanceof ProfileActivity);
+
+                Intent intent;
+                MainActivity mainActivity;
+                ProfileActivity profileActivity;
+                if (mContext instanceof MainActivity) {
+                    mainActivity = (MainActivity) mContext;
+                    intent = new Intent(mainActivity, PostActivity.class);
+                    intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
+                    mainActivity.startActivity(intent);
+                    mainActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                } else if (mContext instanceof ProfileActivity) {
+                    profileActivity = (ProfileActivity) mContext;
+                    intent = new Intent(profileActivity, PostActivity.class);
+                    intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
+                    profileActivity.startActivity(intent);
+                    profileActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                } else {
+                }
             }
         });
 
