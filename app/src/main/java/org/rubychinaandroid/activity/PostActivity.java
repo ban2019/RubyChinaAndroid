@@ -70,7 +70,6 @@ public class PostActivity extends SwipeBackActivity {
     }
 
     private void configMenuItem(final String topicId) {
-
         if (!OAuthManager.getLoggedInState()) {
             mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override

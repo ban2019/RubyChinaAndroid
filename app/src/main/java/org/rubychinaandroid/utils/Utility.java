@@ -137,7 +137,7 @@ public class Utility {
                                 storeTopicsToFile(RubyChinaArgKeys.MY_FAVOURITES, data.get(i).getTopicId());
                             }
 
-                            updateFavouriteRecord();
+                            favouriteHelper();
                         }
 
                         @Override
@@ -154,6 +154,11 @@ public class Utility {
 
     private static int page = 0;
     public static void updateFavouriteRecord() {
+        deleteFile(RubyChinaArgKeys.MY_FAVOURITES);
+        favouriteHelper();
+    }
+
+    private static void favouriteHelper() {
         new Thread(new Runnable() {
             @Override
             public void run() {

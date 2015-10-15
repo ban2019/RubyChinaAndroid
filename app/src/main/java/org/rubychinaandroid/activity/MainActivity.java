@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         configDrawer();
-        deleteFile(RubyChinaArgKeys.MY_FAVOURITES);
         Utility.updateFavouriteRecord();
     }
 
