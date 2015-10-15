@@ -2,6 +2,7 @@ package org.rubychinaandroid.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +24,7 @@ import org.rubychinaandroid.adapter.ViewPagerAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.UserModel;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.SlidingTabLayout;
@@ -74,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         // Assigning ViewPager View and setting the adapter
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
-
         // cache pages
         mPager.setOffscreenPageLimit(3);
 
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
         mTabs.setDistributeEvenly(true);
-
         // Setting Custom Color for the Scroll bar indicator of the Tab View
         mTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 return getResources().getColor(R.color.tabsScrollColor);
             }
         });
-
         mTabs.setViewPager(mPager);
 
         mAddButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
@@ -104,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         configDrawer();
+        deleteFile(RubyChinaArgKeys.MY_FAVOURITES);
+        Utility.updateFavouriteRecord();
     }
 
     public FloatingActionButton getFloatingActionButton() {

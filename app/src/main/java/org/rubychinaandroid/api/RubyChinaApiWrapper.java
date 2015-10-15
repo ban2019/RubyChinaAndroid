@@ -35,6 +35,7 @@ public class RubyChinaApiWrapper {
     private static final String API_PROFILE_URL = API_BASE_URL + "/users/%s.json";
     private static final String API_USER_TOPICS_URL = API_BASE_URL + "/users/%s/topics.json";
     private static final String API_FAVOURITE_TOPIC_URL = API_BASE_URL + "/topics/%s/favorite.json";
+    private static final String API_UNFAVOURITE_TOPIC_URL = API_BASE_URL + "/topics/%s/unfavorite.json";
     private static final String API_USER_FAVOURITE_TOPICS_URL = API_BASE_URL + "/users/%s/favorites.json";
 
     public static final String LOG_TAG = "RubyChinaApiWrapper";
@@ -231,6 +232,25 @@ public class RubyChinaApiWrapper {
 
     public static void favouriteTopic(String topicId, final RubyChinaApiListener listener) {
         asyncHttpClient.post(String.format(API_FAVOURITE_TOPIC_URL, topicId), new ApiParams()
+                        .with("id", topicId)
+                        .withToken(),
+                new TextHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String rawResponse) {
+                        listener.onSuccess(null);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String rawResponse, Throwable throwable) {
+                        Log.d("code:", Integer.toString(statusCode));
+                        Log.d("info:", rawResponse);
+                        listener.onFailure(rawResponse);
+                    }
+                });
+    }
+
+    public static void unFavouriteTopic(String topicId, final RubyChinaApiListener listener) {
+        asyncHttpClient.post(String.format(API_UNFAVOURITE_TOPIC_URL, topicId), new ApiParams()
                         .with("id", topicId)
                         .withToken(),
                 new TextHttpResponseHandler() {
