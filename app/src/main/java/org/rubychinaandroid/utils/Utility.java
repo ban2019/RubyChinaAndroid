@@ -122,41 +122,44 @@ public class Utility {
         return MyApplication.getInstance().deleteFile(fileName);
     }
 
-    private static final int PAGE = -1;
-    private static Handler mHandler = new Handler() {
+    private static class FavouriteHandler extends Handler {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case PAGE:
-                    assert(OAuthManager.getInstance().getLoggedInState());
+                    assert (OAuthManager.getInstance().getLoggedInState());
                     RubyChinaApiWrapper.getFavouriteTopics(OAuthManager.getInstance().getUserLogin(),
                             msg.arg1, new RubyChinaApiListener<ArrayList<TopicModel>>() {
-                        @Override
-                        public void onSuccess(ArrayList<TopicModel> data) {
-                            Log.d(LOG_TAG, Integer.toString(data.size()));
-                            for (int i = 0; i < data.size(); i++) {
-                                storeTopicsToFile(RubyChinaArgKeys.MY_FAVOURITES, data.get(i).getTopicId());
-                            }
+                                @Override
+                                public void onSuccess(ArrayList<TopicModel> data) {
+                                    Log.d(LOG_TAG, Integer.toString(data.size()));
+                                    for (int i = 0; i < data.size(); i++) {
+                                        storeTopicsToFile(RubyChinaArgKeys.MY_FAVOURITES, data.get(i).getTopicId());
+                                    }
 
-                            favouriteHelper();
-                        }
+                                    favouriteHelper();
+                                }
 
-                        @Override
-                        public void onFailure(String data) {
-                            ArrayList<String> list = readTopicsFromFile(RubyChinaArgKeys.MY_FAVOURITES);
-                        }
-                    });
+                                @Override
+                                public void onFailure(String data) {
+                                    ArrayList<String> list = readTopicsFromFile(RubyChinaArgKeys.MY_FAVOURITES);
+                                }
+                            });
                     break;
                 default:
                     break;
             }
         }
-    };
+    }
 
-    private static int page = 0;
+    private static final int PAGE = -1;
+    private static Handler mHandler = new FavouriteHandler();
+
     public static void updateFavouriteRecord() {
         deleteFile(RubyChinaArgKeys.MY_FAVOURITES);
         favouriteHelper();
     }
+
+    private static int page = 0;
 
     private static void favouriteHelper() {
         new Thread(new Runnable() {
