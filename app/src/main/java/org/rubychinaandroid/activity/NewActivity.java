@@ -123,6 +123,7 @@ public class NewActivity extends SwipeBackActivity {
                 Intent intent = new Intent(NewActivity.this, PreviewActivity.class);
                 intent.putExtra(RubyChinaArgKeys.POST_CONTENT, mContentTextView.getText().toString());
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             }
         });
 

@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                         if (menuItem.getItemId() == R.id.favourite) {
                             Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
                             startActivity(intent);
+                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                         }
 
                         mDrawerLayout.closeDrawers();
