@@ -16,4 +16,6 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="favorite">收藏</string>
     <string name="title_activity_favourite">FavouriteActivity</string>
+    <string name="preview">预览</string>
+    <string name="publish">发布</string>
 </resources>

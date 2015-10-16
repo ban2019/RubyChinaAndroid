@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,9 +35,6 @@ public class NewActivity extends SwipeBackActivity {
 
     private TextView mTitleTextView;
     private TextView mContentTextView;
-
-    private Button mPublishButton;
-    private Button mPreviewButton;
 
     private Toolbar mToolbar;
 
@@ -69,32 +67,36 @@ public class NewActivity extends SwipeBackActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("发表新帖");
-
-        mTitleTextView = (TextView) findViewById(R.id.title);
-        mContentTextView = (TextView) findViewById(R.id.content);
-
-        mPublishButton = (Button) findViewById(R.id.publish);
-        mPublishButton.setOnClickListener(new View.OnClickListener() {
+        mToolbar.inflateMenu(R.menu.menu_new);
+        mToolbar.getMenu().getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                mPublishButton.setEnabled(false);
+            public boolean onMenuItemClick(MenuItem item) {
 
+                Intent intent = new Intent(NewActivity.this, PreviewActivity.class);
+                intent.putExtra(RubyChinaArgKeys.POST_CONTENT, mContentTextView.getText().toString());
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+
+                return false;
+            }
+        });
+
+        mToolbar.getMenu().getItem(1).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
                 if (!OAuthManager.getInstance().getLoggedInState()) {
                     Utility.showToast("还没有在主页面登录哦");
-                    mPublishButton.setEnabled(true);
-                    return;
+                    return false;
                 }
 
                 if ("".equals(mTitleTextView.getText().toString())) {
                     Utility.showToast("不要忘记加标题哦");
-                    mPublishButton.setEnabled(true);
-                    return;
+                    return false;
                 }
 
                 if ("".equals(mContentTextView.getText().toString())) {
                     Utility.showToast("还没有写正文哦");
-                    mPublishButton.setEnabled(true);
-                    return;
+                    return false;
                 }
 
                 RubyChinaApiWrapper.publishPost(mTitleTextView.getText().toString(),
@@ -110,29 +112,21 @@ public class NewActivity extends SwipeBackActivity {
                             @Override
                             public void onFailure(String error) {
                                 Utility.showToast("发表失败");
-                                mPublishButton.setEnabled(true);
                             }
                         });
+
+                return false;
             }
         });
 
-        mPreviewButton = (Button) findViewById(R.id.preview);
-        mPreviewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(NewActivity.this, PreviewActivity.class);
-                intent.putExtra(RubyChinaArgKeys.POST_CONTENT, mContentTextView.getText().toString());
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-            }
-        });
+        mTitleTextView = (TextView) findViewById(R.id.title);
+        mContentTextView = (TextView) findViewById(R.id.content);
 
         boolean updateNodes = false;
         if (updateNodes) {
             RubyChinaApiWrapper.getAllNodes(new RubyChinaApiListener<ArrayList<NodeModel>>() {
                 @Override
                 public void onSuccess(ArrayList<NodeModel> data) {
-
                     for (int i = 0; i < data.size(); i++) {
                         NodeModel node = data.get(i);
                         Log.d(LOG_TAG, node.getId());
@@ -156,16 +150,19 @@ public class NewActivity extends SwipeBackActivity {
         adapter.setDropDownViewResource(R.layout.node_spinner);
         mNodesSpinner.setAdapter(adapter);
 
-        mNodesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSelectedNodeId = mNodeIdCache[position];
-            }
+        mNodesSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                               long id) {
+                        mSelectedNodeId = mNodeIdCache[position];
+                    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
+                    }
+                }
+        );
     }
 }
