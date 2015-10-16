@@ -17,26 +17,37 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import java.io.File;
 
 public class MyApplication extends Application {
-
-    public static MyApplication gAppContext;
     private String LOG_TAG = "MyApplication";
-
-    /* ImageLoader and options for avatar loading in getView() */
-    public static DisplayImageOptions imageLoaderOptions = new DisplayImageOptions.Builder()
-            .showImageOnFail(R.drawable.avatar_doge_mm)
-            .imageScaleType(ImageScaleType.EXACTLY)
-            .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565)
-            .displayer(new RoundedBitmapDisplayer(10))
-            .build();
+    private static MyApplication mContext;
+    private DisplayImageOptions mImageLoaderOptions;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = (MyApplication) getApplicationContext();
+        initImageLoader();
+    }
 
-        gAppContext = (MyApplication) getApplicationContext();
+    public static MyApplication getInstance() {
+        return mContext;
+    }
+
+    public int getMemorySize() {
+        final ActivityManager mgr = (ActivityManager) getApplicationContext().
+                getSystemService(Activity.ACTIVITY_SERVICE);
+        return mgr.getMemoryClass();
+    }
+
+    private void initImageLoader() {
+        /* ImageLoader and options for avatar loading in getView() */
+        mImageLoaderOptions = new DisplayImageOptions.Builder()
+                .showImageOnFail(R.drawable.avatar_default)
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565)
+                .displayer(new RoundedBitmapDisplayer(10))
+                .build();
 
         File cacheDir = StorageUtils.getOwnCacheDirectory(getApplicationContext(), "Pictures/rubychina");
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .threadPoolSize(3)
                 .memoryCache(new WeakMemoryCache())
@@ -48,13 +59,7 @@ public class MyApplication extends Application {
         ImageLoader.getInstance().init(config);
     }
 
-    public static MyApplication getInstance() {
-        return gAppContext;
-    }
-
-    public int getMemorySize() {
-        final ActivityManager mgr = (ActivityManager) getApplicationContext().
-                getSystemService(Activity.ACTIVITY_SERVICE);
-        return mgr.getMemoryClass();
+    public DisplayImageOptions getImageLoaderOptions() {
+        return mImageLoaderOptions;
     }
 }

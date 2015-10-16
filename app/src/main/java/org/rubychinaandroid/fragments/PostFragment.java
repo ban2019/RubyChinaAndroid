@@ -122,16 +122,14 @@ public class PostFragment extends Fragment {
                 Log.d("Post", "Image to be loaded: " + data.getTopic().getUserAvatarUrl());
 
                 ImageLoader.getInstance().displayImage(data.getTopic().getUserAvatarUrl(),
-                        mAvatar, MyApplication.imageLoaderOptions);
+                        mAvatar, MyApplication.getInstance().getImageLoaderOptions());
 
                 Log.d("Post", "Image has been loaded: " + data.getTopic().getUserAvatarUrl());
 
                 String author = data.getTopic().getUserName();
                 author = ("".equals(author) ? data.getTopic().getUserLogin() : author);
                 mAuthor.setText(author);
-
                 mTime.setText(data.getTopic().getCreatedTime());
-
                 mNode.setText(data.getTopic().getNodeName());
             }
 

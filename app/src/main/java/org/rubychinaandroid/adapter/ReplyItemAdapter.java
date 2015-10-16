@@ -47,7 +47,8 @@ public class ReplyItemAdapter extends RecyclerView.Adapter<ReplyItemAdapter.View
         holder.time.setText(reply.getCreatedTime());
 
         String userAvatarUrl = reply.getUserAvatarUrl();
-        ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar, MyApplication.imageLoaderOptions);
+        ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar,
+                MyApplication.getInstance().getImageLoaderOptions());
 
         final int floor = position + 1;
         holder.content.setOnClickListener(new View.OnClickListener() {

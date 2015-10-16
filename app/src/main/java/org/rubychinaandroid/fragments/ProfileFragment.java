@@ -58,7 +58,8 @@ public class ProfileFragment extends TopicsFragment {
             public void onSuccess(UserModel data) {
                 mUsername.setText(data.getName());
                 mEmail.setText(data.getEmail());
-                ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mAvatar, MyApplication.imageLoaderOptions);
+                ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mAvatar,
+                        MyApplication.getInstance().getImageLoaderOptions());
             }
 
             @Override

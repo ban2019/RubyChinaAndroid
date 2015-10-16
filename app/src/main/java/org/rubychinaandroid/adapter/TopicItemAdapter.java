@@ -57,7 +57,8 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
         holder.time.setText(topic.getDetail());
         /* 3. load avatar */
         String userAvatarUrl = topic.getUserAvatarUrl();
-        ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar, MyApplication.imageLoaderOptions);
+        ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar,
+                MyApplication.getInstance().getImageLoaderOptions());
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

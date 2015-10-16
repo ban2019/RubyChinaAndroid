@@ -147,7 +147,7 @@ public class NewActivity extends SwipeBackActivity {
         final int DEFAULT_NODE_INDEX = 1;
         mSelectedNodeId = mNodeIdCache[DEFAULT_NODE_INDEX];
 
-        mContext = MyApplication.gAppContext;
+        mContext = MyApplication.getInstance();
 
         mNodesSpinner = (Spinner) findViewById(R.id.node_spinner);
 

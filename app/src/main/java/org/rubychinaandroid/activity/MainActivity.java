@@ -131,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
                             // Update the drawer.
                             mDrawerUsername.setText(data.getName());
-                            ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar, MyApplication.imageLoaderOptions);
+                            ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar,
+                                    MyApplication.getInstance().getImageLoaderOptions());
                             Log.d(LOG_TAG, data.getUserLogin());
                         }
 
@@ -170,7 +171,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UserModel data) {
                     mDrawerUsername.setText(data.getName());
-                    ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar, MyApplication.imageLoaderOptions);
+                    ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar,
+                            MyApplication.getInstance().getImageLoaderOptions());
                 }
 
                 @Override

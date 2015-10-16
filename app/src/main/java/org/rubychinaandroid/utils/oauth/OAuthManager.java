@@ -27,9 +27,9 @@ public class OAuthManager {
 
     private OAuthManager() {
         Log.d(TAG, "construct");
-        mEditor = MyApplication.gAppContext
+        mEditor = MyApplication.getInstance()
                 .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
-        mPref = MyApplication.gAppContext
+        mPref = MyApplication.getInstance()
                 .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
     }
 
@@ -43,7 +43,7 @@ public class OAuthManager {
     public static synchronized SharedPreferences.Editor getEditor() {
         Log.d(TAG, "getEditor()");
         if (mEditor == null) {
-            mEditor = MyApplication.gAppContext
+            mEditor = MyApplication.getInstance()
                     .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
         }
         return mEditor;

@@ -73,7 +73,7 @@ public class Utility {
 
     public static void showToast(String msg) {
         if (toast == null) {
-            toast = Toast.makeText(MyApplication.gAppContext, msg, Toast.LENGTH_SHORT);
+            toast = Toast.makeText(MyApplication.getInstance(), msg, Toast.LENGTH_SHORT);
             Log.d(LOG_TAG, "toast is null");
         } else {
             toast.setText(msg);
