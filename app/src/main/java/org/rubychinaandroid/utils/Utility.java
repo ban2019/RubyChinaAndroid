@@ -122,11 +122,16 @@ public class Utility {
         return MyApplication.getInstance().deleteFile(fileName);
     }
 
+    private static final int PAGE = -1;
     private static class FavouriteHandler extends Handler {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case PAGE:
-                    assert (OAuthManager.getInstance().getLoggedInState());
+                    //assert (OAuthManager.getInstance().getLoggedInState());
+                    if (!OAuthManager.getInstance().getLoggedInState()) {
+                        Log.d(LOG_TAG, "have not logged in");
+                        return;
+                    }
                     RubyChinaApiWrapper.getFavouriteTopics(OAuthManager.getInstance().getUserLogin(),
                             msg.arg1, new RubyChinaApiListener<ArrayList<TopicModel>>() {
                                 @Override
@@ -141,7 +146,7 @@ public class Utility {
 
                                 @Override
                                 public void onFailure(String data) {
-                                    ArrayList<String> list = readTopicsFromFile(RubyChinaArgKeys.MY_FAVOURITES);
+                                    Log.d(LOG_TAG, data);
                                 }
                             });
                     break;
@@ -150,8 +155,6 @@ public class Utility {
             }
         }
     }
-
-    private static final int PAGE = -1;
     private static Handler mHandler = new FavouriteHandler();
 
     public static void updateFavouriteRecord() {
@@ -160,7 +163,6 @@ public class Utility {
     }
 
     private static int page = 0;
-
     private static void favouriteHelper() {
         new Thread(new Runnable() {
             @Override

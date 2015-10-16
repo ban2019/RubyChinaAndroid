@@ -58,7 +58,6 @@ public class PostActivity extends SwipeBackActivity {
         });
 
         PostFragment postFragment = new PostFragment();
-
         Bundle args = new Bundle();
         args.putString(RubyChinaArgKeys.TOPIC_ID, topicId);
         postFragment.setArguments(args);
