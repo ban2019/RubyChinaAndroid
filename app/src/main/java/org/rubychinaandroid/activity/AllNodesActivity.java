@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 
 import org.rubychinaandroid.R;
@@ -17,6 +18,7 @@ import org.rubychinaandroid.view.AllNodesAdapter;
 import org.rubychinaandroid.view.IndexableRecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -26,19 +28,21 @@ public class AllNodesActivity extends SwipeBackActivity implements RubyChinaApiL
     RecyclerView.LayoutManager mLayoutManager;
     AllNodesAdapter mNodeAdapter;
     SwipeRefreshLayout mSwipeLayout;
+    List<NodeModel> mNodes = new ArrayList<NodeModel>();
+    boolean mIsAdapterSet = false;
+    Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_nodes);
 
-        final Context context = this;
-        mNodeAdapter = new AllNodesAdapter(context);
-        mRecyclerView = (IndexableRecyclerView) findViewById(R.id.grid_all_node);
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle("所有节点");
 
+        mRecyclerView = (IndexableRecyclerView) findViewById(R.id.grid_all_node);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        //mRecyclerView.setAdapter(mNodeAdapter);
         mRecyclerView.setFastScrollEnabled(true);
 
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
@@ -61,21 +65,25 @@ public class AllNodesActivity extends SwipeBackActivity implements RubyChinaApiL
 
     @Override
     public void onSuccess(ArrayList<NodeModel> data) {
-        mNodeAdapter.update(data);
         mSwipeLayout.setRefreshing(false);
-        mRecyclerView.setAdapter(mNodeAdapter);
-        mLayoutManager.scrollToPosition(0);
+        mNodes.clear();
+        mNodes.addAll(data);
+
+        mNodeAdapter = new AllNodesAdapter(this, mNodes);
+        mNodeAdapter.update(data);
+        if (!mIsAdapterSet) {
+            mRecyclerView.setAdapter(mNodeAdapter);
+            mIsAdapterSet = true;
+        }
     }
 
     @Override
     public void onFailure(String error) {
         mSwipeLayout.setRefreshing(false);
-        //MessageUtils.showErrorMessage(getActivity(), error);
         Utility.showToast(error);
     }
 
     private void requestNode(boolean refresh) {
-        //V2EXManager.getAllNodes(getActivity(), refresh, this);
         RubyChinaApiWrapper.getAllNodes(this);
     }
 }

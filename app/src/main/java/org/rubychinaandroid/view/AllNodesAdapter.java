@@ -35,13 +35,15 @@ import java.util.TreeSet;
  */
 public class AllNodesAdapter extends RecyclerView.Adapter<AllNodesAdapter.ViewHolder> implements SectionIndexer {
     Context mContext;
-    List<NodeModel> mNodes = new ArrayList<NodeModel>();
+
     HashMap<String, Integer> mAlphaPosition = new HashMap<String, Integer>();
     String mSections = "";
     TreeSet<String> mSectionSet = new TreeSet<>();
+    List<NodeModel> mNodes;
 
-    public AllNodesAdapter(Context context) {
+    public AllNodesAdapter(Context context, List<NodeModel> nodes) {
         mContext = context;
+        mNodes = nodes;
     }
 
     public HashMap<String, Integer> getAlphaPosition() {
@@ -61,20 +63,16 @@ public class AllNodesAdapter extends RecyclerView.Adapter<AllNodesAdapter.ViewHo
         viewHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, PostActivity.class);
+                Intent intent = new Intent(mContext, NodeActivity.class);
                 intent.putExtra("model", (Parcelable) node);
                 mContext.startActivity(intent);
             }
         });
 
         viewHolder.title.setText(node.getName());
-        if (false /*node.header != null*/) {
-            viewHolder.header.setVisibility(View.VISIBLE);
-            //viewHolder.header.setText(Html.fromHtml(node.header));
-        } else {
-            viewHolder.header.setVisibility(View.GONE);
-        }
-        viewHolder.topics.setText("0" + " 个主题");
+        viewHolder.header.setVisibility(View.VISIBLE);
+        viewHolder.header.setText(Html.fromHtml(node.getSummary()));
+        viewHolder.topics.setText(node.getTopicsCount() + " 个主题");
     }
 
     @Override
