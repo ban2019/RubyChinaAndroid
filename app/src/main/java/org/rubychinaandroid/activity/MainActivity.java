@@ -209,10 +209,13 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                        } else if (menuItem.getItemId() == R.id.all_nodes) {
+                            Intent intent = new Intent(MainActivity.this, AllNodesActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                         }
 
                         mDrawerLayout.closeDrawers();
-
                         return true;
                     }
                 });
