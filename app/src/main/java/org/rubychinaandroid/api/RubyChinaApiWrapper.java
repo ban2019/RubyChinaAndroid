@@ -87,11 +87,26 @@ public class RubyChinaApiWrapper {
         asyncHttpClient.get(urlString, new TextHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, final String responseBody) {
-                try {
-                    listener.onSuccess(Utility.parseFromNodeEntry(responseBody, null));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                new AsyncTask<Void, Void, ArrayList<TopicModel>>() {
+                    @Override
+                    protected ArrayList<TopicModel> doInBackground(Void... params) {
+                        try {
+                            //listener.onSuccess(Utility.parseFromNodeEntry(responseBody, null));
+                            return Utility.parseFromNodeEntry(responseBody, null);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+                    @Override
+                    protected void onPostExecute(ArrayList<TopicModel> topics) {
+                        if (topics != null) {
+                            SafeHandler.onSuccess(listener, topics);
+                        } else {
+                            SafeHandler.onFailure(listener, "topics is null");
+                        }
+                    }
+                }.execute();
             }
 
             @Override
