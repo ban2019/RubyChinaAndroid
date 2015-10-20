@@ -20,7 +20,7 @@
         android:padding="5dp">
 
         <ImageView
-            android:id="@+id/image_view"
+            android:id="@+id/avatar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -39,7 +39,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/topic_text_view"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
@@ -48,7 +48,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/created_time_text_view"
+                android:id="@+id/created_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"

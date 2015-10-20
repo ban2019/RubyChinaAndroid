@@ -25,6 +25,22 @@ public class NodeModel extends BaseModel {
         return summary;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTopicsCount(int count) {
+        this.topicsCount = count;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
 
     public void parse(JSONObject jsonObject) {
         try {

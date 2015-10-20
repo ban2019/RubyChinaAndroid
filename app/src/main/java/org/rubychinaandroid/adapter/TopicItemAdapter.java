@@ -17,6 +17,7 @@ import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.FavouriteActivity;
 import org.rubychinaandroid.activity.MainActivity;
+import org.rubychinaandroid.activity.NodeActivity;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.activity.ProfileActivity;
 import org.rubychinaandroid.model.TopicModel;
@@ -52,7 +53,6 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
         final TopicModel topic = mTopicList.get(position);
         /* 1. load title */
         holder.title.setText(topic.getTitle());
-        Log.d(TAG, topic.getTitle());
         /* 2. load author and publish time */
         holder.time.setText(topic.getDetail());
         /* 3. load avatar */
@@ -79,8 +79,12 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
                 } else {
                     if (mContext instanceof ProfileActivity) {
                         swipeActivity = (ProfileActivity) mContext;
-                    } else {
+                    } else if (mContext instanceof FavouriteActivity){
                         swipeActivity = (FavouriteActivity) mContext;
+                    } else if (mContext instanceof NodeActivity) {
+                        swipeActivity = (NodeActivity) mContext;
+                    } else {
+                        swipeActivity = null;
                     }
                     intent = new Intent(swipeActivity, PostActivity.class);
                     intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
@@ -110,9 +114,9 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
             super(view);
 
             cardView = (CardView) view.findViewById(R.id.card_container);
-            avatar = (ImageView) view.findViewById(R.id.image_view);
-            title = (TextView) view.findViewById(R.id.topic_text_view);
-            time = (TextView) view.findViewById(R.id.created_time_text_view);
+            avatar = (ImageView) view.findViewById(R.id.avatar);
+            title = (TextView) view.findViewById(R.id.title);
+            time = (TextView) view.findViewById(R.id.created_time);
         }
     }
 }

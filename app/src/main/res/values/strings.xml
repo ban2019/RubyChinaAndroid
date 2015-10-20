@@ -19,5 +19,5 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_favourite">FavouriteActivity</string>
     <string name="title_activity_all_nodes">AllNodesActivity</string>
-
+    <string name="title_activity_node">NodeActivity</string>
 </resources>

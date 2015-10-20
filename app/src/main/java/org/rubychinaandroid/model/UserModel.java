@@ -36,7 +36,6 @@ public class UserModel {
         if ("".equals(userName)) {
             return userLogin;
         }
-
         return userName;
     }
 
@@ -54,5 +53,9 @@ public class UserModel {
 
     public String getAvatarUrl() {
         return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

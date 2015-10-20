@@ -60,7 +60,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     // and at most one of the three is not null.
     private RubyChinaCategory mCategory;
     private String mUserLogin;
-    private String mNode;
+    private String mNodeId;
 
     private int mGetTopicsByWhat;
     private final int BY_CATEGORY = 0;
@@ -80,7 +80,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         int value = args.getInt(RubyChinaArgKeys.TOPIC_CATEGORY);
         mCategory = new RubyChinaCategory(value);
         mUserLogin = args.getString(RubyChinaArgKeys.USER_LOGIN);
-        mNode = args.getString(RubyChinaArgKeys.NODE);
+        mNodeId = args.getString(RubyChinaArgKeys.NODE_ID);
 
         boolean isFromFavouriteActivity = args.getBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY);
 
@@ -97,8 +97,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mGetTopicsByWhat = BY_USER_FAVOURITE;
             }
             mActivity = getActivity();
-        } else if (mNode != null) {
+        } else if (mNodeId != null) {
             mGetTopicsByWhat = BY_NODE;
+            mActivity = getActivity();
+            Log.d(LOG_TAG, mNodeId);
         }
 
         mTopicList = new ArrayList<TopicModel>();
@@ -108,7 +110,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mRecyclerViewAdapter = new TopicItemAdapter(mAppCompatActivity, mTopicList, this);
 
             ((MainActivity) mAppCompatActivity).getFloatingActionButton().attachToRecyclerView(mRecyclerView);
-        } else {//if (mGetTopicsByWhat == BY_USER || ) {
+        } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
             mRecyclerViewAdapter = new TopicItemAdapter(mActivity, mTopicList, this);
         }
@@ -250,6 +252,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         } else if (mGetTopicsByWhat == BY_USER_FAVOURITE) {
             requestTopicsByFavourite();
         } else if (mGetTopicsByWhat == BY_NODE) {
+            requestTopicsByNode();
         }
     }
 
@@ -262,6 +265,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void requestTopicsByNode() {
+        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mCurrentPage, new TopicListHttpCallbackListener());
     }
 
     private void requestTopicsByFavourite() {

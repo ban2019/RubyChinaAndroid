@@ -9,7 +9,7 @@ import org.rubychinaandroid.utils.Utility;
 /* JSON Model */
 public class TopicModel extends BaseModel {
 
-    private static final String TIME_FORMAT = "创建于 %s";
+    private static final String TIME_FORMAT = "%s";
     private static final String DETAIL_FORMAT = "%s " + TIME_FORMAT;
 
     public String getTopicId() {

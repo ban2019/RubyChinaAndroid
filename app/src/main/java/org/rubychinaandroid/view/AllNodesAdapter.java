@@ -14,10 +14,13 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.activity.AllNodesActivity;
+import org.rubychinaandroid.activity.NodeActivity;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.model.NodeModel;
 import org.rubychinaandroid.utils.PinyinAlpha;
 import org.rubychinaandroid.utils.PinyinComparator;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +37,7 @@ import java.util.TreeSet;
  * Created by yw on 2015/4/28.
  */
 public class AllNodesAdapter extends RecyclerView.Adapter<AllNodesAdapter.ViewHolder> implements SectionIndexer {
+    private final static String TAG = "AllNodesAdapter";
     Context mContext;
 
     HashMap<String, Integer> mAlphaPosition = new HashMap<String, Integer>();
@@ -64,8 +68,10 @@ public class AllNodesAdapter extends RecyclerView.Adapter<AllNodesAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, NodeActivity.class);
-                intent.putExtra("model", (Parcelable) node);
+                intent.putExtra(RubyChinaArgKeys.NODE_NAME, node.getName());
+                intent.putExtra(RubyChinaArgKeys.NODE_ID, node.getId());
                 mContext.startActivity(intent);
+                ((AllNodesActivity) mContext).overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             }
         });
 

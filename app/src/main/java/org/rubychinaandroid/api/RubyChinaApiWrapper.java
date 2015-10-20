@@ -1,5 +1,6 @@
 package org.rubychinaandroid.api;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -19,13 +20,11 @@ import java.util.ArrayList;
 
 
 public class RubyChinaApiWrapper {
+    public static final String LOG_TAG = "RubyChinaApiWrapper";
 
-    /* OAUTH Request URLs, app id & app secret */
     private static final String BASE_URL = "https://ruby-china.org";
-
     private static final String OAUTH_REVOKE_URL = BASE_URL + "/oauth/revoke";
-
-    /* API URL */
+    // API URL
     private static final String API_BASE_URL = "https://ruby-china.org/api/v3";
     private static final String API_TOPICS_URL = API_BASE_URL + "/topics.json";
     private static final String API_TOPICS_CONTENT_URL = API_BASE_URL + "/topics/%s.json";
@@ -37,8 +36,8 @@ public class RubyChinaApiWrapper {
     private static final String API_FAVOURITE_TOPIC_URL = API_BASE_URL + "/topics/%s/favorite.json";
     private static final String API_UNFAVOURITE_TOPIC_URL = API_BASE_URL + "/topics/%s/unfavorite.json";
     private static final String API_USER_FAVOURITE_TOPICS_URL = API_BASE_URL + "/users/%s/favorites.json";
-
-    public static final String LOG_TAG = "RubyChinaApiWrapper";
+    // HTML URL
+    private static final String API_NODE_TOPICS_URL = BASE_URL + "/topics/node%s?page=%d";
 
     private static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
@@ -78,6 +77,32 @@ public class RubyChinaApiWrapper {
                         .with("login", userLogin)
                         .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
                 listener);
+    }
+
+    public static void getNodeTopicsFromBrowser(String nodeId, int page,
+                                                final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
+        String urlString = String.format(API_NODE_TOPICS_URL, nodeId, page);
+        asyncHttpClient.addHeader("Referer", getBaseUrl());
+        asyncHttpClient.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        asyncHttpClient.get(urlString, new TextHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, final String responseBody) {
+                try {
+                    listener.onSuccess(Utility.parseFromNodeEntry(responseBody, null));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String error, Throwable throwable) {
+                SafeHandler.onFailure(listener, error);
+            }
+        });
+    }
+
+    private static String getBaseUrl() {
+        return BASE_URL;
     }
 
     public static void getPostContent(final String topicId,

@@ -69,7 +69,7 @@ public class AllNodesActivity extends SwipeBackActivity implements RubyChinaApiL
         mNodes.clear();
         mNodes.addAll(data);
 
-        mNodeAdapter = new AllNodesAdapter(this, mNodes);
+        mNodeAdapter = new AllNodesAdapter(AllNodesActivity.this, mNodes);
         mNodeAdapter.update(data);
         if (!mIsAdapterSet) {
             mRecyclerView.setAdapter(mNodeAdapter);

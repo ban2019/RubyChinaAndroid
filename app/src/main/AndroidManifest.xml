@@ -58,6 +58,10 @@
             android:name=".activity.AllNodesActivity"
             android:label="@string/title_activity_all_nodes" >
         </activity>
+        <activity
+            android:name=".activity.NodeActivity"
+            android:label="@string/title_activity_node" >
+        </activity>
     </application>
 
 </manifest>

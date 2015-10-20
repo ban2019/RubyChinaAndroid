@@ -16,4 +16,7 @@ public class RubyChinaArgKeys {
 
     public static final String NODE = "tab";
 
+    public static final String NODE_ID = "node_id";
+    public static final String NODE_NAME = "node_name";
+
 }

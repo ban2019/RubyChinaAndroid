@@ -7,10 +7,16 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
+import org.rubychinaandroid.model.NodeModel;
 import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.model.UserModel;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
 import java.io.BufferedReader;
@@ -22,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class Utility {
 
@@ -31,6 +38,10 @@ public class Utility {
     public static int LIST_LIMIT = 20;
 
     public static String getTimeSpanSinceCreated(String date) {
+
+        if (date == null || "".equals(date)) {
+            return "";
+        }
 
         String rawPublishTime = date;
 
@@ -123,11 +134,11 @@ public class Utility {
     }
 
     private static final int PAGE = -1;
+
     private static class FavouriteHandler extends Handler {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case PAGE:
-                    //assert (OAuthManager.getInstance().getLoggedInState());
                     if (!OAuthManager.getInstance().getLoggedInState()) {
                         Log.d(LOG_TAG, "have not logged in");
                         return;
@@ -155,6 +166,7 @@ public class Utility {
             }
         }
     }
+
     private static Handler mHandler = new FavouriteHandler();
 
     public static void updateFavouriteRecord() {
@@ -163,6 +175,7 @@ public class Utility {
     }
 
     private static int page = 0;
+
     private static void favouriteHelper() {
         new Thread(new Runnable() {
             @Override
@@ -174,5 +187,52 @@ public class Utility {
                 mHandler.sendMessage(message);
             }
         }).start();
+    }
+
+    public static ArrayList<TopicModel> parseFromNodeEntry(String responseBody, String nodeName) throws Exception {
+        Document doc = Jsoup.parse(responseBody);
+        ArrayList<TopicModel> topics = new ArrayList<>();
+        Element body = doc.body();
+        Elements elements = body.getElementsByAttributeValueMatching("class", Pattern.compile("topic media topic-(.*)"));
+        for (Element el : elements) {
+            topics.add(parseTopicModel(el));
+        }
+
+        return topics;
+    }
+
+    private static TopicModel parseTopicModel(Element el) throws Exception {
+        Elements divNodes = el.getElementsByTag("div");
+        TopicModel topic = new TopicModel();
+        topic.setTopicId(el.attr("class").replace("topic media topic-", ""));
+        UserModel user = new UserModel();
+        for (Element divNode : divNodes) {
+            String content = divNode.toString();
+            if (content.contains("class=\"avatar media-left\"")) {
+                Elements userIdNode = divNode.getElementsByTag("a");
+                if (userIdNode != null) {
+                    String idUrlString = userIdNode.attr("href");
+                    user.setUserName(idUrlString.replace("/", ""));
+                    topic.setUserName(user.getName());
+                }
+
+                Elements avatarNode = divNode.getElementsByTag("img");
+                if (avatarNode != null) {
+                    String avatarString = avatarNode.attr("src");
+                    user.setAvatarUrl(avatarString);
+                    topic.setUserAvatarUrl(avatarString);
+                }
+            } else if (content.contains("class=\"infos media-body\"")) {
+                Elements divNodesInside = divNode.getElementsByTag("div");
+                for (Element divNodeInside : divNodesInside) {
+                    String contentInside = divNodeInside.toString();
+                    if (contentInside.contains("class=\"title media-heading\"")) {
+                        Elements es = divNodeInside.getElementsByTag("a");
+                        topic.setTitle(es.get(0).attr("title"));
+                    }
+                }
+            }
+        }
+        return topic;
     }
 }
