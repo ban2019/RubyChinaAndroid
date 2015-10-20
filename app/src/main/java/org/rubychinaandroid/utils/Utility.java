@@ -189,13 +189,20 @@ public class Utility {
         }).start();
     }
 
-    public static ArrayList<TopicModel> parseFromNodeEntry(String responseBody, String nodeName) throws Exception {
+    public static ArrayList<TopicModel> parseFromNodeEntry(String responseBody, String nodeName)
+            throws Exception {
         Document doc = Jsoup.parse(responseBody);
         ArrayList<TopicModel> topics = new ArrayList<>();
         Element body = doc.body();
         Elements elements = body.getElementsByAttributeValueMatching("class", Pattern.compile("topic media topic-(.*)"));
+
+        int i = 0;
         for (Element el : elements) {
-            topics.add(parseTopicModel(el));
+            try {
+                topics.add(parseTopicModel(el));
+            } catch (Exception e) {
+                Log.e("err", e.toString());
+            }
         }
 
         return topics;
@@ -204,15 +211,15 @@ public class Utility {
     private static TopicModel parseTopicModel(Element el) throws Exception {
         Elements divNodes = el.getElementsByTag("div");
         TopicModel topic = new TopicModel();
-        topic.setTopicId(el.attr("class").replace("topic media topic-", ""));
+        topic.setTopicId(el.attr("class").substring("topic media topic-".length()));
         UserModel user = new UserModel();
         for (Element divNode : divNodes) {
             String content = divNode.toString();
-            if (content.contains("class=\"avatar media-left\"")) {
+            if (content.contains("class=\"avatar\"")) {
                 Elements userIdNode = divNode.getElementsByTag("a");
                 if (userIdNode != null) {
                     String idUrlString = userIdNode.attr("href");
-                    user.setUserName(idUrlString.replace("/", ""));
+                    user.setUserName(idUrlString.substring("/".length()));
                     topic.setUserName(user.getName());
                 }
 
@@ -222,11 +229,11 @@ public class Utility {
                     user.setAvatarUrl(avatarString);
                     topic.setUserAvatarUrl(avatarString);
                 }
-            } else if (content.contains("class=\"infos media-body\"")) {
+            } else if (content.contains("class=\"infos")) {
                 Elements divNodesInside = divNode.getElementsByTag("div");
                 for (Element divNodeInside : divNodesInside) {
                     String contentInside = divNodeInside.toString();
-                    if (contentInside.contains("class=\"title media-heading\"")) {
+                    if (contentInside.contains("class=\"title")) {
                         Elements es = divNodeInside.getElementsByTag("a");
                         topic.setTitle(es.get(0).attr("title"));
                     }
