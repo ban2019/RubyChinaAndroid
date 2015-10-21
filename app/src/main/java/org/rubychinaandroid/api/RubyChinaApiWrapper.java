@@ -8,6 +8,10 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.rubychinaandroid.model.NodeModel;
 import org.rubychinaandroid.model.PostModel;
 import org.rubychinaandroid.model.ReplyModel;
@@ -17,6 +21,7 @@ import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.Utility;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 
 public class RubyChinaApiWrapper {
@@ -91,13 +96,13 @@ public class RubyChinaApiWrapper {
                     @Override
                     protected ArrayList<TopicModel> doInBackground(Void... params) {
                         try {
-                            //listener.onSuccess(Utility.parseFromNodeEntry(responseBody, null));
-                            return Utility.parseFromNodeEntry(responseBody, null);
+                            return parseFromNodeEntry(responseBody, null);
                         } catch (Exception e) {
                             e.printStackTrace();
                             return null;
                         }
                     }
+
                     @Override
                     protected void onPostExecute(ArrayList<TopicModel> topics) {
                         if (topics != null) {
@@ -114,6 +119,61 @@ public class RubyChinaApiWrapper {
                 SafeHandler.onFailure(listener, error);
             }
         });
+    }
+
+    private static ArrayList<TopicModel> parseFromNodeEntry(String responseBody, String nodeName)
+            throws Exception {
+        Document doc = Jsoup.parse(responseBody);
+        ArrayList<TopicModel> topics = new ArrayList<>();
+        Element body = doc.body();
+        Elements elements = body.getElementsByAttributeValueMatching("class", Pattern.compile("topic media topic-(.*)"));
+
+        for (Element el : elements) {
+            try {
+                topics.add(parseTopicModel(el));
+            } catch (Exception e) {
+                Log.e("err", e.toString());
+            }
+        }
+
+        return topics;
+    }
+
+    private static TopicModel parseTopicModel(Element el) throws Exception {
+        Elements divNodes = el.getElementsByTag("div");
+        TopicModel topic = new TopicModel();
+        topic.setTopicId(el.attr("class").substring("topic media topic-".length()));
+        UserModel user = new UserModel();
+        for (Element divNode : divNodes) {
+            String content = divNode.toString();
+            if (content.contains("class=\"avatar")) {
+                Elements userIdNode = divNode.getElementsByTag("a");
+                if (userIdNode != null) {
+                    String idUrlString = userIdNode.attr("href");
+                    user.setUserName(idUrlString.substring("/".length()));
+                    topic.setUserName(user.getName());
+                }
+
+                Elements avatarNode = divNode.getElementsByTag("img");
+                if (avatarNode != null) {
+                    String avatarString = avatarNode.attr("src");
+                    user.setAvatarUrl(avatarString);
+                    topic.setUserAvatarUrl(avatarString);
+                }
+            } else {
+                if (content.contains("class=\"infos")) {
+                    Elements divNodesInside = divNode.getElementsByTag("div");
+                    for (Element divNodeInside : divNodesInside) {
+                        String contentInside = divNodeInside.toString();
+                        if (contentInside.contains("class=\"title")) {
+                            Elements es = divNodeInside.getElementsByTag("a");
+                            topic.setTitle(es.get(0).attr("title"));
+                        }
+                    }
+                }
+            }
+        }
+        return topic;
     }
 
     private static String getBaseUrl() {
@@ -306,26 +366,3 @@ public class RubyChinaApiWrapper {
                 });
     }
 }
-
-/*
-    *****可用的URL列表*******
-        Method	URL
-        GET	    http://ruby-china.org/api/topics.json
-        GET	    http://ruby-china.org/api/topics/node/:id.json
-        POST	http://ruby-china.org/api/topics.json
-        GET	    http://ruby-china.org/api/topics/:id.json
-        POST	http://ruby-china.org/api/topics/:id/replies.json
-        POST	http://ruby-china.org/api/topics/:id/follow.json
-        POST	http://ruby-china.org/api/topics/:id/unfollow.json
-        POST	http://ruby-china.org/api/topics/:id/favorite.json
-        GET	    http://ruby-china.org/api/nodes.json
-        PUT	    http://ruby-china.org/api/user/favorite/:user/:topic.json
-        GET	    http://ruby-china.org/api/users.json
-        GET	    http://ruby-china.org/api/users/temp_access_token.json
-        GET	    http://ruby-china.org/api/users/:user.json
-        GET	    http://ruby-china.org/api/users/:user/topics.json
-        GET	    http://ruby-china.org/api/users/:user/topics/favorite.json
-        GET	    http://ruby-china.org/api/sites.json
-
-        https://ruby-china.org/api/v3/hello.json?access_token=#{access_token}
-    */
