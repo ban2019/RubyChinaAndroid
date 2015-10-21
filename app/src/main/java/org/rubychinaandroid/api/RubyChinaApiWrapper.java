@@ -140,10 +140,12 @@ public class RubyChinaApiWrapper {
     }
 
     private static TopicModel parseTopicModel(Element el) throws Exception {
-        Elements divNodes = el.getElementsByTag("div");
         TopicModel topic = new TopicModel();
         topic.setTopicId(el.attr("class").substring("topic media topic-".length()));
+
+        Elements divNodes = el.getElementsByTag("div");
         UserModel user = new UserModel();
+
         for (Element divNode : divNodes) {
             String content = divNode.toString();
             if (content.contains("class=\"avatar")) {
