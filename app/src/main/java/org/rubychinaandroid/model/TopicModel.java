@@ -3,7 +3,7 @@ package org.rubychinaandroid.model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.rubychinaandroid.utils.RubyChinaTypes;
+import org.rubychinaandroid.utils.RubyChinaCategory;
 import org.rubychinaandroid.utils.Utility;
 
 /* JSON Model */
@@ -161,11 +161,11 @@ public class TopicModel extends BaseModel {
         this.user = user;
     }
 
-    public RubyChinaTypes.TOPIC_CATEGORY getCategory() {
+    public RubyChinaCategory getCategory() {
         return category;
     }
 
-    public void setCategory(RubyChinaTypes.TOPIC_CATEGORY category) {
+    public void setCategory(RubyChinaCategory category) {
         this.category = category;
     }
 
@@ -186,7 +186,7 @@ public class TopicModel extends BaseModel {
 
     Abilities abilities;
 
-    RubyChinaTypes.TOPIC_CATEGORY category;
+    RubyChinaCategory category;
 
     public TopicModel() {
         this.user = new User();
