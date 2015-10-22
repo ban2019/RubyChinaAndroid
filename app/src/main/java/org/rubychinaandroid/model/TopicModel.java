@@ -97,6 +97,10 @@ public class TopicModel extends BaseModel {
                 "".equals(user.getName()) ? user.getLogin() : user.getName(), getCreatedTime());
     }
 
+    public void setCreateTime(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getCreatedTime() {
         return Utility.getTimeSpanSinceCreated(createdAt);
     }

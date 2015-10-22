@@ -44,9 +44,19 @@ public class Utility {
         }
 
         String rawPublishTime = date;
+        String timeInString = "";
 
-        String timeInString = rawPublishTime.substring(0, rawPublishTime.indexOf('T')) + ' ' +
-                rawPublishTime.substring(rawPublishTime.indexOf('T') + 1, rawPublishTime.indexOf('.'));
+        if (rawPublishTime.contains(".")) { // This time format parsing is for the one got from API
+            timeInString = rawPublishTime.substring(0, rawPublishTime.indexOf('T')) + ' ' +
+                    rawPublishTime.substring(rawPublishTime.indexOf('T') + 1, rawPublishTime.indexOf('.'));
+        } else { // This parsing is for the one got from JSoup
+            if (rawPublishTime.contains("前")) {
+                return rawPublishTime;
+            }
+            timeInString = rawPublishTime.substring(0, rawPublishTime.indexOf('T')) + ' ' +
+                    rawPublishTime.substring(rawPublishTime.indexOf('T') + 1, rawPublishTime.indexOf('+'));
+        }
+
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date created;

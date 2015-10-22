@@ -144,35 +144,26 @@ public class RubyChinaApiWrapper {
         topic.setTopicId(el.attr("class").substring("topic media topic-".length()));
 
         Elements divNodes = el.getElementsByTag("div");
-        UserModel user = new UserModel();
-
         for (Element divNode : divNodes) {
             String content = divNode.toString();
             if (content.contains("class=\"avatar")) {
-                Elements userIdNode = divNode.getElementsByTag("a");
-                if (userIdNode != null) {
-                    String idUrlString = userIdNode.attr("href");
-                    user.setUserName(idUrlString.substring("/".length()));
-                    topic.setUserName(user.getName());
+                Elements userLoginNode = divNode.getElementsByTag("a");
+                if (userLoginNode != null) {
+                    topic.setUserName(userLoginNode.attr("href").substring("/".length()));
                 }
 
                 Elements avatarNode = divNode.getElementsByTag("img");
                 if (avatarNode != null) {
                     String avatarString = avatarNode.attr("src");
-                    user.setAvatarUrl(avatarString);
                     topic.setUserAvatarUrl(avatarString);
                 }
-            } else {
-                if (content.contains("class=\"infos")) {
-                    Elements divNodesInside = divNode.getElementsByTag("div");
-                    for (Element divNodeInside : divNodesInside) {
-                        String contentInside = divNodeInside.toString();
-                        if (contentInside.contains("class=\"title")) {
-                            Elements es = divNodeInside.getElementsByTag("a");
-                            topic.setTitle(es.get(0).attr("title"));
-                        }
-                    }
-                }
+            } else if (content.contains("class=\"infos")) {
+                Element aaNode = divNode.getElementsByTag("a").first();
+                topic.setTitle(aaNode.attr("title"));
+
+                Elements abbrNodes = divNode.getElementsByTag("abbr");
+                String time = abbrNodes.get(0).attr("title");
+                topic.setCreatedAt(Utility.getTimeSpanSinceCreated(time));
             }
         }
         return topic;
@@ -184,11 +175,9 @@ public class RubyChinaApiWrapper {
 
     public static void getPostContent(final String topicId,
                                       final RubyChinaApiListener<PostModel> listener) {
-
         asyncHttpClient.get(String.format(API_TOPICS_CONTENT_URL, topicId),
                 new ApiParams().with("id", topicId),
                 new TextHttpResponseHandler() {
-
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawResponse) {
                         if (rawResponse != null) {
@@ -196,9 +185,7 @@ public class RubyChinaApiWrapper {
                                 JSONObject jsonObject = new JSONObject(rawResponse);
                                 PostModel postModel = new PostModel();
                                 postModel.parse(jsonObject);
-
                                 listener.onSuccess(postModel);
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -292,7 +279,6 @@ public class RubyChinaApiWrapper {
                             UserModel userModel = new UserModel();
                             userModel.parse(jsonObject);
                             listener.onSuccess(userModel);
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -307,7 +293,6 @@ public class RubyChinaApiWrapper {
     }
 
     public static void getUserProfile(String userLogin, final RubyChinaApiListener<UserModel> listener) {
-
         asyncHttpClient.get(String.format(API_PROFILE_URL, userLogin),
                 new ApiParams().with("login", userLogin),
                 new TextHttpResponseHandler() {
@@ -318,7 +303,6 @@ public class RubyChinaApiWrapper {
                             UserModel userModel = new UserModel();
                             userModel.parse(jsonObject);
                             listener.onSuccess(userModel);
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
