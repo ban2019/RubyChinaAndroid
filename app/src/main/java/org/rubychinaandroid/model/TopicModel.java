@@ -10,7 +10,7 @@ import org.rubychinaandroid.utils.Utility;
 public class TopicModel extends BaseModel {
 
     private static final String TIME_FORMAT = "%s";
-    private static final String DETAIL_FORMAT = "%s " + TIME_FORMAT;
+    private static final String DETAIL_FORMAT = "%s    " + TIME_FORMAT;
 
     public String getTopicId() {
         return id;

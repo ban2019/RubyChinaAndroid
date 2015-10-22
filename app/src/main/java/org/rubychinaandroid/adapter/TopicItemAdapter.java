@@ -54,7 +54,7 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
         /* 1. load title */
         holder.title.setText(topic.getTitle());
         /* 2. load author and publish time */
-        holder.time.setText(topic.getDetail());
+        holder.detail.setText(topic.getDetail());
         /* 3. load avatar */
         String userAvatarUrl = topic.getUserAvatarUrl();
         ImageLoader.getInstance().displayImage(userAvatarUrl, holder.avatar,
@@ -108,7 +108,7 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
         public CardView cardView;
         public ImageView avatar;
         public TextView title;
-        public TextView time;
+        public TextView detail; // author and created time or updated time
 
         ViewHolder(View view) {
             super(view);
@@ -116,7 +116,7 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
             cardView = (CardView) view.findViewById(R.id.card_container);
             avatar = (ImageView) view.findViewById(R.id.avatar);
             title = (TextView) view.findViewById(R.id.title);
-            time = (TextView) view.findViewById(R.id.created_time);
+            detail = (TextView) view.findViewById(R.id.detail);
         }
     }
 }
