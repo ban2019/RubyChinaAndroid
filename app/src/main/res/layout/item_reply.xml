@@ -10,8 +10,7 @@
         android:layout_height="@dimen/avatar_normal_size"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:src="@drawable/avatar_doge_mm" />
+        android:layout_margin="10dp" />
 
     <TextView
         android:id="@+id/replier"

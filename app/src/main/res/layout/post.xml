@@ -29,8 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.7"
             android:adjustViewBounds="true"
-            android:padding="10dp"
-            android:src="@drawable/avatar_doge_mm" />
+            android:padding="10dp" />
         <!--
         这里如果不设置初始图片（即android:src），在 PostFragment 第一次被加载的时候楼主的头像图片
         将不会显示，但手动下拉刷新后头像图片可以显示，原因不明。

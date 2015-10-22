@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/avatar"
         android:layout_toRightOf="@id/avatar"
-        android:text="username"
         android:textColor="@color/white"
         android:textSize="30sp"
         android:layout_marginLeft="30dp" />
@@ -35,8 +34,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/avatar"
-        android:textColor="@color/white"
-        android:text="json@gmail.com"/>
+        android:textColor="@color/white" />
 
     <ImageView
         android:id="@+id/www_location"
