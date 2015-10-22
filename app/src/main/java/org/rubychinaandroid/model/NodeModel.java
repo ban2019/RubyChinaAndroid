@@ -53,4 +53,9 @@ public class NodeModel extends BaseModel {
             e.printStackTrace();
         }
     }
+
+    // Type convert function prepared for Custom Spinner
+    public String toString(){
+        return String.format("%s", name);
+    }
 }
