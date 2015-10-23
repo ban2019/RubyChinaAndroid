@@ -75,16 +75,17 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         // Parse parameters.
         Bundle args = getArguments();
-        // There is history only for the topics under some category, none for topics by user,
-        // so when request user's topics, there is no need to load shared preference.
+
         int value = args.getInt(RubyChinaArgKeys.TOPIC_CATEGORY);
+        int NO_MAPPING = 0; // getInt returns 0 when no mapping
         mCategory = new RubyChinaCategory(value);
         mUserLogin = args.getString(RubyChinaArgKeys.USER_LOGIN);
         mNodeId = args.getString(RubyChinaArgKeys.NODE_ID);
 
         boolean isFromFavouriteActivity = args.getBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY);
 
-        if (value < 0) {
+        // Store topics under categories only to db.
+        if (value != NO_MAPPING) {
             mAppCompatActivity = (MainActivity) getActivity();
             mPref = mAppCompatActivity.getSharedPreferences(CLASS_NAME, Context.MODE_PRIVATE);
             // Different TopicsFragment's mCachedPages instance is saved in separate files.
@@ -100,7 +101,6 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         } else if (mNodeId != null) {
             mGetTopicsByWhat = BY_NODE;
             mActivity = getActivity();
-            Log.d(LOG_TAG, mNodeId);
         }
 
         mTopicList = new ArrayList<TopicModel>();
@@ -182,8 +182,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         .saveTopic(topic, mCategory, mCurrentPage);
             }
 
-            if (mCurrentPage > mCachedPages) {
-                mCachedPages = mCurrentPage;
+            if (mCurrentPage >= mCachedPages) {
+                mCachedPages = mCurrentPage + 1; // mCachedPages is 1-based, mCurrengPage is 0-based.
                 SharedPreferences.Editor editor = mAppCompatActivity
                         .getSharedPreferences(CLASS_NAME, Context.MODE_PRIVATE).edit();
                 editor.putInt(Integer.toString(mCategory.getValue()) + "mCachedPages", mCachedPages);

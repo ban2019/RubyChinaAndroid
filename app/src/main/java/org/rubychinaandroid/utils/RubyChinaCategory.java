@@ -6,17 +6,14 @@ public class RubyChinaCategory {
     private final String TAG = "RubyChinaCategory";
     private final int OFFSET = 5;
     private int MAX_CATEGORIES = 4;
+
     private int EXCELLENT = -5;
+    private int NO_REPLY = -4;
+    private int RECENT = -3;
+    private int LAST_ACTIVE = -2;
     private int POPULAR = -1;
 
     public RubyChinaCategory(int value) {
-        /*
-        * excellent = -5
-        * no_reply = -4
-        * recent = -3
-        * last_active = -2
-        * popular = -1
-        */
         if (value >= 0 && value < MAX_CATEGORIES) {
             this.value = value - OFFSET;
         } else if (value >= EXCELLENT && value <= POPULAR) {
