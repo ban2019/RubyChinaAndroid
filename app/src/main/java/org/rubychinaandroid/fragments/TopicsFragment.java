@@ -33,18 +33,17 @@ import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import java.util.ArrayList;
 
 public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
-    private final String CLASS_NAME = "TopicsFragment";
     private final String LOG_TAG = "TopicsFragment";
 
     private AppCompatActivity mAppCompatActivity;
     private Activity mActivity;
+    private Context mContext;
+    private String mErrorHint;
 
     RecyclerView mRecyclerView;
     HeaderViewRecyclerAdapter mHeaderAdapter;
     protected TopicItemAdapter mRecyclerViewAdapter;
-    private int mCurrentPage = 0;
-    private int mCachedPages = 0;
-    private SharedPreferences mPref;
+    private int mPageIndex = 0;
     private ArrayList<TopicModel> mTopicList;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -55,6 +54,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     // Used to prevent onLoadMore being called again and again when
     // the selection stays at the end.
     private boolean isFailToLoadMore = false;
+    private boolean isClearDB = false;
 
     // These member variables should be assigned by parameters passed by parent activity,
     // and at most one of the three is not null.
@@ -70,9 +70,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_topics, container, false);
-
         // Parse parameters.
         Bundle args = getArguments();
 
@@ -87,10 +85,9 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         // Store topics under categories only to db.
         if (value != NO_MAPPING) {
             mAppCompatActivity = (MainActivity) getActivity();
-            mPref = mAppCompatActivity.getSharedPreferences(CLASS_NAME, Context.MODE_PRIVATE);
             // Different TopicsFragment's mCachedPages instance is saved in separate files.
-            mCachedPages = mPref.getInt(Integer.toString(mCategory.getValue()) + "mCachedPages", 0);
             mGetTopicsByWhat = BY_CATEGORY;
+            mContext = mAppCompatActivity;
         } else if (mUserLogin != null) {
             if (!isFromFavouriteActivity) {
                 mGetTopicsByWhat = BY_USER;
@@ -98,9 +95,11 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mGetTopicsByWhat = BY_USER_FAVOURITE;
             }
             mActivity = getActivity();
+            mContext = mActivity;
         } else if (mNodeId != null) {
             mGetTopicsByWhat = BY_NODE;
             mActivity = getActivity();
+            mContext = mActivity;
         }
 
         mTopicList = new ArrayList<TopicModel>();
@@ -108,7 +107,6 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         if (mGetTopicsByWhat == BY_CATEGORY) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mAppCompatActivity));
             mRecyclerViewAdapter = new TopicItemAdapter(mAppCompatActivity, mTopicList, this);
-
             ((MainActivity) mAppCompatActivity).getFloatingActionButton().attachToRecyclerView(mRecyclerView);
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -146,19 +144,18 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mSwipeRefreshLayout.setRefreshing(false);
 
             // Update the displayed topics
-            if (mCachedPages > 0 && mGetTopicsByWhat == BY_CATEGORY) {
-                clearDBByCategory();
+            if (isClearDB && mGetTopicsByWhat == BY_CATEGORY) {
+                RubyChinaDBManager.getInstance(mAppCompatActivity)
+                        .clearAllTopicsByCategory(mCategory);
             }
-            for (TopicModel topic : topicModelList) {
-                mTopicList.add(topic);
-            }
+            mTopicList.addAll(topicModelList);
             mRecyclerViewAdapter.notifyDataSetChanged();
 
             if (mGetTopicsByWhat == BY_CATEGORY) {
-                // Save topicModelList to DB.
-                saveToDBByCategory();
+                RubyChinaDBManager.getInstance(mAppCompatActivity)
+                        .saveTopics(topicModelList, mCategory, mPageIndex);
             }
-
+            ++mPageIndex;
             isFailToLoadMore = false;
         }
 
@@ -168,42 +165,13 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mSwipeRefreshLayout.setRefreshing(false);
 
             if (mGetTopicsByWhat == BY_CATEGORY) {
-                for (TopicModel topic : loadFromDBByCategory()) {
-                    mTopicList.add(topic);
-                }
+                ArrayList<TopicModel> topics = RubyChinaDBManager.getInstance(mAppCompatActivity)
+                        .loadTopics(mCategory, mPageIndex);
+                mTopicList.addAll(topics);
             }
+            ++mPageIndex;
             mRecyclerViewAdapter.notifyDataSetChanged();
             isFailToLoadMore = true;
-        }
-
-        private void saveToDBByCategory() {
-            for (TopicModel topic : mTopicList) {
-                RubyChinaDBManager.getInstance(mAppCompatActivity)
-                        .saveTopic(topic, mCategory, mCurrentPage);
-            }
-
-            if (mCurrentPage >= mCachedPages) {
-                mCachedPages = mCurrentPage + 1; // mCachedPages is 1-based, mCurrengPage is 0-based.
-                SharedPreferences.Editor editor = mAppCompatActivity
-                        .getSharedPreferences(CLASS_NAME, Context.MODE_PRIVATE).edit();
-                editor.putInt(Integer.toString(mCategory.getValue()) + "mCachedPages", mCachedPages);
-                editor.commit();
-            }
-        }
-
-        private ArrayList<TopicModel> loadFromDBByCategory() {
-            ArrayList<TopicModel> cachedTopics = (ArrayList<TopicModel>) RubyChinaDBManager
-                    .getInstance(mAppCompatActivity)
-                    .loadTopics(mCategory, mCurrentPage);
-            return cachedTopics;
-        }
-
-        private void clearDBByCategory() {
-            for (int i = 0; i <= mCachedPages; i++) {
-                RubyChinaDBManager.getInstance(mAppCompatActivity)
-                        .removeOnePageTopics(i, mCategory.getValue());
-            }
-            mCachedPages = 0;
         }
     }
 
@@ -221,13 +189,15 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onLoadMore() {
-        if (!mNoMore && !isFailToLoadMore) {
+        if ((!mNoMore && !isFailToLoadMore) ||
+                !RubyChinaDBManager.getInstance(mContext).isAllTopicsLoaded(mCategory, mPageIndex)) {
             requestMoreTopics();
         }
     }
 
     private void requestTopics() {
-        mCurrentPage = 0;
+        isClearDB = true;
+        mPageIndex = 0;
         mTopicList.clear();
 
         if (mGetTopicsByWhat == BY_CATEGORY) {
@@ -244,7 +214,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void requestMoreTopics() {
-        ++mCurrentPage;
+        isClearDB = false;
+
         if (mGetTopicsByWhat == BY_CATEGORY) {
             requestTopicsByCategory();
         } else if (mGetTopicsByWhat == BY_USER) {
@@ -257,18 +228,18 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void requestTopicsByCategory() {
-        RubyChinaApiWrapper.getTopicsByCategory(mCategory, mCurrentPage, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getTopicsByCategory(mCategory, mPageIndex, new TopicListHttpCallbackListener());
     }
 
     private void requestTopicsByUserLogin() {
-        RubyChinaApiWrapper.getUserTopics(mUserLogin, mCurrentPage, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getUserTopics(mUserLogin, mPageIndex, new TopicListHttpCallbackListener());
     }
 
     private void requestTopicsByNode() {
-        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mCurrentPage, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mPageIndex, new TopicListHttpCallbackListener());
     }
 
     private void requestTopicsByFavourite() {
-        RubyChinaApiWrapper.getFavouriteTopics(mUserLogin, mCurrentPage, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getFavouriteTopics(mUserLogin, mPageIndex, new TopicListHttpCallbackListener());
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.rubychinaandroid.utils.RubyChinaCategory;
+
 public class RubyChinaOpenHelper extends SQLiteOpenHelper {
 
     private static final String TOPIC_TABLE_NAME = "Topic";
@@ -41,10 +43,10 @@ public class RubyChinaOpenHelper extends SQLiteOpenHelper {
         db.execSQL("drop table if exists " + TOPIC_TABLE_NAME);
     }
 
-    public void deletePage(SQLiteDatabase db, int page, int category) {
+    public void deletePage(SQLiteDatabase db, int page, RubyChinaCategory category) {
         String DELETE_PAGE = "delete from " + TOPIC_TABLE_NAME + " " +
                 "where page=" + Integer.toString(page) + " and " +
-                "category=" + Integer.toString(category);
+                "category=" + Integer.toString(category.getValue());
         db.execSQL(DELETE_PAGE);
     }
 }
