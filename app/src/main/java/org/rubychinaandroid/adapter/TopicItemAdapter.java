@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import org.rubychinaandroid.activity.MainActivity;
 import org.rubychinaandroid.activity.NodeActivity;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.activity.ProfileActivity;
+import org.rubychinaandroid.fragments.RecyclerViewItemEnabler;
 import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
@@ -28,7 +28,30 @@ import java.util.ArrayList;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
-public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.ViewHolder> {
+
+
+public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.ViewHolder>
+        implements RecyclerViewItemEnabler {
+
+    private boolean mAllEnabled;
+    @Override
+    public void onViewAttachedToWindow(TopicItemAdapter.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        holder.itemView.setEnabled(isAllItemsEnabled());
+        //or do this in onBindViewHolder()
+    }
+    @Override
+    public boolean isAllItemsEnabled(){ return mAllEnabled; }
+
+    @Override
+    public boolean getItemEnabled(int position){
+        return true;
+    }
+    public void setAllItemsEnabled(boolean enable){
+        mAllEnabled = enable;
+        notifyItemRangeChanged(0, getItemCount());
+    }
+
     private String TAG = "TopicItemAdapter";
 
     private final LayoutInflater mLayoutInflater;

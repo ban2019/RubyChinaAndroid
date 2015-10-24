@@ -9,7 +9,6 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.TopicsFragment;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
-
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 public class NodeActivity extends SwipeBackActivity {

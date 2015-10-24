@@ -9,11 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;

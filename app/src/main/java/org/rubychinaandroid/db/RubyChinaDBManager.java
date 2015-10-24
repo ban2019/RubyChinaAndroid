@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.RubyChinaCategory;
+
 import java.util.ArrayList;
 
 public class RubyChinaDBManager {

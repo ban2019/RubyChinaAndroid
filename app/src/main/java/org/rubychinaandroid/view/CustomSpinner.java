@@ -3,7 +3,6 @@ package org.rubychinaandroid.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -20,14 +19,14 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
-import org.rubychinaandroid.utils.InputUtils;
+
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.utils.InputUtils;
 
 /**
  * Created by yw on 2015/7/19.

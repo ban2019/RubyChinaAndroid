@@ -1,14 +1,11 @@
 package org.rubychinaandroid.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,8 +32,6 @@ import java.util.ArrayList;
 public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
     private final String LOG_TAG = "TopicsFragment";
 
-    private AppCompatActivity mAppCompatActivity;
-    private Activity mActivity;
     private Context mContext;
 
     private final String HINT_CACHE = "尝试从缓存加载";
@@ -142,6 +137,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             // Stop refresh anim.
             mSwipeRefreshLayout.setRefreshing(false);
+            mRecyclerViewAdapter.setAllItemsEnabled(true);
 
             // Update the displayed topics
             if (isClearDB && mGetTopicsByWhat == BY_CATEGORY) {
@@ -161,6 +157,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         public void onFailure(String error) {
             Utility.showToast(mErrorHint);
             mSwipeRefreshLayout.setRefreshing(false);
+            mRecyclerViewAdapter.setAllItemsEnabled(true);
 
             if (mGetTopicsByWhat == BY_CATEGORY) {
                 ArrayList<TopicModel> topics = mDBManager.loadTopics(mCategory, mPageIndex);
@@ -181,6 +178,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 // start refresh anim
                 mSwipeRefreshLayout.setRefreshing(true);
                 requestTopics();
+                mRecyclerViewAdapter.setAllItemsEnabled(false);
             }
         }, 500);
     }

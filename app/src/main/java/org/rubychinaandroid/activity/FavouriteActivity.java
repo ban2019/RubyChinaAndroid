@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import org.rubychinaandroid.R;
-import org.rubychinaandroid.fragments.ProfileFragment;
 import org.rubychinaandroid.fragments.TopicsFragment;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.oauth.OAuthManager;

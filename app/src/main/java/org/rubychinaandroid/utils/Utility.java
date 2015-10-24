@@ -2,21 +2,14 @@ package org.rubychinaandroid.utils;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
-import org.rubychinaandroid.model.NodeModel;
 import org.rubychinaandroid.model.TopicModel;
-import org.rubychinaandroid.model.UserModel;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
 import java.io.BufferedReader;
@@ -28,7 +21,6 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 public class Utility {
 

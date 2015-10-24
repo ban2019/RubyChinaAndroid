@@ -11,7 +11,6 @@ import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
 import in.uncod.android.bypass.Bypass;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-import us.feras.mdv.MarkdownView;
 
 
 public class PreviewActivity extends SwipeBackActivity {
