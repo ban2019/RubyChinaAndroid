@@ -38,7 +38,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private AppCompatActivity mAppCompatActivity;
     private Activity mActivity;
     private Context mContext;
-    private String mErrorHint;
+
+    private final String HINT_CACHE = "尝试从缓存加载";
+    private final String HINT_FAIL = "加载话题列表失败";
+    private String mErrorHint = HINT_FAIL;
 
     RecyclerView mRecyclerView;
     HeaderViewRecyclerAdapter mHeaderAdapter;
@@ -100,6 +103,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mGetTopicsByWhat = BY_NODE;
             mActivity = getActivity();
             mContext = mActivity;
+            // If browsing topics by node, the topics are got from HTML parsed by JSoup.
+            // In browser, ?page=0 has the same effect as ?page=1, so, if mPageIndex is 0-based,
+            // the first page will be loaded twice. So, mPageIndex must be 1-based for this case.
+            mPageIndex = 1;
         }
 
         mTopicList = new ArrayList<TopicModel>();
@@ -161,15 +168,16 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         @Override
         public void onFailure(String error) {
-            Utility.showToast("加载话题列表失败");
+            Utility.showToast(mErrorHint);
             mSwipeRefreshLayout.setRefreshing(false);
 
             if (mGetTopicsByWhat == BY_CATEGORY) {
                 ArrayList<TopicModel> topics = RubyChinaDBManager.getInstance(mAppCompatActivity)
                         .loadTopics(mCategory, mPageIndex);
                 mTopicList.addAll(topics);
+                ++mPageIndex;
             }
-            ++mPageIndex;
+
             mRecyclerViewAdapter.notifyDataSetChanged();
             isFailToLoadMore = true;
         }
@@ -189,15 +197,20 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onLoadMore() {
-        if ((!mNoMore && !isFailToLoadMore) ||
+        mErrorHint = HINT_FAIL;
+        if ((!mNoMore && !isFailToLoadMore)) {
+            requestMoreTopics();
+        } else if (mGetTopicsByWhat == BY_CATEGORY &&
                 !RubyChinaDBManager.getInstance(mContext).isAllTopicsLoaded(mCategory, mPageIndex)) {
+            mErrorHint = HINT_CACHE;
             requestMoreTopics();
         }
     }
 
     private void requestTopics() {
         isClearDB = true;
-        mPageIndex = 0;
+        mPageIndex = mGetTopicsByWhat == BY_NODE ? 1 : 0;
+
         mTopicList.clear();
 
         if (mGetTopicsByWhat == BY_CATEGORY) {
