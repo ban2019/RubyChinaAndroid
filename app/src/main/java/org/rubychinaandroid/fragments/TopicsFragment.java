@@ -41,11 +41,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     RecyclerView mRecyclerView;
     HeaderViewRecyclerAdapter mHeaderAdapter;
     protected TopicItemAdapter mRecyclerViewAdapter;
-    private int mPageIndex = 0;
     private ArrayList<TopicModel> mTopicList;
-
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private FootUpdate mFootUpdate = new FootUpdate();
     // Whether no more topics can be provided.
     private boolean mNoMore = false;
@@ -54,6 +51,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private boolean isFailToLoadMore = false;
     private boolean isClearDB = false;
     private RubyChinaDBManager mDBManager;
+    private int mPageIndex = 0;
 
     // These member variables should be assigned by parameters passed by parent activity,
     // and at most one of the three is not null.
@@ -61,30 +59,28 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private String mUserLogin;
     private String mNodeId;
 
-    private int mGetTopicsByWhat;
+    private final int INVALID = -1;
     private final int BY_CATEGORY = 0;
     private final int BY_USER = 1;
     private final int BY_USER_FAVOURITE = 2;
     private final int BY_NODE = 3;
+    private int mGetTopicsByWhat = INVALID;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_topics, container, false);
+    private void parseArguments() {
+        assert(mContext != null && mRecyclerView != null);
         // Parse parameters.
         Bundle args = getArguments();
-
         int value = args.getInt(RubyChinaArgKeys.TOPIC_CATEGORY);
-        int NO_MAPPING = 0; // getInt returns 0 when no mapping
+        final int NO_MAPPING = 0; // getInt returns 0 when no mapping
         mCategory = new RubyChinaCategory(value);
         mUserLogin = args.getString(RubyChinaArgKeys.USER_LOGIN);
         mNodeId = args.getString(RubyChinaArgKeys.NODE_ID);
 
-        boolean isFromFavouriteActivity = args.getBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY);
-
-        mContext = getActivity();
         if (value != NO_MAPPING) {
             mGetTopicsByWhat = BY_CATEGORY;
         } else if (mUserLogin != null) {
+            boolean isFromFavouriteActivity = args.
+                    getBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY);
             if (!isFromFavouriteActivity) {
                 mGetTopicsByWhat = BY_USER;
             } else {
@@ -92,19 +88,31 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         } else if (mNodeId != null) {
             mGetTopicsByWhat = BY_NODE;
-            // If browsing topics by node, the topics are got from HTML parsed by JSoup.
-            // In browser, ?page=0 has the same effect as ?page=1, so, if mPageIndex is 0-based,
-            // the first page will be loaded twice. So, mPageIndex must be 1-based for this case.
-            mPageIndex = 1;
         }
 
+        if (mGetTopicsByWhat == BY_CATEGORY) {
+            ((MainActivity) mContext).getFloatingActionButton().attachToRecyclerView(mRecyclerView);
+        }
+    }
+
+    private void resetPageIndex() {
+        assert(mGetTopicsByWhat != INVALID);
+        // If browsing topics by node, the topics are got from HTML parsed by JSoup.
+        // In browser, ?page=0 has the same effect as ?page=1, so, if mPageIndex is 0-based,
+        // the first page will be loaded twice. So, mPageIndex must be 1-based for this case.
+        mPageIndex = mGetTopicsByWhat == BY_NODE ? 1 : 0;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mContext = getActivity();
+        mDBManager = RubyChinaDBManager.getInstance(mContext);
+
+        View view = inflater.inflate(R.layout.fragment_topics, container, false);
         mTopicList = new ArrayList<TopicModel>();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerViewAdapter = new TopicItemAdapter(mContext, mTopicList, this);
-        if (mGetTopicsByWhat == BY_CATEGORY) {
-            ((MainActivity) mContext).getFloatingActionButton().attachToRecyclerView(mRecyclerView);
-        }
 
         mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
         mRecyclerView.setAdapter(mHeaderAdapter);
@@ -121,9 +129,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
         mSwipeRefreshLayout.setRefreshing(true);
 
-        mDBManager = RubyChinaDBManager.getInstance(mContext);
-        requestTopics();
+        parseArguments();
+        resetPageIndex();
 
+        requestTopics();
         return view;
     }
 
@@ -135,20 +144,20 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 mNoMore = true;
             }
 
-            // Stop refresh anim.
-            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayout.setRefreshing(false); // Stop refresh anim.
             mRecyclerViewAdapter.setAllItemsEnabled(true);
-
-            // Update the displayed topics
-            if (isClearDB && mGetTopicsByWhat == BY_CATEGORY) {
-                mDBManager.clearAllTopicsByCategory(mCategory);
-            }
             mTopicList.addAll(topicModelList);
             mRecyclerViewAdapter.notifyDataSetChanged();
 
+            assert(mGetTopicsByWhat != INVALID);
+            // Update the displayed topics
             if (mGetTopicsByWhat == BY_CATEGORY) {
+                if (isClearDB) {
+                    mDBManager.clearAllTopicsByCategory(mCategory);
+                }
                 mDBManager.saveTopics(topicModelList, mCategory, mPageIndex);
             }
+
             ++mPageIndex;
             isFailToLoadMore = false;
         }
@@ -177,8 +186,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             public void run() {
                 // start refresh anim
                 mSwipeRefreshLayout.setRefreshing(true);
-                requestTopics();
                 mRecyclerViewAdapter.setAllItemsEnabled(false);
+                requestTopics();
             }
         }, 500);
     }
@@ -197,8 +206,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void requestTopics() {
         isClearDB = true;
-        mPageIndex = mGetTopicsByWhat == BY_NODE ? 1 : 0;
-
+        resetPageIndex();
         mTopicList.clear();
 
         if (mGetTopicsByWhat == BY_CATEGORY) {
