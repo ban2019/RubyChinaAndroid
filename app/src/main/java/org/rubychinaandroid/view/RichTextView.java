@@ -1,13 +1,17 @@
 package org.rubychinaandroid.view;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +25,7 @@ import java.util.ArrayList;
  */
 public class RichTextView extends TextView {
 
+    private final String TAG = "RichTextView";
     public RichTextView(Context context) {
         super(context);
     }
@@ -61,9 +66,9 @@ public class RichTextView extends TextView {
             imageUrls.add(imageUrl);
         }
 
-        for(ImageSpan span : spans){
+        for (ImageSpan span : spans) {
             final int start = htmlSpannable.getSpanStart(span);
-            final int end   = htmlSpannable.getSpanEnd(span);
+            final int end = htmlSpannable.getSpanEnd(span);
 
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
@@ -73,9 +78,9 @@ public class RichTextView extends TextView {
             };
 
             ClickableSpan[] clickSpans = htmlSpannable.getSpans(start, end, ClickableSpan.class);
-            if(clickSpans != null && clickSpans.length != 0) {
+            if (clickSpans != null && clickSpans.length != 0) {
 
-                for(ClickableSpan c_span : clickSpans) {
+                for (ClickableSpan c_span : clickSpans) {
                     htmlSpannable.removeSpan(c_span);
                 }
             }
@@ -83,7 +88,34 @@ public class RichTextView extends TextView {
             htmlSpannable.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
+        // Replace all the URLSpans with self-defined DefensiveSpans, to handle the hyperlinks of the
+        // floor number(such as #1, #2, etc), and user login(such as @username), which contain
+        // invalid urls in href
+        URLSpan[] urlSpans = htmlSpannable.getSpans(0, htmlSpannable.length(), URLSpan.class);
+        for (URLSpan span : urlSpans) {
+            int start = htmlSpannable.getSpanStart(span);
+            int end = htmlSpannable.getSpanEnd(span);
+            htmlSpannable.removeSpan(span);
+            htmlSpannable.setSpan(new DefensiveURLSpan(span.getURL()), start, end, 0);
+        }
+
         super.setText(spanned);
         setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private static class DefensiveURLSpan extends URLSpan {
+        private final String TAG = "DefensiveURLSpan";
+        public DefensiveURLSpan(String url) {
+            super(url);
+        }
+
+        @Override
+        public void onClick(View widget) {
+            try {
+                super.onClick(widget);
+            } catch (ActivityNotFoundException e) {
+                Log.d(TAG, "caught");
+            }
+        }
     }
 }
