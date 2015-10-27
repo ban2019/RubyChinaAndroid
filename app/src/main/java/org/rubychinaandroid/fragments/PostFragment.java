@@ -28,9 +28,10 @@ import org.rubychinaandroid.model.PostModel;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.RichTextView;
+import org.rubychinaandroid.view.ScrollCallback;
 
 
-public class PostFragment extends Fragment {
+public class PostFragment extends Fragment implements ScrollCallback {
 
     private TextView mTitle;
     private RichTextView mContent;
@@ -43,6 +44,7 @@ public class PostFragment extends Fragment {
     private CardView mCardView;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ObservableScrollView mScrollView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,7 +64,7 @@ public class PostFragment extends Fragment {
         mCardView = (CardView) view.findViewById(R.id.card_container);
 
         mFrameLayout = (FrameLayout) view.findViewById(R.id.frame_post);
-        ObservableScrollView scrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view);
+        mScrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -79,7 +81,7 @@ public class PostFragment extends Fragment {
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
 
         PostActivity activity = (PostActivity) getActivity();
-        activity.getFloatingActionButton().attachToScrollView(scrollView);
+        activity.getFloatingActionButton().attachToScrollView(mScrollView);
 
         return view;
     }
@@ -153,5 +155,9 @@ public class PostFragment extends Fragment {
                 Utility.showToast("加载帖子失败");
             }
         });
+    }
+
+    public void scrollTo(int direction) {
+        mScrollView.fullScroll(direction);
     }
 }

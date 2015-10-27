@@ -16,6 +16,8 @@ import org.rubychinaandroid.fragments.PostFragment;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
+import org.rubychinaandroid.view.JumpToolbar;
+import org.rubychinaandroid.view.ScrollCallback;
 
 import java.util.ArrayList;
 
@@ -25,26 +27,18 @@ public class PostActivity extends SwipeBackActivity {
 
     private String TAG = "PostActivity";
 
-    private Toolbar mToolbar;
+    private JumpToolbar mToolbar;
     private FloatingActionButton mReplyButton;
     boolean mIsFavourite = false; // whether current topic is favourite
+    private PostFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        // Creating The Toolbar and setting it as the Toolbar for the activity
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        mToolbar.setTitle("话题内容");
-        mToolbar.inflateMenu(R.menu.menu_post);
-
         final Intent intent = getIntent();
         final String topicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
-
-        // Set the favourite menu item's state according to history and logging state and
-        // set click listener correspondingly.
-        configMenuItem(topicId);
 
         mReplyButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
         mReplyButton.setOnClickListener(new View.OnClickListener() {
@@ -57,11 +51,21 @@ public class PostActivity extends SwipeBackActivity {
             }
         });
 
-        PostFragment postFragment = new PostFragment();
+        mFragment = new PostFragment();
         Bundle args = new Bundle();
         args.putString(RubyChinaArgKeys.TOPIC_ID, topicId);
-        postFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, postFragment).commit();
+        mFragment.setArguments(args);
+
+        // Creating The Toolbar and setting it as the Toolbar for the activity
+        mToolbar = (JumpToolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle("话题内容");
+        mToolbar.inflateMenu(R.menu.menu_post);
+        mToolbar.attachTo(mFragment);
+        // Set the favourite menu item's state according to history and logging state and
+        // set click listener correspondingly.
+        configMenuItem(topicId);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
     }
 
     public FloatingActionButton getFloatingActionButton() {
@@ -83,7 +87,6 @@ public class PostActivity extends SwipeBackActivity {
         }
 
         ArrayList<String> topicIds = Utility.readTopicsFromFile(RubyChinaArgKeys.MY_FAVOURITES);
-        Log.d(TAG + "size:", "" + topicIds.size());
         if (topicIds.contains(topicId)) {
             mToolbar.getMenu().getItem(0).setIcon(R.drawable.ic_post_favourite_active);
         }
