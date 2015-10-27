@@ -24,10 +24,11 @@ import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
 import org.rubychinaandroid.view.ReplyInputBox;
+import org.rubychinaandroid.view.ScrollCallback;
 
 import java.util.ArrayList;
 
-public class ReplyFragment extends Fragment {
+public class ReplyFragment extends Fragment implements ScrollCallback {
 
     private RecyclerView mRecyclerView;
     private ArrayList<ReplyModel> mReplyList = new ArrayList<ReplyModel>();
@@ -115,5 +116,14 @@ public class ReplyFragment extends Fragment {
 
     private void refreshReplies() {
         RubyChinaApiWrapper.getPostReplies(mTopicId, new ReplyHttpCallbackListener());
+    }
+
+    @Override
+    public void scrollTo(int direction) {
+        if (direction == View.FOCUS_DOWN) {
+            mRecyclerView.scrollToPosition(mReplyList.size() - 1);
+        } else if (direction == View.FOCUS_UP) {
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 }
