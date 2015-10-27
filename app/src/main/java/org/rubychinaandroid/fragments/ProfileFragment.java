@@ -16,6 +16,7 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.UserModel;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.ScreenUtils;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
@@ -50,7 +51,8 @@ public class ProfileFragment extends TopicsFragment {
         mUsername = (TextView) mProfileHeaderView.findViewById(R.id.username);
         mEmail = (TextView) mProfileHeaderView.findViewById(R.id.email);
 
-        mUserLogin = OAuthManager.getInstance().getUserLogin();
+        Bundle args = getArguments();
+        mUserLogin = args.getString(RubyChinaArgKeys.USER_LOGIN);
         assert (!"".equals(mUserLogin));
 
         RubyChinaApiWrapper.getUserProfile(mUserLogin, new RubyChinaApiListener<UserModel>() {

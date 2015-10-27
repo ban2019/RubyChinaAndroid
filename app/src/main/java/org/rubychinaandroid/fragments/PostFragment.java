@@ -1,5 +1,6 @@
 package org.rubychinaandroid.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.PostActivity;
+import org.rubychinaandroid.activity.ProfileActivity;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.PostModel;
@@ -126,19 +128,28 @@ public class PostFragment extends Fragment {
 
                 Log.d("Post", "Image has been loaded: " + data.getTopic().getUserAvatarUrl());
 
-                String author = data.getTopic().getUserName();
-                author = ("".equals(author) ? data.getTopic().getUserLogin() : author);
+                final String userName = data.getTopic().getUserName();
+                final String userLogin = data.getTopic().getUserLogin();
+                String author = ("".equals(userName) ? userLogin : userLogin + "(" + userName + ")");
                 mAuthor.setText(author);
                 mTime.setText(data.getTopic().getCreatedTime());
                 mNode.setText(data.getTopic().getNodeName());
+
+                mAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        intent.putExtra(RubyChinaArgKeys.USER_LOGIN, userLogin);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                    }
+                });
             }
 
             @Override
             public void onFailure(String error) {
-
                 // stop the swipe refresh layout's animation
                 mSwipeRefreshLayout.setRefreshing(false);
-
                 Utility.showToast("加载帖子失败");
             }
         });

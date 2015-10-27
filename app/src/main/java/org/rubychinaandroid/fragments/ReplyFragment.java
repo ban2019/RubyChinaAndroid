@@ -30,14 +30,11 @@ import java.util.ArrayList;
 public class ReplyFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-
     private ArrayList<ReplyModel> mReplyList = new ArrayList<ReplyModel>();
     private ReplyItemAdapter mRecyclerViewAdapter;
     private String mTopicId;
     private ReplyInputBox mReplyInputBox;
-
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private FootUpdate mFootUpdate = new FootUpdate();
 
     @Override
@@ -57,14 +54,12 @@ public class ReplyFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         mRecyclerViewAdapter = new ReplyItemAdapter(getActivity(), mReplyList, new ReplyItemOnClickListener() {
             @Override
             public void onClick(int floor, String userLogin) {
                 mReplyInputBox.hintReplyTo(floor, userLogin);
             }
         });
-
         HeaderViewRecyclerAdapter mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
         mRecyclerView.setAdapter(mHeaderAdapter);
         mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(getActivity()), new FootUpdate.LoadMore() {
@@ -85,10 +80,8 @@ public class ReplyFragment extends Fragment {
                 }, 500);
             }
         });
-
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
-
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -101,10 +94,8 @@ public class ReplyFragment extends Fragment {
     }
 
     public class ReplyHttpCallbackListener implements RubyChinaApiListener<ArrayList<ReplyModel>> {
-
         @Override
         public void onSuccess(ArrayList<ReplyModel> data) {
-
             mSwipeRefreshLayout.setRefreshing(false);
 
             mReplyList.clear();

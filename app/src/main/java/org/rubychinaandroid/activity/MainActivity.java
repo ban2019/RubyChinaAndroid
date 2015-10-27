@@ -23,6 +23,7 @@ import org.rubychinaandroid.adapter.ViewPagerAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.UserModel;
+import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.SlidingTabLayout;
@@ -185,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent;
                 if (OAuthManager.getInstance().getLoggedInState()) {
                     intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    intent.putExtra(RubyChinaArgKeys.USER_LOGIN, OAuthManager.getInstance().getUserLogin());
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else {
