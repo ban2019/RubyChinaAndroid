@@ -42,6 +42,12 @@ public class JumpToolbar extends Toolbar {
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                // If clicking once more than one second ago(such as touch with no intention),
+                // reset clickedOnce.
+                if (System.currentTimeMillis() - mLastMilliseconds >= 500) {
+                    clickedOnce = true;
+                }
+
                 if (!clickedOnce) {
                     clickedOnce = true;
                     return;
