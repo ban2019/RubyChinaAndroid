@@ -8,11 +8,12 @@ import android.support.v7.widget.Toolbar;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.TopicsFragment;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
+import org.rubychinaandroid.view.JumpToolbar;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 public class NodeActivity extends SwipeBackActivity {
-    Toolbar mToolbar;
+    JumpToolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +24,16 @@ public class NodeActivity extends SwipeBackActivity {
         String nodeName = intent.getStringExtra(RubyChinaArgKeys.NODE_NAME);
         String nodeId = intent.getStringExtra(RubyChinaArgKeys.NODE_ID);
 
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        mToolbar.setTitle(nodeName);
-
         TopicsFragment fragment = new TopicsFragment();
         Bundle bundle = new Bundle();
         bundle.putString(RubyChinaArgKeys.NODE_ID, nodeId);
         bundle.putBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY, false);
         fragment.setArguments(bundle);
+
+        mToolbar = (JumpToolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle(nodeName);
+        mToolbar.attachTo(fragment);
+
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 }

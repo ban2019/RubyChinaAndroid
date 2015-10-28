@@ -26,10 +26,12 @@ import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
+import org.rubychinaandroid.view.ScrollCallback;
 
 import java.util.ArrayList;
 
-public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, OnScrollToBottomListener {
+public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+        OnScrollToBottomListener, ScrollCallback {
     private final String LOG_TAG = "TopicsFragment";
 
     private Context mContext;
@@ -250,5 +252,14 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void requestTopicsByFavourite() {
         RubyChinaApiWrapper.getFavouriteTopics(mUserLogin, mPageIndex, new TopicListHttpCallbackListener());
+    }
+
+    @Override
+    public void scrollTo(int direction) {
+        if (direction == View.FOCUS_DOWN) {
+            mRecyclerView.scrollToPosition(mTopicList.size() - 1);
+        } else if (direction == View.FOCUS_UP) {
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 }
