@@ -24,12 +24,11 @@ import java.util.ArrayList;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 public class PostActivity extends SwipeBackActivity {
-
     private String TAG = "PostActivity";
 
     private JumpToolbar mToolbar;
     private FloatingActionButton mReplyButton;
-    boolean mIsFavourite = false; // whether current topic is favourite
+    boolean mIsFavourite = false;
     private PostFragment mFragment;
 
     @Override

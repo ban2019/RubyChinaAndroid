@@ -43,7 +43,6 @@ public class JumpToolbar extends Toolbar {
             @Override
             public void onClick(View v) {
                 if (!clickedOnce) {
-                    mLastMilliseconds = System.currentTimeMillis();
                     clickedOnce = true;
                     return;
                 }
@@ -51,8 +50,9 @@ public class JumpToolbar extends Toolbar {
                 if (System.currentTimeMillis() - mLastMilliseconds < 500) {
                     clickedOnce = false;
                     mFragment.scrollTo(View.FOCUS_UP);
-                    mLastMilliseconds = System.currentTimeMillis();
                 }
+
+                mLastMilliseconds = System.currentTimeMillis();
             }
         });
     }
