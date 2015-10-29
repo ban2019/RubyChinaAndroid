@@ -18,8 +18,9 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="org.rubychinaandroid.LOG_OUT" />
             </intent-filter>
         </activity>
         <activity
@@ -62,6 +63,11 @@
             android:name=".activity.NodeActivity"
             android:label="@string/title_activity_node" >
         </activity>
+        <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/title_activity_setting" >
+        </activity>
+
     </application>
 
 </manifest>

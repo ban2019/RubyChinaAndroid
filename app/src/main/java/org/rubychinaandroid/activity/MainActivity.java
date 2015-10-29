@@ -1,5 +1,7 @@
 package org.rubychinaandroid.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     // REQUEST CODES used to recognize the result returned by different activity
     private final int LOGIN_ACTIVITY_REQUEST_CODE = 1;
     private final int NEW_ACTIVITY_REQUEST_CODE = 2;
+    private final int SETTING_ACTIVITY_REQUEST_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,11 +151,21 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case NEW_ACTIVITY_REQUEST_CODE:
-
                 if (resultCode == RESULT_OK) {
                     Log.d(LOG_TAG, "Succeeded to publish topic.");
                 } else {
                     Log.d(LOG_TAG, "Failed to publish topic.");
+                }
+                break;
+
+            case SETTING_ACTIVITY_REQUEST_CODE:
+                if (resultCode == RubyChinaArgKeys.RESULT_LOGGED_OUT) {
+                    // Reset drawer.
+                    mDrawerUsername.setText("未命名");
+                    ImageLoader.getInstance().displayImage(
+                            "drawable://" + R.drawable.avatar_default,
+                            mDrawerAvatar,
+                            MyApplication.getInstance().getImageLoaderOptions());
                 }
                 break;
 
@@ -212,6 +225,10 @@ public class MainActivity extends AppCompatActivity {
                         } else if (menuItem.getItemId() == R.id.all_nodes) {
                             Intent intent = new Intent(MainActivity.this, AllNodesActivity.class);
                             startActivity(intent);
+                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                        } else if (menuItem.getItemId() == R.id.setting) {
+                            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                            startActivityForResult(intent, SETTING_ACTIVITY_REQUEST_CODE);
                             overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                         }
 

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="settings_settings"
+        android:title="@string/settings_normal">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_noimage_nowifi"
+            android:summary="@string/settings_no_image_no_wifi_summary"
+            android:title="@string/settings_no_image_no_wifi" />
+        <!--
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_effect"
+            android:title="@string/settings_use_effect"/>
+            -->
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_more">
+        <Preference
+            android:key="pref_cache"
+            android:title="@string/settings_clear_cache"
+            android:summary="0KB"/>
+        <Preference
+            android:key="pref_about"
+            android:title="@string/settings_about" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

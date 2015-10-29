@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.rubychinaandroid.MyApplication;
+import org.rubychinaandroid.api.RubyChinaApiListener;
+import org.rubychinaandroid.api.RubyChinaApiWrapper;
+import org.rubychinaandroid.db.RubyChinaDBManager;
+import org.rubychinaandroid.utils.Utility;
 
 public class OAuthManager {
 
@@ -40,7 +44,7 @@ public class OAuthManager {
         return mOAuthManager;
     }
 
-    public static synchronized SharedPreferences.Editor getEditor() {
+    private static synchronized SharedPreferences.Editor getEditor() {
         Log.d(TAG, "getEditor()");
         if (mEditor == null) {
             mEditor = MyApplication.getInstance()
@@ -80,5 +84,23 @@ public class OAuthManager {
 
     public static String getUserLogin() {
         return mPref.getString(LOGIN, "");
+    }
+
+    public static void logOut() {
+        RubyChinaApiWrapper.revoke(new RubyChinaApiListener() {
+            @Override
+            public void onSuccess(Object data) {
+                Utility.showToast("注销成功");
+            }
+
+            @Override
+            public void onFailure(String data) {
+                Utility.showToast("注销失败");
+                Log.d(TAG, data);
+            }
+        });
+        revokeAccessToken();
+        saveUserLogin("");
+        saveLoggedInState(false);
     }
 }

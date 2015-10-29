@@ -11,6 +11,18 @@
     <string name="preview">预览</string>
     <string name="publish">发布</string>
     <string name="topic_add_node_hint">选择节点</string>
+    <string name="settings_normal">常规设置</string>
+    <string name="settings_no_image_no_wifi">无图模式</string>
+    <string name="settings_no_image_no_wifi_summary">2G/3G网络下不显示图片</string>
+    <string name="settings_image_no_wifi_summary">2G/3G网络下显示图片</string>
+    <string name="settings_more">其他</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_about">关于我们</string>
+    <string name="settings_dialog_hint">提示</string>
+    <string name="settings_logout_or_not">确定退出登录？</string>
+    <string name="title_confirm_yes">确定</string>
+    <string name="title_confirm_cancel">取消</string>
+    <string name="settings_clear_cache_or_not">确定清除缓存？</string>
 
     <string name="title_activity_read_post">PostActivity</string>
     <string name="title_activity_reply_post">ReplyActivity</string>
@@ -22,4 +34,5 @@
     <string name="title_activity_favourite">FavouriteActivity</string>
     <string name="title_activity_all_nodes">AllNodesActivity</string>
     <string name="title_activity_node">NodeActivity</string>
+    <string name="title_activity_setting">SettingActivity</string>
 </resources>
