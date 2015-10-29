@@ -19,12 +19,14 @@ import com.melnykov.fab.ObservableScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
+import org.rubychinaandroid.MyConfig;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.activity.ProfileActivity;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.PostModel;
+import org.rubychinaandroid.utils.NetWorkHelper;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.RichTextView;
@@ -120,7 +122,7 @@ public class PostFragment extends Fragment implements ScrollCallback {
 
                 mTitle.setText(data.getTopic().getTitle());
 
-                boolean displayImage = true;
+                boolean displayImage = Utility.isDisplayImageNow();
                 mContent.setRichText(data.getBodyHtml(), displayImage);
 
                 Log.d("Post", "Image to be loaded: " + data.getTopic().getUserAvatarUrl());

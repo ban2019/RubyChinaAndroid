@@ -17,6 +17,8 @@ public class RubyChinaArgKeys {
     public static final String NODE_ID = "node_id";
     public static final String NODE_NAME = "node_name";
 
-    // SettingActivity's result returned to MainActivity
+    // SettingActivity's result returned to MainActivity.
     public static final int RESULT_LOGGED_OUT = -2;
+    // whether display image under mobile network
+    public static final String DISPLAY_IMAGE_IF_MOBILE = "display_image";
 }

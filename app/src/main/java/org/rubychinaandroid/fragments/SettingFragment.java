@@ -13,6 +13,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import org.rubychinaandroid.MyApplication;
+import org.rubychinaandroid.MyConfig;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.utils.FileUtils;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
@@ -87,13 +89,16 @@ public class SettingFragment extends PreferenceFragment {
 
         // 加载图片
         mLoadImage = (CheckBoxPreference) findPreference("pref_noimage_nowifi");
-        //mLoadImage.setChecked(!mApp.isLoadImageInMobileNetwork());
+        MyConfig.getInstance().setBooleanPreference(RubyChinaArgKeys.DISPLAY_IMAGE_IF_MOBILE,
+                mLoadImage.isChecked());
         mLoadImage.setSummary(mLoadImage.isChecked()
                 ? R.string.settings_no_image_no_wifi_summary
                 : R.string.settings_image_no_wifi_summary);
         mLoadImage.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                //mApp.setConfigLoadImageInMobileNetwork(!mLoadImage.isChecked());
+                MyConfig.getInstance().setBooleanPreference(
+                        RubyChinaArgKeys.DISPLAY_IMAGE_IF_MOBILE,
+                        mLoadImage.isChecked());
                 mLoadImage.setSummary(mLoadImage.isChecked()
                         ? R.string.settings_no_image_no_wifi_summary
                         : R.string.settings_image_no_wifi_summary);

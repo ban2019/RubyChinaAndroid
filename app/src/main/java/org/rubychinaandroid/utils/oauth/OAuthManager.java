@@ -90,12 +90,12 @@ public class OAuthManager {
         RubyChinaApiWrapper.revoke(new RubyChinaApiListener() {
             @Override
             public void onSuccess(Object data) {
-                Utility.showToast("×¢Ïú³É¹¦");
+                Utility.showToast("æ³¨é”€æˆåŠŸ");
             }
 
             @Override
             public void onFailure(String data) {
-                Utility.showToast("×¢ÏúÊ§°Ü");
+                Utility.showToast("æ³¨é”€å¤±è´¥");
                 Log.d(TAG, data);
             }
         });

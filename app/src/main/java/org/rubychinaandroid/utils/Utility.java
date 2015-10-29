@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.rubychinaandroid.MyApplication;
+import org.rubychinaandroid.MyConfig;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.TopicModel;
@@ -189,5 +190,15 @@ public class Utility {
                 mHandler.sendMessage(message);
             }
         }).start();
+    }
+
+    public static boolean isDisplayImageNow() {
+        boolean isDisplayIfMobile = MyConfig.getInstance()
+                .getBooleanPreference(RubyChinaArgKeys.DISPLAY_IMAGE_IF_MOBILE);
+        boolean isMobile = NetWorkHelper.isMobile(MyApplication.getInstance());
+        if (!isDisplayIfMobile && isMobile) {
+            return false;
+        }
+        return true;
     }
 }
