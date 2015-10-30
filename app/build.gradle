@@ -39,9 +39,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.android.support:design:22.2.0'
     compile 'com.commit451:bypasses:1.0.1'
-    compile files('src/main/java/org/rubychinaandroid/libs/android-async-http-1.4.7.jar')
-    compile files('src/main/java/org/rubychinaandroid/libs/universal-image-loader-1.9.4-with-sources.jar')
+    compile 'com.loopj.android:android-async-http:1.4.7'
+    compile files('src/main/java/org/rubychinaandroid/libs/universal-image-loader-1.9.4.jar')
     compile files('src/main/java/org/rubychinaandroid/libs/scribe-1.2.1.jar')
-    compile files('src/main/java/org/rubychinaandroid/libs/markdownview-1.2.jar')
     compile files('src/main/java/org/rubychinaandroid/libs/jsoup-1.8.3.jar')
 }

@@ -1,15 +1,14 @@
 ## RubyChinaAndroid
 
-ruby-china.org的第三方客户端
+ruby-china.org 的第三方客户端
 
 #### 下载链接
 
-[**Github**](https://github.com/xialincn/RubyChinaAndroid/releases/ruby-china-android.apk)
+[**Github**](https://github.com/xialincn/RubyChinaAndroid/release/ruby-china-android.apk)
 
 ### Android 版本要求
 
 Android 4.0+
-
 
 ### 功能
 
@@ -28,7 +27,12 @@ Android 4.0+
  * Android Studio 1.2.1.1
  * Android SDK 22
 
-### 屏幕截图
+### 代码及图片资源引用
+
+[v2ex by greatyao](https://github.com/greatyao/v2ex-android)
+[rubychina4android by gonjay](https://github.com/gonjay/rubychina4android)
+[](https://www.google.com/design/icons/#ic_visibility)
+
 
 ### LICENSE
 
