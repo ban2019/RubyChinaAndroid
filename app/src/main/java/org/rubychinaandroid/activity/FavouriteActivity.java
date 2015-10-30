@@ -1,7 +1,6 @@
 package org.rubychinaandroid.activity;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.TopicsFragment;

@@ -3,7 +3,6 @@ package org.rubychinaandroid.view;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;

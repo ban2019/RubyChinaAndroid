@@ -19,14 +19,12 @@ import com.melnykov.fab.ObservableScrollView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.rubychinaandroid.MyApplication;
-import org.rubychinaandroid.MyConfig;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.activity.PostActivity;
 import org.rubychinaandroid.activity.ProfileActivity;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.PostModel;
-import org.rubychinaandroid.utils.NetWorkHelper;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.RichTextView;

@@ -1,14 +1,8 @@
 package org.rubychinaandroid.activity;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.view.ViewGroup;
-import android.widget.Button;
 
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.SettingFragment;

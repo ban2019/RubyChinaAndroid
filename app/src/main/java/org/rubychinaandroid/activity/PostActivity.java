@@ -3,7 +3,6 @@ package org.rubychinaandroid.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,7 +16,6 @@ import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.JumpToolbar;
-import org.rubychinaandroid.view.ScrollCallback;
 
 import java.util.ArrayList;
 

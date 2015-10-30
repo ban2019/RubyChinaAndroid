@@ -18,7 +18,6 @@ import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.UserModel;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.ScreenUtils;
-import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
 
 public class ProfileFragment extends TopicsFragment {

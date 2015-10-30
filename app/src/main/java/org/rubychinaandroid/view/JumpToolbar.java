@@ -2,13 +2,9 @@ package org.rubychinaandroid.view;
 
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-
-import org.rubychinaandroid.fragments.PostFragment;
 
 public class JumpToolbar extends Toolbar {
     private final String TAG = "JumpToolbar";

@@ -7,7 +7,6 @@ import android.util.Log;
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
-import org.rubychinaandroid.db.RubyChinaDBManager;
 import org.rubychinaandroid.utils.Utility;
 
 public class OAuthManager {

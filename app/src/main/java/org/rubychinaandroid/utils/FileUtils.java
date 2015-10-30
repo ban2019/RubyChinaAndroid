@@ -1,17 +1,13 @@
 package org.rubychinaandroid.utils;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import org.rubychinaandroid.MyApplication;
-import org.rubychinaandroid.db.RubyChinaDBManager;
 
 import java.io.File;
-import java.util.ArrayList;
 
 public class FileUtils {
     private final static String TAG = "FileUtils";

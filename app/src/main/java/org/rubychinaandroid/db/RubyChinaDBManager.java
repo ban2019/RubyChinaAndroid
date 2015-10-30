@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.rubychinaandroid.model.TopicModel;
-import org.rubychinaandroid.utils.FileUtils;
 import org.rubychinaandroid.utils.RubyChinaCategory;
 
 import java.util.ArrayList;

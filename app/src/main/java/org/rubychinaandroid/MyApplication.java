@@ -3,7 +3,6 @@ package org.rubychinaandroid;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -14,10 +13,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-
-import org.rubychinaandroid.utils.FileUtils;
-import org.rubychinaandroid.utils.NetWorkHelper;
-import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
 import java.io.File;
 
