@@ -3,6 +3,7 @@ package org.rubychinaandroid.fragments;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,9 +26,11 @@ import org.rubychinaandroid.MyConfig;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.utils.FileUtils;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
+import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
 public class SettingFragment extends PreferenceFragment {
+    final String TAG = "SettingFragment";
     SharedPreferences mPreferences;
     Preference mCache;
     Preference mAbout;
@@ -108,7 +111,7 @@ public class SettingFragment extends PreferenceFragment {
 
         // 清除缓存
         mCache = findPreference("pref_cache");
-        //mCache.setSummary(FileUtils.getFileSize(FileUtils.getCacheSize(getActivity())));
+        mCache.setSummary(FileUtils.getCacheSize());
         mCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -117,8 +120,8 @@ public class SettingFragment extends PreferenceFragment {
                         .setPositiveButton(R.string.title_confirm_yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //FileUtils.clearAppCache(getActivity());
-                                mCache.setSummary("0KB");
+                                FileUtils.clearApplicationData();
+                                mCache.setSummary(FileUtils.getCacheSize());
                             }
                         })
                         .setNegativeButton(R.string.title_confirm_cancel, null).show();
@@ -134,11 +137,27 @@ public class SettingFragment extends PreferenceFragment {
                 return true;
             }
         });
+
+        mHelp = findPreference("pref_help");
+        mHelp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("浏览帖子和评论时，长按标题栏可以跳转到最下，" +
+                        "双击标题栏可以跳转到最上。")
+                        .setCancelable(false)
+                        .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                builder.show();
+                return false;
+            }
+        });
     }
 
     private void showAboutMe() {
-        //Intent intent = new Intent(getActivity(), AboutActivity.class);
-        //startActivity(intent);
+        Utility.showToast("感谢使用");
     }
 
 }

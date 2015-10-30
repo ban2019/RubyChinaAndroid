@@ -49,4 +49,8 @@ public class RubyChinaOpenHelper extends SQLiteOpenHelper {
                 "category=" + Integer.toString(category.getValue());
         db.execSQL(DELETE_PAGE);
     }
+
+    public void destroy(SQLiteDatabase db) {
+        db.execSQL("drop table if exists " + TOPIC_TABLE_NAME);
+    }
 }

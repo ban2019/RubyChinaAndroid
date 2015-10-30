@@ -7,13 +7,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.rubychinaandroid.model.TopicModel;
+import org.rubychinaandroid.utils.FileUtils;
 import org.rubychinaandroid.utils.RubyChinaCategory;
 
 import java.util.ArrayList;
 
 public class RubyChinaDBManager {
     private final String LOG_TAG = "RubyChinaDBManager";
-    public final String DB_NAME = "ruby_china_android";
+    private final String DB_NAME = "ruby_china_android";
     public final int VERSION = 1;
     private static RubyChinaDBManager mRubyChinaDBManager;
     private SQLiteDatabase db;
@@ -115,5 +116,13 @@ public class RubyChinaDBManager {
             mTotalPages = page + 1; // mTotalPages is 1-based, mIndexPage is 0-based.
             getInstance(mContext).commitTotalPages(category, mTotalPages);
         }
+    }
+
+    public String getDatabaseName() {
+        return DB_NAME;
+    }
+
+    public void destroyDatabase() {
+        dbHelper.destroy(db);
     }
 }

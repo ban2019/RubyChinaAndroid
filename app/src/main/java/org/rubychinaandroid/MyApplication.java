@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import org.rubychinaandroid.utils.FileUtils;
 import org.rubychinaandroid.utils.NetWorkHelper;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 

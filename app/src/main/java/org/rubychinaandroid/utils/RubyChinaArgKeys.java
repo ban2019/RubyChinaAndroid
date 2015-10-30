@@ -21,4 +21,6 @@ public class RubyChinaArgKeys {
     public static final int RESULT_LOGGED_OUT = -2;
     // whether display image under mobile network
     public static final String DISPLAY_IMAGE_IF_MOBILE = "display_image";
+
+    public static final String CLEAR_CACHE_AFTER_REBOOT = "clear_cache_after_reboot";
 }

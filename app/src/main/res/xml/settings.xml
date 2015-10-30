@@ -27,6 +27,10 @@
         <Preference
             android:key="pref_about"
             android:title="@string/settings_about" />
+        <Preference
+            android:key="pref_help"
+            android:title="帮助"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
