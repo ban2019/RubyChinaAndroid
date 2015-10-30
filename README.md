@@ -33,6 +33,12 @@ Android 4.0+
 [rubychina4android by gonjay](https://github.com/gonjay/rubychina4android)
 [](https://www.google.com/design/icons/#ic_visibility)
 
+### 屏幕截图
+
+<img src=https://github.com/xialincn/RubyChinaAndroid/blob/master/snapshots/Screenshot_main.png width="200" height="350"/>
+<img src=https://github.com/xialincn/RubyChinaAndroid/blob/master/snapshots/Screenshot_drawer.png width="200" height="350">
+<img src=https://github.com/xialincn/RubyChinaAndroid/blob/master/snapshots/Screenshot_all_nodes.png width="200" height="350">
+
 
 ### LICENSE
 
