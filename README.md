@@ -30,7 +30,9 @@ Android 4.0+
 ### 代码及图片资源引用
 
 [v2ex by greatyao](https://github.com/greatyao/v2ex-android)
+
 [rubychina4android by gonjay](https://github.com/gonjay/rubychina4android)
+
 [](https://www.google.com/design/icons/#ic_visibility)
 
 ### 屏幕截图
