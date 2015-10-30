@@ -33,7 +33,7 @@ Android 4.0+
 
 [rubychina4android by gonjay](https://github.com/gonjay/rubychina4android)
 
-[](https://www.google.com/design/icons/#ic_visibility)
+[google design icons](https://www.google.com/design/icons/#ic_visibility)
 
 ### 屏幕截图
 
