@@ -15,7 +15,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
--libraryjars libs
--dontwarn demo.Pinyin4jAppletDemo*
--dontwarn org.scribe.services.*
