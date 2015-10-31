@@ -2,9 +2,6 @@
 
 ruby-china.org 的第三方客户端
 
-#### 下载链接
-
-[**Github**](https://github.com/xialincn/RubyChinaAndroid/release/ruby-china-android.apk)
 
 ### Android 版本要求
 
