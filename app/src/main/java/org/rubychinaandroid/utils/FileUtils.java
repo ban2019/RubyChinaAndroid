@@ -12,24 +12,29 @@ import java.io.File;
 public class FileUtils {
     private final static String TAG = "FileUtils";
     private static final int RATIO = 1024;
+
+    private static double round(double d) {
+        return (double) Math.round(d * 100) / 100;
+    }
+
     public static String getCacheSize() {
         File appDir = StorageUtils.getOwnCacheDirectory(MyApplication.getInstance(), "Pictures/rubychina");
         long bytes = folderSize(appDir);
         double kb = bytes / RATIO;
-        if ((int)kb == 0) {
-            return bytes + "B";
+        if ((int) kb == 0) {
+            return round(bytes) + "B";
         }
 
         double mb = kb / RATIO;
-        if ((int)mb == 0) {
-            return kb + "KB";
+        if ((int) mb == 0) {
+            return round(kb) + "KB";
         }
 
         double gb = mb / RATIO;
-        if ((int)gb == 0) {
-            return mb + "MB";
+        if ((int) gb == 0) {
+            return round(mb) + "MB";
         }
-        return gb + "GB";
+        return round(gb) + "GB";
     }
 
     public static long folderSize(File directory) {
