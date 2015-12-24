@@ -54,7 +54,7 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
         View postLayout = view.findViewById(R.id.id_post);
 
         mTitle = (TextView) postLayout.findViewById(R.id.title);
-        mContent = (RichTextView) postLayout.findViewById(R.id.container);
+        mContent = (RichTextView) postLayout.findViewById(R.id.content);
         mAvatar = (ImageView) postLayout.findViewById(R.id.avatar);
         mAuthor = (TextView) postLayout.findViewById(R.id.author);
         mTime = (TextView) postLayout.findViewById(R.id.time);
