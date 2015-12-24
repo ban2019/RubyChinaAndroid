@@ -27,7 +27,6 @@ public class PostActivity extends SwipeBackActivity {
     private JumpToolbar mToolbar;
     private FloatingActionButton mReplyButton;
     boolean mIsFavourite = false;
-    private PostFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +47,20 @@ public class PostActivity extends SwipeBackActivity {
             }
         });
 
-        mFragment = new PostFragment();
+        PostFragment fragment = new PostFragment();
         Bundle args = new Bundle();
         args.putString(RubyChinaArgKeys.TOPIC_ID, topicId);
-        mFragment.setArguments(args);
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
 
         // Creating The Toolbar and setting it as the Toolbar for the activity
         mToolbar = (JumpToolbar) findViewById(R.id.tool_bar);
         mToolbar.setTitle("话题内容");
         mToolbar.inflateMenu(R.menu.menu_post);
-        mToolbar.attachTo(mFragment);
+        mToolbar.attachTo(fragment);
         // Set the favourite menu item's state according to history and logging state and
         // set click listener correspondingly.
         configMenuItem(topicId);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.content, mFragment).commit();
     }
 
     public FloatingActionButton getFloatingActionButton() {

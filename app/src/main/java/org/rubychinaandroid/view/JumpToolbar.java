@@ -1,6 +1,5 @@
 package org.rubychinaandroid.view;
 
-
 import android.content.Context;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -67,5 +66,9 @@ public class JumpToolbar extends Toolbar {
                 return true;
             }
         });
+    }
+
+    public interface ScrollCallback {
+        void scrollTo(int direction);
     }
 }

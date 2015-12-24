@@ -1,5 +1,6 @@
 package org.rubychinaandroid.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,11 +28,11 @@ import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.PostModel;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
+import org.rubychinaandroid.view.JumpToolbar;
 import org.rubychinaandroid.view.RichTextView;
-import org.rubychinaandroid.view.ScrollCallback;
 
 
-public class PostFragment extends Fragment implements ScrollCallback {
+public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback {
 
     private TextView mTitle;
     private RichTextView mContent;
@@ -42,30 +43,25 @@ public class PostFragment extends Fragment implements ScrollCallback {
     private String mTopicId;
     private FrameLayout mFrameLayout;
     private CardView mCardView;
-
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ObservableScrollView mScrollView;
+    private Activity mHostActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_post, container, false);
-
         Log.d("PostFragment", "onCreateView");
-
         View postLayout = view.findViewById(R.id.id_post);
 
         mTitle = (TextView) postLayout.findViewById(R.id.title);
-        mContent = (RichTextView) postLayout.findViewById(R.id.content);
+        mContent = (RichTextView) postLayout.findViewById(R.id.container);
         mAvatar = (ImageView) postLayout.findViewById(R.id.avatar);
         mAuthor = (TextView) postLayout.findViewById(R.id.author);
         mTime = (TextView) postLayout.findViewById(R.id.time);
         mNode = (TextView) postLayout.findViewById(R.id.node);
         mCardView = (CardView) view.findViewById(R.id.card_container);
-
         mFrameLayout = (FrameLayout) view.findViewById(R.id.frame_post);
         mScrollView = (ObservableScrollView) view.findViewById(R.id.scroll_view);
-
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -80,10 +76,18 @@ public class PostFragment extends Fragment implements ScrollCallback {
         mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
                 android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
 
-        PostActivity activity = (PostActivity) getActivity();
-        activity.getFloatingActionButton().attachToScrollView(mScrollView);
-
+        ((PostActivity) mHostActivity).getFloatingActionButton().attachToScrollView(mScrollView);
         return view;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof PostActivity) {
+            mHostActivity = activity;
+        } else {
+            throw new RuntimeException("The host activity should be of PostActivity type.");
+        }
     }
 
     @Override
@@ -92,9 +96,7 @@ public class PostFragment extends Fragment implements ScrollCallback {
 
         Bundle args = getArguments();
         mTopicId = args.getString(RubyChinaArgKeys.TOPIC_ID);
-
         Log.d("PostFragment", "onActivityCreated");
-
         // trigger the swipe refresh layout's animation
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
@@ -106,30 +108,20 @@ public class PostFragment extends Fragment implements ScrollCallback {
     }
 
     public void refreshTopic() {
-
         RubyChinaApiWrapper.getPostContent(mTopicId, new RubyChinaApiListener<PostModel>() {
-
             @Override
             public void onSuccess(PostModel data) {
-
                 mCardView.setVisibility(View.VISIBLE);
                 mFrameLayout.setVisibility(View.VISIBLE);
-
                 // stop the swipe refresh layout's animation
                 mSwipeRefreshLayout.setRefreshing(false);
-
                 mTitle.setText(data.getTopic().getTitle());
-
                 boolean displayImage = Utility.isDisplayImageNow();
                 mContent.setRichText(data.getBodyHtml(), displayImage);
-
                 Log.d("Post", "Image to be loaded: " + data.getTopic().getUserAvatarUrl());
-
                 ImageLoader.getInstance().displayImage(data.getTopic().getUserAvatarUrl(),
                         mAvatar, MyApplication.getInstance().getImageLoaderOptions());
-
                 Log.d("Post", "Image has been loaded: " + data.getTopic().getUserAvatarUrl());
-
                 final String userName = data.getTopic().getUserName();
                 final String userLogin = data.getTopic().getUserLogin();
                 String author = ("".equals(userName) ? userLogin : userLogin + "(" + userName + ")");
@@ -140,10 +132,10 @@ public class PostFragment extends Fragment implements ScrollCallback {
                 mAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        Intent intent = new Intent(mHostActivity, ProfileActivity.class);
                         intent.putExtra(RubyChinaArgKeys.USER_LOGIN, userLogin);
                         startActivity(intent);
-                        getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                        mHostActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                     }
                 });
             }

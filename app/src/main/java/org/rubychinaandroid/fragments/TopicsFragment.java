@@ -26,12 +26,12 @@ import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
 import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
-import org.rubychinaandroid.view.ScrollCallback;
+import org.rubychinaandroid.view.JumpToolbar;
 
 import java.util.ArrayList;
 
 public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
-        OnScrollToBottomListener, ScrollCallback {
+        OnScrollToBottomListener, JumpToolbar.ScrollCallback {
     private final String LOG_TAG = "TopicsFragment";
 
     private Context mContext;

@@ -1,6 +1,7 @@
 package org.rubychinaandroid.fragments;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +33,13 @@ public class SettingFragment extends PreferenceFragment {
     CheckBoxPreference mLoadImage;
     Preference mHelp;
     Button mLogout;
-    MyApplication mApp = MyApplication.getInstance();
+    Activity mHostActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mHostActivity = activity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +50,7 @@ public class SettingFragment extends PreferenceFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(mHostActivity);
 
         ViewGroup root = (ViewGroup) getView();
         ListView localListView = (ListView) root.findViewById(android.R.id.list);
@@ -51,7 +58,7 @@ public class SettingFragment extends PreferenceFragment {
         localListView.setCacheColorHint(0);
         root.removeView(localListView);
 
-        ViewGroup localViewGroup = (ViewGroup) LayoutInflater.from(getActivity())
+        ViewGroup localViewGroup = (ViewGroup) LayoutInflater.from(mHostActivity)
                 .inflate(R.layout.fragment_setting, null);
         ((ViewGroup) localViewGroup.findViewById(R.id.setting_content))
                 .addView(localListView, -1, -1);
@@ -69,7 +76,7 @@ public class SettingFragment extends PreferenceFragment {
         mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
                 builder.setTitle(R.string.settings_dialog_hint)
                         .setMessage(R.string.settings_logout_or_not)
                         .setPositiveButton(R.string.title_confirm_yes, new DialogInterface.OnClickListener() {
@@ -77,8 +84,8 @@ public class SettingFragment extends PreferenceFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 OAuthManager.logOut();
                                 Intent intent = new Intent();
-                                getActivity().setResult(RubyChinaArgKeys.RESULT_LOGGED_OUT, intent);
-                                getActivity().finish();
+                                mHostActivity.setResult(RubyChinaArgKeys.RESULT_LOGGED_OUT, intent);
+                                mHostActivity.finish();
                             }
                         })
                         .setNegativeButton(R.string.title_confirm_cancel, null).show();
@@ -109,7 +116,7 @@ public class SettingFragment extends PreferenceFragment {
         mCache.setSummary(FileUtils.getCacheSize());
         mCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
                 builder.setTitle(R.string.settings_dialog_hint)
                         .setMessage(R.string.settings_clear_cache_or_not)
                         .setPositiveButton(R.string.title_confirm_yes, new DialogInterface.OnClickListener() {
@@ -137,7 +144,7 @@ public class SettingFragment extends PreferenceFragment {
         mHelp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mHostActivity);
                 builder.setMessage("浏览帖子和评论时，长按标题栏可以跳转到最下，" +
                         "双击标题栏可以跳转到最上。")
                         .setCancelable(false)

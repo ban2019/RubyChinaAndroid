@@ -23,12 +23,12 @@ import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
+import org.rubychinaandroid.view.JumpToolbar;
 import org.rubychinaandroid.view.ReplyInputBox;
-import org.rubychinaandroid.view.ScrollCallback;
 
 import java.util.ArrayList;
 
-public class ReplyFragment extends Fragment implements ScrollCallback {
+public class ReplyFragment extends Fragment implements JumpToolbar.ScrollCallback {
 
     private RecyclerView mRecyclerView;
     private ArrayList<ReplyModel> mReplyList = new ArrayList<ReplyModel>();
@@ -37,25 +37,30 @@ public class ReplyFragment extends Fragment implements ScrollCallback {
     private ReplyInputBox mReplyInputBox;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private FootUpdate mFootUpdate = new FootUpdate();
+    private Activity mHostActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mHostActivity = activity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reply, container, false);
 
-        final Activity activity = getActivity();
-
         // keep the soft input keyboard away from covering the reply list
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        mHostActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        Intent intent = activity.getIntent();
+        Intent intent = mHostActivity.getIntent();
         mTopicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
 
         mReplyInputBox = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
         mReplyInputBox.setTopicId(mTopicId);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerViewAdapter = new ReplyItemAdapter(getActivity(), mReplyList, new ReplyItemOnClickListener() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mHostActivity));
+        mRecyclerViewAdapter = new ReplyItemAdapter(mHostActivity, mReplyList, new ReplyItemOnClickListener() {
             @Override
             public void onClick(int floor, String userLogin) {
                 mReplyInputBox.hintReplyTo(floor, userLogin);
@@ -63,7 +68,7 @@ public class ReplyFragment extends Fragment implements ScrollCallback {
         });
         HeaderViewRecyclerAdapter mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
         mRecyclerView.setAdapter(mHeaderAdapter);
-        mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(getActivity()), new FootUpdate.LoadMore() {
+        mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(mHostActivity), new FootUpdate.LoadMore() {
             @Override
             public void loadMore() {
                 //requestMoreReplies();
