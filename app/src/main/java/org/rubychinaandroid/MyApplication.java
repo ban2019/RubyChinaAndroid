@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import org.rubychinaandroid.utils.FavouriteUtils;
+
 import java.io.File;
 
 public class MyApplication extends Application {
@@ -26,6 +28,7 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = (MyApplication) getApplicationContext();
         initImageLoader();
+        updateFavRecord();
     }
 
     public static MyApplication getInstance() {
@@ -61,5 +64,9 @@ public class MyApplication extends Application {
 
     public DisplayImageOptions getImageLoaderOptions() {
         return mImageLoaderOptions;
+    }
+
+    private void updateFavRecord() {
+        FavouriteUtils.updateFavouriteRecord();
     }
 }

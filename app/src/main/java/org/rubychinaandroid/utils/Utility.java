@@ -14,7 +14,9 @@ import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,18 +26,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Utility {
-
     private static final String LOG_TAG = "Utility";
 
-    // the number of returned posts after one request
-    public static int LIST_LIMIT = 20;
-
     public static String getTimeSpanSinceCreated(String date) {
-
         if (date == null || "".equals(date)) {
             return "";
         }
-
         String rawPublishTime = date;
         String timeInString = "";
 
@@ -57,7 +53,6 @@ public class Utility {
 
         try {
             created = format.parse(timeInString);
-
             long diff = created.getTime() - current.getTime();
             long milliSeconds = diff > 0 ? diff : -diff;
             long seconds = milliSeconds / 1000;
@@ -93,103 +88,7 @@ public class Utility {
             toast.setText(msg);
             Log.d(LOG_TAG, "toast is not null");
         }
-
         toast.show();
-    }
-
-    public static void storeTopicsToFile(String fileName, String data) {
-        Log.d(LOG_TAG, "store " + data + fileName);
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                    MyApplication.getInstance().openFileOutput(fileName, Context.MODE_PRIVATE | Context.MODE_APPEND));
-            outputStreamWriter.write(data + "\n");
-            outputStreamWriter.close();
-            Log.d(LOG_TAG, "store " + data + fileName);
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-    }
-
-    public static ArrayList<String> readTopicsFromFile(String fileName) {
-        ArrayList<String> ret = new ArrayList<>();
-        try {
-            InputStream inputStream = MyApplication.getInstance().openFileInput(fileName);
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    Log.d(LOG_TAG, receiveString);
-                    ret.add(receiveString);
-                }
-                inputStream.close();
-            }
-        } catch (FileNotFoundException e) {
-            Log.d("PostActivity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.d("PostActivity", "Can not read file: " + e.toString());
-        }
-        return ret;
-    }
-
-    public static boolean deleteFile(String fileName) {
-        return MyApplication.getInstance().deleteFile(fileName);
-    }
-
-    private static final int PAGE = -1;
-
-    private static class FavouriteHandler extends Handler {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case PAGE:
-                    if (!OAuthManager.getInstance().getLoggedInState()) {
-                        Log.d(LOG_TAG, "have not logged in");
-                        return;
-                    }
-                    RubyChinaApiWrapper.getFavouriteTopics(OAuthManager.getInstance().getUserLogin(),
-                            msg.arg1, new RubyChinaApiListener<ArrayList<TopicModel>>() {
-                                @Override
-                                public void onSuccess(ArrayList<TopicModel> data) {
-                                    Log.d(LOG_TAG, Integer.toString(data.size()));
-                                    for (int i = 0; i < data.size(); i++) {
-                                        storeTopicsToFile(RubyChinaArgKeys.MY_FAVOURITES, data.get(i).getTopicId());
-                                    }
-
-                                    favouriteHelper();
-                                }
-
-                                @Override
-                                public void onFailure(String data) {
-                                    Log.d(LOG_TAG, data);
-                                }
-                            });
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    private static Handler mHandler = new FavouriteHandler();
-
-    public static void updateFavouriteRecord() {
-        deleteFile(RubyChinaArgKeys.MY_FAVOURITES);
-        favouriteHelper();
-    }
-
-    private static int page = 0;
-
-    private static void favouriteHelper() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message message = new Message();
-                message.what = PAGE;
-                message.arg1 = page;
-                ++page;
-                mHandler.sendMessage(message);
-            }
-        }).start();
     }
 
     public static boolean isDisplayImageNow() {

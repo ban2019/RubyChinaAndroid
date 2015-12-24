@@ -23,6 +23,7 @@ import org.rubychinaandroid.adapter.ViewPagerAdapter;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.UserModel;
+import org.rubychinaandroid.utils.FavouriteUtils;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         configDrawer();
-        Utility.updateFavouriteRecord();
+        //PostActivity.updateFavouriteRecord();
     }
 
     public FloatingActionButton getFloatingActionButton() {
@@ -128,12 +129,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UserModel data) {
                             OAuthManager.getInstance().saveUserLogin(data.getUserLogin());
-
                             // Update the drawer.
                             mDrawerUsername.setText(data.getName());
                             ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar,
                                     MyApplication.getInstance().getImageLoaderOptions());
                             Log.d(LOG_TAG, data.getUserLogin());
+                            FavouriteUtils.updateFavouriteRecord();
                         }
 
                         @Override
@@ -141,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(LOG_TAG, "onFailure");
                         }
                     });
-
                 } else {
                     OAuthManager.getInstance().saveLoggedInState(false);
                     Utility.showToast("登录失败");

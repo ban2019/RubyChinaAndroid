@@ -20,6 +20,7 @@ import android.widget.ListView;
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.MyConfig;
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.utils.FavouriteUtils;
 import org.rubychinaandroid.utils.FileUtils;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
@@ -83,12 +84,12 @@ public class SettingFragment extends PreferenceFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 OAuthManager.logOut();
+                                FavouriteUtils.updateFavouriteRecord();
                                 Intent intent = new Intent();
                                 mHostActivity.setResult(RubyChinaArgKeys.RESULT_LOGGED_OUT, intent);
                                 mHostActivity.finish();
                             }
-                        })
-                        .setNegativeButton(R.string.title_confirm_cancel, null).show();
+                        }).setNegativeButton(R.string.title_confirm_cancel, null).show();
             }
         });
 

@@ -43,13 +43,14 @@ public class RubyChinaApiWrapper {
     private static final String API_USER_FAVOURITE_TOPICS_URL = API_BASE_URL + "/users/%s/favorites.json";
     // HTML URL
     private static final String API_NODE_TOPICS_URL = BASE_URL + "/topics/node%s?page=%d";
+    // The number of posts got once
+    private static int LIST_LIMIT = 20;
 
     private static AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
 
     // Page is zero-based, 20 topics in one page.
     public static void getTopics(String url, ApiParams params,
                                  final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
-
         final String jsonObjName = "topics";
         asyncHttpClient.get(url, params,
                 new WrappedTextHttpResponseHandler<>(TopicModel.class, jsonObjName, listener));
@@ -60,18 +61,17 @@ public class RubyChinaApiWrapper {
         getTopics(API_TOPICS_URL,
                 new ApiParams()
                         .with("type", category.getExpr())
-                        .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
+                        .with("offset", Integer.toString(page * LIST_LIMIT)),
                 listener);
     }
 
     // Page is zero-based, 20 topics in one page.
     public static void getUserTopics(String userLogin, int page,
                                      final RubyChinaApiListener<ArrayList<TopicModel>> listener) {
-
         getTopics(String.format(API_USER_TOPICS_URL, userLogin),
                 new ApiParams()
                         .with("login", userLogin)
-                        .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
+                        .with("offset", Integer.toString(page * LIST_LIMIT)),
                 listener);
     }
 
@@ -80,7 +80,7 @@ public class RubyChinaApiWrapper {
         getTopics(String.format(API_USER_FAVOURITE_TOPICS_URL, userLogin),
                 new ApiParams()
                         .with("login", userLogin)
-                        .with("offset", Integer.toString(page * Utility.LIST_LIMIT)),
+                        .with("offset", Integer.toString(page * LIST_LIMIT)),
                 listener);
     }
 

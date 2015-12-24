@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 public class PostModel extends BaseModel {
+    private final String TAG = "PostModel";
     private TopicModel topic;
     private String body;
     private String bodyHtml;
@@ -55,12 +56,11 @@ public class PostModel extends BaseModel {
 
     public void parse(JSONObject jsonObject) {
         try {
-            JSONObject joPost = jsonObject.getJSONObject("topic");
-            this.topic.parse(joPost);
-
-            this.body = joPost.getString("body");
-            this.bodyHtml = joPost.getString("body_html");
-            this.hits = joPost.getString("hits");
+            JSONObject jo = jsonObject.getJSONObject("topic");
+            this.topic.parse(jo);
+            this.body = jo.getString("body");
+            this.bodyHtml = jo.getString("body_html");
+            this.hits = jo.getString("hits");
         } catch (Exception e) {
             e.printStackTrace();
         }

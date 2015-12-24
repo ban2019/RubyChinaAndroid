@@ -8,9 +8,6 @@ public class RubyChinaArgKeys {
     public static final String TOPIC_CATEGORY = "category";
     public static final String USER_LOGIN = "user_login";
 
-    // File storing favourite topic ids
-    public static final String MY_FAVOURITES = "MyFavourites.txt";
-
     // Distinguish FavouriteActivity and ProfileActivity
     public static final String IS_FROM_FAVOURITE_ACTIVITY = "is_from_favourite_activity";
 
