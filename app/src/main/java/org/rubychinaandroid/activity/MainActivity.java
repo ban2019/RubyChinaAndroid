@@ -80,11 +80,9 @@ public class MainActivity extends AppCompatActivity {
         // cache pages
         mPager.setOffscreenPageLimit(3);
 
-        // Assigning the Sliding Tab Layout View
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
         mTabs.setDistributeEvenly(true);
-        // Setting Custom Color for the Scroll bar indicator of the Tab View
         mTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
@@ -104,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         configDrawer();
-        //PostActivity.updateFavouriteRecord();
     }
 
     public FloatingActionButton getFloatingActionButton() {
@@ -133,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
                             mDrawerUsername.setText(data.getName());
                             ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar,
                                     MyApplication.getInstance().getImageLoaderOptions());
-                            Log.d(LOG_TAG, data.getUserLogin());
                             FavouriteUtils.updateFavouriteRecord();
                         }
 

@@ -11,13 +11,13 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
-import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.MyConfig;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.utils.FavouriteUtils;

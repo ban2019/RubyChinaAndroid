@@ -1,28 +1,12 @@
 package org.rubychinaandroid.utils;
 
-import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.MyConfig;
-import org.rubychinaandroid.api.RubyChinaApiListener;
-import org.rubychinaandroid.api.RubyChinaApiWrapper;
-import org.rubychinaandroid.model.TopicModel;
-import org.rubychinaandroid.utils.oauth.OAuthManager;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Utility {

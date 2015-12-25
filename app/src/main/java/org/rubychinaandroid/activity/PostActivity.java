@@ -1,36 +1,23 @@
 package org.rubychinaandroid.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.R;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.fragments.PostFragment;
-import org.rubychinaandroid.model.TopicModel;
 import org.rubychinaandroid.utils.FavouriteUtils;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.JumpToolbar;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;

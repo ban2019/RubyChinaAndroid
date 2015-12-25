@@ -1,4 +1,5 @@
 package org.rubychinaandroid.utils;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -8,7 +9,6 @@ import org.rubychinaandroid.MyApplication;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.TopicModel;
-import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.oauth.OAuthManager;
 
 import java.io.BufferedReader;
@@ -33,7 +33,6 @@ public class FavouriteUtils {
                     MyApplication.getInstance().openFileOutput(FILENAME, Context.MODE_PRIVATE | Context.MODE_APPEND));
             outputStreamWriter.write(data + "\n");
             outputStreamWriter.close();
-            //Log.d(LOG_TAG, "store " + data + FILENAME);
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
@@ -48,7 +47,6 @@ public class FavouriteUtils {
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 while ((receiveString = bufferedReader.readLine()) != null) {
-                    Log.d(LOG_TAG, receiveString);
                     ret.add(receiveString);
                 }
                 inputStream.close();
@@ -61,10 +59,6 @@ public class FavouriteUtils {
         return ret;
     }
 
-    private static boolean deleteFile(String fileName) {
-        return MyApplication.getInstance().deleteFile(fileName);
-    }
-
     private static final int PAGE = -1;
 
     private static class FavouriteHandler extends Handler {
@@ -75,7 +69,6 @@ public class FavouriteUtils {
                         Log.d(LOG_TAG, "have not logged in");
                         return;
                     }
-                    Log.d("login=", OAuthManager.getInstance().getUserLogin());
                     RubyChinaApiWrapper.getFavouriteTopics(OAuthManager.getInstance().getUserLogin(),
                             msg.arg1, new RubyChinaApiListener<ArrayList<TopicModel>>() {
                                 @Override
@@ -99,18 +92,16 @@ public class FavouriteUtils {
         }
     }
 
-    private static Handler mHandler = new FavouriteHandler();
-
+    private static int page = 0;
     public static void updateFavouriteRecord() {
-        deleteFile(FILENAME);
-        Log.d(LOG_TAG, "updatefavouriterecord");
+        page = 0;
+        MyApplication.getInstance().deleteFile(FILENAME);
         if (OAuthManager.getInstance().getLoggedInState()) {
             favouriteHelper();
         }
     }
 
-    private static int page = 0;
-
+    private static Handler mHandler = new FavouriteHandler();
     private static void favouriteHelper() {
         new Thread(new Runnable() {
             @Override

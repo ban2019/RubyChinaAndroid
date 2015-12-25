@@ -28,7 +28,7 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = (MyApplication) getApplicationContext();
         initImageLoader();
-        updateFavRecord();
+        FavouriteUtils.updateFavouriteRecord();
     }
 
     public static MyApplication getInstance() {
@@ -64,9 +64,5 @@ public class MyApplication extends Application {
 
     public DisplayImageOptions getImageLoaderOptions() {
         return mImageLoaderOptions;
-    }
-
-    private void updateFavRecord() {
-        FavouriteUtils.updateFavouriteRecord();
     }
 }
