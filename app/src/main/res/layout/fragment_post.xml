@@ -33,14 +33,10 @@
                 android:layout_height="wrap_content"
                 android:showDividers="middle"
                 android:visibility="invisible">
-
                 <include
                     android:id="@+id/id_post"
                     layout="@layout/post" />
-
             </FrameLayout>
         </android.support.v7.widget.CardView>
-
     </com.melnykov.fab.ObservableScrollView>
-
 </android.support.v4.widget.SwipeRefreshLayout>

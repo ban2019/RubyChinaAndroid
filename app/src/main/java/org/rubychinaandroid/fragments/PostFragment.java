@@ -50,7 +50,6 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
-        Log.d("PostFragment", "onCreateView");
         View postLayout = view.findViewById(R.id.id_post);
 
         mTitle = (TextView) postLayout.findViewById(R.id.title);

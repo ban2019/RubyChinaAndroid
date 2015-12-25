@@ -1,7 +1,9 @@
 package org.rubychinaandroid.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,6 +86,7 @@ public class PostActivity extends SwipeBackActivity {
 
         ArrayList<String> topicIds = FavouriteUtils.loadFavourites();
         if (topicIds.contains(topicId)) {
+            mIsFavourite = true;
             mToolbar.getMenu().getItem(0).setIcon(R.drawable.ic_post_favourite_active);
         }
 
@@ -94,19 +97,49 @@ public class PostActivity extends SwipeBackActivity {
                     if (mIsFavourite) {
                         item.setIcon(R.drawable.ic_post_favourite);
                         mIsFavourite = false;
-                    } else {
-                        item.setIcon(R.drawable.ic_post_favourite_active);
-                        mIsFavourite = true;
-                        RubyChinaApiWrapper.favouriteTopic(topicId, new RubyChinaApiListener() {
+                        final ProgressDialog dialog = ProgressDialog.show(
+                                PostActivity.this, null, "正在取消收藏", true);
+                        RubyChinaApiWrapper.unFavouriteTopic(topicId, new RubyChinaApiListener() {
                             @Override
                             public void onSuccess(Object data) {
-                                Utility.showToast("已收藏");
-                                FavouriteUtils.recordFavourite(topicId);
+                                Utility.showToast("已取消收藏");
+                                FavouriteUtils.eraseFavourite(topicId);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                    }
+                                }, 500);
                             }
 
                             @Override
                             public void onFailure(String data) {
                                 Utility.showToast("Error:" + data);
+                                dialog.dismiss();
+                            }
+                        });
+                    } else {
+                        item.setIcon(R.drawable.ic_post_favourite_active);
+                        mIsFavourite = true;
+                        final ProgressDialog dialog = ProgressDialog.show(
+                                PostActivity.this, null, "正在收藏", true);
+                        RubyChinaApiWrapper.favouriteTopic(topicId, new RubyChinaApiListener() {
+                            @Override
+                            public void onSuccess(Object data) {
+                                Utility.showToast("已收藏");
+                                FavouriteUtils.recordFavourite(topicId);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                    }
+                                }, 500);
+                            }
+
+                            @Override
+                            public void onFailure(String data) {
+                                Utility.showToast("Error:" + data);
+                                dialog.dismiss();
                             }
                         });
                     }
@@ -116,5 +149,3 @@ public class PostActivity extends SwipeBackActivity {
         });
     }
 }
-
-

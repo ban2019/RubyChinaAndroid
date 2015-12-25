@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FavouriteUtils {
     private static final String LOG_TAG = "Favourite";
@@ -27,14 +28,25 @@ public class FavouriteUtils {
         FILENAME = new File(MyApplication.getInstance().getFilesDir(), "fav_record").getName();
     }
 
-    public static void recordFavourite(String data) {
+    public static void recordFavourite(String id) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                     MyApplication.getInstance().openFileOutput(FILENAME, Context.MODE_PRIVATE | Context.MODE_APPEND));
-            outputStreamWriter.write(data + "\n");
+            outputStreamWriter.write(id + "\n");
             outputStreamWriter.close();
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    public static void eraseFavourite(String id) {
+        List<String> records = loadFavourites();
+        if (records.contains(id)) {
+            records.remove(records.indexOf(id));
+        }
+        MyApplication.getInstance().deleteFile(FILENAME);
+        for (String i : records) {
+            recordFavourite(i);
         }
     }
 
