@@ -7,50 +7,40 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.rubychinaandroid.utils.RubyChinaCategory;
 
 public class RubyChinaOpenHelper extends SQLiteOpenHelper {
+    private static final String DATABASE_NAME = "ruby_china_android.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String TEXT_TYPE = " TEXT";
+    private static final String INTEGER_TYPE = " INTEGER";
+    private static final String NOT_NULL = " not null";
+    private static final String COMMA_SEP = ",";
 
-    private static final String TOPIC_TABLE_NAME = "Topic";
+    public static final String SQL_CREATE_TABLE =
+            "CREATE TABLE " + Contract.Entry.TABLE_NAME + " (" +
+                    Contract.Entry._ID + " INTEGER PRIMARY KEY," +
+                    Contract.Entry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
+                    Contract.Entry.COLUMN_NAME_AUTHOR + TEXT_TYPE + COMMA_SEP +
+                    Contract.Entry.COLUMN_NAME_LOGIN + TEXT_TYPE + COMMA_SEP +
+                    Contract.Entry.COLUMN_NAME_AVATAR + TEXT_TYPE + COMMA_SEP +
+                    Contract.Entry.COLUMN_NAME_TIME + TEXT_TYPE + COMMA_SEP +
+                    Contract.Entry.COLUMN_NAME_CATEGORY + INTEGER_TYPE + NOT_NULL + COMMA_SEP +
+                    Contract.Entry.COLUMN_NAME_PAGE + INTEGER_TYPE + NOT_NULL +
+                    ")";
+    private static final String SQL_DELETE_TABLE =
+            "DROP TABLE IF EXISTS " + Contract.Entry.TABLE_NAME;
 
-    private static final String TOPIC_COLUMN_TITLE = "title";
-    private static final String TOPIC_COLUMN_AUTHOR = "author";
-    private static final String TOPIC_COLUMN_LOGIN = "user_login";
-    private static final String TOPIC_COLUMN_AVATAR = "avatar_url";
-    private static final String TOPIC_COLUMN_TIME = "create_time";
-    private static final String TOPIC_COLUMN_CATEGORY = "category";
-    private static final String TOPIC_COLUMN_PAGE = "page";
 
-    public static final String CREATE_TOPIC_TABLE = "create table if not exists " + TOPIC_TABLE_NAME +
-            "(" + "id integer primary key autoincrement," +
-            TOPIC_COLUMN_TITLE + " text," +
-            TOPIC_COLUMN_AUTHOR + " text," +
-            TOPIC_COLUMN_LOGIN + " text," +
-            TOPIC_COLUMN_AVATAR + " text," +
-            TOPIC_COLUMN_TIME + " text," +
-            TOPIC_COLUMN_CATEGORY + " integer not null," +
-            TOPIC_COLUMN_PAGE + " integer not null)";
-
-    public RubyChinaOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,
-                               int version) {
-        super(context, name, factory, version);
+    public RubyChinaOpenHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TOPIC_TABLE);
+        db.execSQL(SQL_CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists " + TOPIC_TABLE_NAME);
-    }
-
-    public void deletePage(SQLiteDatabase db, int page, RubyChinaCategory category) {
-        String DELETE_PAGE = "delete from " + TOPIC_TABLE_NAME + " " +
-                "where page=" + Integer.toString(page) + " and " +
-                "category=" + Integer.toString(category.getValue());
-        db.execSQL(DELETE_PAGE);
-    }
-
-    public void destroy(SQLiteDatabase db) {
-        db.execSQL("drop table if exists " + TOPIC_TABLE_NAME);
+        db.execSQL(SQL_DELETE_TABLE);
+        onCreate(db);
     }
 }

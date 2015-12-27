@@ -13,115 +13,147 @@ import java.util.ArrayList;
 
 public class RubyChinaDBManager {
     private final String LOG_TAG = "RubyChinaDBManager";
-    private final String DB_NAME = "ruby_china_android";
-    public final int VERSION = 1;
-    private static RubyChinaDBManager mRubyChinaDBManager;
-    private SQLiteDatabase db;
-    private RubyChinaOpenHelper dbHelper;
+    private static volatile RubyChinaDBManager mInstance;
+    private RubyChinaOpenHelper mDbHelper;
+    private volatile SQLiteDatabase mDb;
     private Context mContext;
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
-    private String mSharedPreferenceFileName;
-    private final String KEY_TOTAL_PAGES = "total_pages";
+    private String mSharedPreferenceFileName = "RubyChinaDBManager";
+    private final String KEY_PAGE_SUM = "page_num";
 
     private RubyChinaDBManager(Context context) {
-        dbHelper = new RubyChinaOpenHelper(context, DB_NAME, null, VERSION);
-        db = dbHelper.getWritableDatabase();
+        mDbHelper = new RubyChinaOpenHelper(context);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mDb = mDbHelper.getWritableDatabase();
+            }
+        }).start();
         mContext = context;
-        mSharedPreferenceFileName = "RubyChinaDBManager";
-        mPref = mContext.getSharedPreferences(mSharedPreferenceFileName, Context.MODE_PRIVATE);
-        mEditor = mContext.getSharedPreferences(mSharedPreferenceFileName, Context.MODE_PRIVATE).edit();
+        mPref = mContext.getSharedPreferences(mSharedPreferenceFileName,
+                Context.MODE_PRIVATE);
+        mEditor = mContext.getSharedPreferences(mSharedPreferenceFileName,
+                Context.MODE_PRIVATE).edit();
     }
 
-    public synchronized static RubyChinaDBManager getInstance(Context context) {
-        if (mRubyChinaDBManager == null) {
-            mRubyChinaDBManager = new RubyChinaDBManager(context);
+    public static RubyChinaDBManager getInstance(Context context) {
+        if (mInstance == null) {
+            synchronized (RubyChinaDBManager.class) {
+                if (mInstance == null) {
+                    mInstance = new RubyChinaDBManager(context);
+                }
+            }
         }
 
-        return mRubyChinaDBManager;
+        return mInstance;
     }
 
-    private void saveTopic(TopicModel topic, RubyChinaCategory category, int page) {
+    private void insert(TopicModel topic, RubyChinaCategory category, int page) {
         if (topic != null) {
             ContentValues values = new ContentValues();
-            values.put("title", topic.getTitle());
-            values.put("author", topic.getUserName());
-            values.put("avatar_url", topic.getUserAvatarUrl());
-            values.put("user_login", topic.getUserLogin());
-            values.put("create_time", topic.getCreatedAt());
-            values.put("category", category.getValue());
-            values.put("page", page);
-            db.insert("Topic", null, values);
+            values.put(Contract.Entry.COLUMN_NAME_TITLE, topic.getTitle());
+            values.put(Contract.Entry.COLUMN_NAME_AUTHOR, topic.getUserName());
+            values.put(Contract.Entry.COLUMN_NAME_AVATAR, topic.getUserAvatarUrl());
+            values.put(Contract.Entry.COLUMN_NAME_LOGIN, topic.getUserLogin());
+            values.put(Contract.Entry.COLUMN_NAME_TIME, topic.getCreatedAt());
+            values.put(Contract.Entry.COLUMN_NAME_CATEGORY, category.getValue());
+            values.put(Contract.Entry.COLUMN_NAME_PAGE, page);
+            mDb.insert(Contract.Entry.TABLE_NAME, null, values);
         }
     }
 
-    public ArrayList<TopicModel> loadTopics(RubyChinaCategory category, int page) {
-        ArrayList<TopicModel> list = new ArrayList<TopicModel>();
-        Cursor cursor = db.query("Topic", null, null, null, null, null, null);
+    public ArrayList<TopicModel> query(RubyChinaCategory category, int page) {
+        String projection[] = {
+                Contract.Entry.COLUMN_NAME_TITLE,
+                Contract.Entry.COLUMN_NAME_AUTHOR,
+                Contract.Entry.COLUMN_NAME_LOGIN,
+                Contract.Entry.COLUMN_NAME_AVATAR,
+                Contract.Entry.COLUMN_NAME_TIME,
+                Contract.Entry.COLUMN_NAME_PAGE,
+                Contract.Entry.COLUMN_NAME_CATEGORY
+        };
+        String sortOrder = Contract.Entry.COLUMN_NAME_TIME + " DESC";
+        String selection = Contract.Entry.COLUMN_NAME_CATEGORY + "=?" + " and " +
+                Contract.Entry.COLUMN_NAME_PAGE + "=?";
+        String selectionArgs[] = {
+                Integer.toString(category.getValue()),
+                Integer.toString(page)
+        };
+        Cursor cursor = mDb.query(
+                Contract.Entry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder);
 
+        ArrayList<TopicModel> list = new ArrayList<TopicModel>();
         if (cursor.moveToFirst()) {
             do {
-                if (cursor.getInt(cursor.getColumnIndex("category")) == category.getValue()
-                        && cursor.getInt(cursor.getColumnIndex("page")) == page) {
-                    TopicModel topicModel = new TopicModel();
-                    topicModel.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-                    topicModel.setUserName(cursor.getString(cursor.getColumnIndex("author")));
-                    topicModel.setUserLogin(cursor.getString(cursor.getColumnIndex("user_login")));
-                    topicModel.setUserAvatarUrl(cursor.getString(cursor.getColumnIndex("avatar_url")));
-                    topicModel.setCreatedAt(cursor.getString(cursor.getColumnIndex("create_time")));
-
-                    list.add(topicModel);
-                }
+                TopicModel topicModel = new TopicModel();
+                topicModel.setTitle(cursor.getString(cursor.getColumnIndex(
+                        Contract.Entry.COLUMN_NAME_TITLE)));
+                topicModel.setUserName(cursor.getString(cursor.getColumnIndex(
+                        Contract.Entry.COLUMN_NAME_AUTHOR)));
+                topicModel.setUserLogin(cursor.getString(cursor.getColumnIndex(
+                        Contract.Entry.COLUMN_NAME_LOGIN)));
+                topicModel.setUserAvatarUrl(cursor.getString(cursor.getColumnIndex(
+                        Contract.Entry.COLUMN_NAME_AVATAR)));
+                topicModel.setCreatedAt(cursor.getString(cursor.getColumnIndex(
+                        Contract.Entry.COLUMN_NAME_TIME)));
+                list.add(topicModel);
             } while (cursor.moveToNext());
         }
         cursor.close();
-
         return list;
     }
 
-    private int mTotalPages = 0;
-    public boolean isAllTopicsLoaded(RubyChinaCategory category, int page) {
-        mTotalPages = getTotalPages(category);
-        return page >= mTotalPages;
+    private int mPageSum = 0;
+
+    public boolean isNoMoreEntries(RubyChinaCategory category, int page) {
+        mPageSum = pageSum(category);
+        return page >= mPageSum;
     }
 
     // Different TopicsFragment's mCachedPages instance is saved in separate files.
-    private int getTotalPages(RubyChinaCategory category) {
-        return mPref.getInt(category.getValue() + KEY_TOTAL_PAGES, 0);
-    }
-    private void commitTotalPages(RubyChinaCategory category, int pages) {
-        mEditor.putInt(category.getValue() + KEY_TOTAL_PAGES, pages);
-        mEditor.commit();
+    private int pageSum(RubyChinaCategory category) {
+        return mPref.getInt(category.getValue() + KEY_PAGE_SUM, 0);
     }
 
-    public void clearAllTopicsByCategory(RubyChinaCategory category) {
-        mTotalPages = getInstance(mContext).getTotalPages(category);
-        for (int i = 0; i <= mTotalPages; i++) {
-            dbHelper.deletePage(db, i, category);
-        }
-        mTotalPages = 0;
-        getInstance(mContext).commitTotalPages(category, mTotalPages);
+    private void putEntrySum(RubyChinaCategory category, int pages) {
+        mEditor.putInt(category.getValue() + KEY_PAGE_SUM, pages);
+        mEditor.commit();
     }
 
     public void saveTopics(ArrayList<TopicModel> topics,
                            RubyChinaCategory category, int page) {
-        dbHelper.deletePage(db, page, category);
+        deleteEntries(page, category);
         for (TopicModel topic : topics) {
-            getInstance(mContext).saveTopic(topic, category, page);
+            insert(topic, category, page);
         }
 
-        mTotalPages = getInstance(mContext).getTotalPages(category);
-        if (page >= mTotalPages) {
-            mTotalPages = page + 1; // mTotalPages is 1-based, mIndexPage is 0-based.
-            getInstance(mContext).commitTotalPages(category, mTotalPages);
+        mPageSum = pageSum(category);
+        if (page >= mPageSum) {
+            mPageSum = page + 1;
+            putEntrySum(category, mPageSum);
         }
     }
 
-    public String getDatabaseName() {
-        return DB_NAME;
+    public void clearTopics(RubyChinaCategory category) {
+        mPageSum = pageSum(category);
+        for (int i = 0; i <= mPageSum; i++) {
+            deleteEntries(i, category);
+        }
+        mPageSum = 0;
+        putEntrySum(category, mPageSum);
     }
 
-    public void destroyDatabase() {
-        dbHelper.destroy(db);
+    private void deleteEntries(int page, RubyChinaCategory category) {
+        String selection = Contract.Entry.COLUMN_NAME_PAGE + "=?" + " and " +
+                Contract.Entry.COLUMN_NAME_CATEGORY + "=?";
+        String[] selectionArgs = {Integer.toString(page), Integer.toString(category.getValue())};
+        mDb.delete(Contract.Entry.TABLE_NAME, selection, selectionArgs);
     }
 }

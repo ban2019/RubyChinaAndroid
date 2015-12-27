@@ -155,7 +155,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             // Update the displayed topics
             if (mGetTopicsByWhat == BY_CATEGORY) {
                 if (isClearDB) {
-                    mDBManager.clearAllTopicsByCategory(mCategory);
+                    mDBManager.clearTopics(mCategory);
                 }
                 mDBManager.saveTopics(topicModelList, mCategory, mPageIndex);
             }
@@ -171,7 +171,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mRecyclerViewAdapter.setAllItemsEnabled(true);
 
             if (mGetTopicsByWhat == BY_CATEGORY) {
-                ArrayList<TopicModel> topics = mDBManager.loadTopics(mCategory, mPageIndex);
+                ArrayList<TopicModel> topics = mDBManager.query(mCategory, mPageIndex);
                 mTopicList.addAll(topics);
                 ++mPageIndex;
             }
@@ -200,7 +200,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         if ((!mNoMore && !isFailToLoadMore)) {
             requestMoreTopics();
         } else if (mGetTopicsByWhat == BY_CATEGORY &&
-                !mDBManager.isAllTopicsLoaded(mCategory, mPageIndex)) {
+                !mDBManager.isNoMoreEntries(mCategory, mPageIndex)) {
             mErrorHint = HINT_CACHE;
             requestMoreTopics();
         }
