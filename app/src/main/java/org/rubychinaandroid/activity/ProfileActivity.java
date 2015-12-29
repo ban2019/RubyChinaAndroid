@@ -8,20 +8,20 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.fragments.ProfileFragment;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-public class ProfileActivity extends SwipeBackActivity {
-
+public class ProfileActivity extends BaseActivity {
     private String TAG = "ProfileActivity";
-    private Toolbar mToolbar;
+
+    public void configToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle("用户资料");
+        setToolbarBackButton();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        mToolbar.setTitle("用户资料");
+        configToolbar();
 
         String userLogin = getIntent().getStringExtra(RubyChinaArgKeys.USER_LOGIN);
         Bundle bundle = new Bundle();

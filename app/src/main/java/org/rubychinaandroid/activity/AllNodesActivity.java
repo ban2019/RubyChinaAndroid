@@ -19,9 +19,8 @@ import org.rubychinaandroid.view.IndexableRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-public class AllNodesActivity extends SwipeBackActivity implements RubyChinaApiListener<ArrayList<NodeModel>> {
+public class AllNodesActivity extends BaseActivity
+        implements RubyChinaApiListener<ArrayList<NodeModel>> {
     private static final String TAG = "AllNodesActivity";
     IndexableRecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
@@ -29,15 +28,18 @@ public class AllNodesActivity extends SwipeBackActivity implements RubyChinaApiL
     SwipeRefreshLayout mSwipeLayout;
     List<NodeModel> mNodes = new ArrayList<NodeModel>();
     boolean mIsAdapterSet = false;
-    Toolbar mToolbar;
+
+    public void configToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle("所有节点");
+        setToolbarBackButton();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_nodes);
-
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        mToolbar.setTitle("所有节点");
+        configToolbar();
 
         mRecyclerView = (IndexableRecyclerView) findViewById(R.id.grid_all_node);
         mLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

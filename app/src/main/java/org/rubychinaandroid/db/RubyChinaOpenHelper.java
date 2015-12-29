@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import org.rubychinaandroid.utils.RubyChinaCategory;
-
 public class RubyChinaOpenHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ruby_china_android.db";
     private static final int DATABASE_VERSION = 1;

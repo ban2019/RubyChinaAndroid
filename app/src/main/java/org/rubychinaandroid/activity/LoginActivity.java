@@ -21,21 +21,23 @@ import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-public class LoginActivity extends SwipeBackActivity {
+public class LoginActivity extends BaseActivity {
     private String LOG_TAG = "LoginActivity";
     private static final Token EMPTY_TOKEN = null;
     private ProgressBar mProgressBar;
-    private Toolbar mToolbar;
+
+    @Override
+    public void configToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle("登录");
+        setToolbarBackButton();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        mToolbar.setTitle("登录");
+        configToolbar();
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         int color = 0xFFEB5424; // red
@@ -43,19 +45,13 @@ public class LoginActivity extends SwipeBackActivity {
         mProgressBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
 
         final OAuthService service = RubyChinaOAuthService.getInstance().getOAuthService();
-
         final WebView webView = (WebView) findViewById(R.id.web_view);
-
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
-
         webView.getSettings().setJavaScriptEnabled(true);
-
         webView.setWebViewClient(new WebViewClient() {
-
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
                 if ("https://ruby-china.org/account/sign_in".equals(url)) {
                     // 1. Send Request for Authorization Grant Providing client id and redirect_url(callback_url)
                     view.loadUrl(url);
@@ -73,19 +69,16 @@ public class LoginActivity extends SwipeBackActivity {
                             // 4. Receive the Access Token
                             Token accessToken = service.getAccessToken(null, verifier);
                             Log.d(OAuthManager.ACCESS_TOKEN, accessToken.toString());
-
                             // Return access_token to MainActivity
                             Intent intent = new Intent();
                             intent.putExtra(OAuthManager.ACCESS_TOKEN, accessToken);
                             setResult(RESULT_OK, intent);
-
                             finish();
                         }
                     }).start();
                 }
                 return true;
             }
-
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 Utility.showToast("webView errorCode" + Integer.toString(errorCode));
             }

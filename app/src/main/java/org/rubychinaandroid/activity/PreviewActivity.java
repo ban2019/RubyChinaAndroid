@@ -10,18 +10,20 @@ import org.rubychinaandroid.R;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 
 import in.uncod.android.bypass.Bypass;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 
-public class PreviewActivity extends SwipeBackActivity {
+public class PreviewActivity extends BaseActivity {
 
+    @Override
+    public void configToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar.setTitle("预览");
+        setToolbarBackButton();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        toolbar.setTitle("预览");
 
         Intent intent = getIntent();
         String content = intent.getStringExtra(RubyChinaArgKeys.POST_CONTENT);

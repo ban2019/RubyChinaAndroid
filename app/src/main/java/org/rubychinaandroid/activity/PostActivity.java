@@ -22,48 +22,53 @@ import org.rubychinaandroid.view.JumpToolbar;
 
 import java.util.ArrayList;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-public class PostActivity extends SwipeBackActivity {
+public class PostActivity extends BaseActivity {
     private String TAG = "PostActivity";
 
-    private JumpToolbar mToolbar;
     private FloatingActionButton mReplyButton;
     boolean mIsFavourite = false;
+    private String mTopicId;
+
+    @Override
+    public void configToolbar() {
+        mToolbar = (JumpToolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle("话题内容");
+        mToolbar.inflateMenu(R.menu.menu_post);
+        setToolbarBackButton();
+
+        // Set the favourite menu item's state according to history and logging state and
+        // set click listener correspondingly.
+        final Intent intent = getIntent();
+        mTopicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
+        ((JumpToolbar)mToolbar).attachTo(createFragment(mTopicId));
+        configMenuItem(mTopicId);
+    }
+
+    private PostFragment createFragment(String topicId) {
+        PostFragment fragment = new PostFragment();
+        Bundle args = new Bundle();
+        args.putString(RubyChinaArgKeys.TOPIC_ID, topicId);
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
+        return fragment;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-
-        final Intent intent = getIntent();
-        final String topicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
+        configToolbar();
 
         mReplyButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
         mReplyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostActivity.this, ReplyActivity.class);
-                intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topicId);
+                intent.putExtra(RubyChinaArgKeys.TOPIC_ID, mTopicId);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             }
         });
-
-        PostFragment fragment = new PostFragment();
-        Bundle args = new Bundle();
-        args.putString(RubyChinaArgKeys.TOPIC_ID, topicId);
-        fragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
-
-        // Creating The Toolbar and setting it as the Toolbar for the activity
-        mToolbar = (JumpToolbar) findViewById(R.id.tool_bar);
-        mToolbar.setTitle("话题内容");
-        mToolbar.inflateMenu(R.menu.menu_post);
-        mToolbar.attachTo(fragment);
-        // Set the favourite menu item's state according to history and logging state and
-        // set click listener correspondingly.
-        configMenuItem(topicId);
     }
 
     public FloatingActionButton getFloatingActionButton() {

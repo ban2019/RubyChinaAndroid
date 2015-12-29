@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
-
-public class PhotoViewActivity extends SwipeBackActivity
+public class PhotoViewActivity extends BaseActivity
         implements ViewPager.OnPageChangeListener,
         PhotoViewPager.OnInterceptTouchListener, PhotoViewCallbacks {
     public static final String EXTRA_PHOTO_INDEX = "photo_index";
@@ -28,8 +26,6 @@ public class PhotoViewActivity extends SwipeBackActivity
 
     private PhotoViewPager mViewPager;
     private PhotoViewerPagerAdapter mAdapter;
-    private Toolbar mToolbar;
-
     private ArrayList<String> mPhotoUrls;
 
     /**
@@ -54,11 +50,17 @@ public class PhotoViewActivity extends SwipeBackActivity
     }
 
     @Override
+    public void configToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setToolbarBackButton();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view);
 
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        configToolbar();
 
         final Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_PHOTO_DATAS)) {
