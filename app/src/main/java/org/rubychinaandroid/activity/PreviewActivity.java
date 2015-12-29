@@ -24,6 +24,7 @@ public class PreviewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
+        configToolbar();
 
         Intent intent = getIntent();
         String content = intent.getStringExtra(RubyChinaArgKeys.POST_CONTENT);

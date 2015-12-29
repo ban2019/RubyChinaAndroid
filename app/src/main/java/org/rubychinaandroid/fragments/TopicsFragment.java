@@ -166,7 +166,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         @Override
         public void onFailure(String error) {
-            Utility.showToast(mErrorHint);
+            if (!"Internal Server Error".equals(error)) {
+                Utility.showToast(mErrorHint);
+            }
+
             mSwipeRefreshLayout.setRefreshing(false);
             mRecyclerViewAdapter.setAllItemsEnabled(true);
 

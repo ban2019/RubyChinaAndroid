@@ -111,28 +111,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-
             case LOGIN_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
                     Utility.showToast("已登录");
-                    Token accessToken = (Token) data.getSerializableExtra(OAuthManager.ACCESS_TOKEN);
-
+                    Token accessToken = (Token) data.getSerializableExtra(OAuthManager.Keys.ACCESS_TOKEN);
                     // Save access token persistently
                     OAuthManager.getInstance().saveAccessTokenString(accessToken.getToken());
                     OAuthManager.getInstance().saveLoggedInState(true);
-
                     // request the user login and store it
                     RubyChinaApiWrapper.hello(new RubyChinaApiListener<UserModel>() {
                         @Override
                         public void onSuccess(UserModel data) {
                             OAuthManager.getInstance().saveUserLogin(data.getUserLogin());
+                            OAuthManager.getInstance().saveAvatarUrl(data.getAvatarUrl());
                             // Update the drawer.
                             mDrawerUsername.setText(data.getName());
                             ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar,
                                     MyApplication.getInstance().getImageLoaderOptions());
                             FavouriteUtils.updateFavouriteRecord();
                         }
-
                         @Override
                         public void onFailure(String data) {
                             Log.d(LOG_TAG, "onFailure");
@@ -143,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                     Utility.showToast("登录失败");
                 }
                 break;
-
             case NEW_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
                     Log.d(LOG_TAG, "Succeeded to publish topic.");
@@ -151,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(LOG_TAG, "Failed to publish topic.");
                 }
                 break;
-
             case SETTING_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RubyChinaArgKeys.RESULT_LOGGED_OUT) {
                     // Reset drawer.
@@ -162,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
                             MyApplication.getInstance().getImageLoaderOptions());
                 }
                 break;
-
             default:
                 break;
         }
@@ -172,26 +166,35 @@ public class MainActivity extends AppCompatActivity {
         mDrawerAvatar = (ImageView) findViewById(R.id.avatar);
         mDrawerUsername = (TextView) findViewById(R.id.username);
 
-        if (OAuthManager.getInstance().getLoggedInState()) {
-            RubyChinaApiWrapper.getUserProfile(OAuthManager.getInstance().getUserLogin(), new RubyChinaApiListener<UserModel>() {
-                @Override
-                public void onSuccess(UserModel data) {
-                    mDrawerUsername.setText(data.getName());
-                    ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar,
-                            MyApplication.getInstance().getImageLoaderOptions());
-                }
-
-                @Override
-                public void onFailure(String data) {
-                }
-            });
+        if (OAuthManager.getInstance().isLoggedIn()) {
+            String url = OAuthManager.getInstance().getAvatarUrl();
+            String login = OAuthManager.getInstance().getUserLogin();
+            if (!"".equals(url) && !"".equals(login)) {
+                ImageLoader.getInstance().displayImage(
+                        url,
+                        mDrawerAvatar,
+                        MyApplication.getInstance().getImageLoaderOptions());
+                mDrawerUsername.setText(login);
+            } else {
+                RubyChinaApiWrapper.getUserProfile(OAuthManager.getInstance().getUserLogin(), new RubyChinaApiListener<UserModel>() {
+                    @Override
+                    public void onSuccess(UserModel data) {
+                        mDrawerUsername.setText(data.getName());
+                        ImageLoader.getInstance().displayImage(data.getAvatarUrl(), mDrawerAvatar,
+                                MyApplication.getInstance().getImageLoaderOptions());
+                    }
+                    @Override
+                    public void onFailure(String data) {
+                    }
+                });
+            }
         }
 
         mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent;
-                if (OAuthManager.getInstance().getLoggedInState()) {
+                if (OAuthManager.getInstance().isLoggedIn()) {
                     intent = new Intent(MainActivity.this, ProfileActivity.class);
                     intent.putExtra(RubyChinaArgKeys.USER_LOGIN, OAuthManager.getInstance().getUserLogin());
                     startActivity(intent);
@@ -201,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
                     overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_in);
                 }
-
                 mDrawerLayout.closeDrawers();
             }
         });

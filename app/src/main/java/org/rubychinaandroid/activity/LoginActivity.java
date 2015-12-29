@@ -68,10 +68,10 @@ public class LoginActivity extends BaseActivity {
                             // 3. Send Request for Access Token Providing Authorization Grant
                             // 4. Receive the Access Token
                             Token accessToken = service.getAccessToken(null, verifier);
-                            Log.d(OAuthManager.ACCESS_TOKEN, accessToken.toString());
+                            Log.d(OAuthManager.Keys.ACCESS_TOKEN, accessToken.toString());
                             // Return access_token to MainActivity
                             Intent intent = new Intent();
-                            intent.putExtra(OAuthManager.ACCESS_TOKEN, accessToken);
+                            intent.putExtra(OAuthManager.Keys.ACCESS_TOKEN, accessToken);
                             setResult(RESULT_OK, intent);
                             finish();
                         }

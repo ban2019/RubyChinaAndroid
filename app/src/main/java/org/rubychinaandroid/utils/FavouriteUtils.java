@@ -77,7 +77,7 @@ public class FavouriteUtils {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case PAGE:
-                    if (!OAuthManager.getInstance().getLoggedInState()) {
+                    if (!OAuthManager.getInstance().isLoggedIn()) {
                         Log.d(LOG_TAG, "have not logged in");
                         return;
                     }
@@ -108,7 +108,7 @@ public class FavouriteUtils {
     public static void updateFavouriteRecord() {
         page = 0;
         MyApplication.getInstance().deleteFile(FILENAME);
-        if (OAuthManager.getInstance().getLoggedInState()) {
+        if (OAuthManager.getInstance().isLoggedIn()) {
             favouriteHelper();
         }
     }

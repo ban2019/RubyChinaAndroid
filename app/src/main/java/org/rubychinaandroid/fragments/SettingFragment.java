@@ -67,7 +67,7 @@ public class SettingFragment extends PreferenceFragment {
 
         //退出登录
         mLogout = (Button) localViewGroup.findViewById(R.id.setting_logout);
-        boolean isLogin = OAuthManager.getInstance().getLoggedInState();
+        boolean isLogin = OAuthManager.getInstance().isLoggedIn();
         if (isLogin) {
             mLogout.setVisibility(View.VISIBLE);
         } else {
@@ -82,7 +82,7 @@ public class SettingFragment extends PreferenceFragment {
                         .setPositiveButton(R.string.title_confirm_yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                OAuthManager.logOut();
+                                OAuthManager.getInstance().logOut();
                                 FavouriteUtils.updateFavouriteRecord();
                                 Intent intent = new Intent();
                                 mHostActivity.setResult(RubyChinaArgKeys.RESULT_LOGGED_OUT, intent);

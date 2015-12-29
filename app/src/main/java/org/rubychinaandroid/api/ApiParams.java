@@ -11,7 +11,7 @@ public class ApiParams extends RequestParams {
     }
 
     public ApiParams withToken() {
-        put(OAuthManager.ACCESS_TOKEN, OAuthManager.getInstance().getAccessTokenString());
+        put(OAuthManager.Keys.ACCESS_TOKEN, OAuthManager.getInstance().getAccessTokenString());
         return this;
     }
 }

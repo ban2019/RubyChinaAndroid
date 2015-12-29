@@ -10,82 +10,85 @@ import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.utils.Utility;
 
 public class OAuthManager {
-
-    private static String TAG = "OAuthManager";
-
+    private String TAG = "OAuthManager";
     // For convenience, the key name 'access_token' is kept identical to the parameter of HTTP request
     // used when accessing protected resource.
-    public static String ACCESS_TOKEN = "access_token";
-    public static final String EMPTY_TOKEN = "";
+    public interface Keys {
+        String ACCESS_TOKEN = "access_token";
+        String SP_FILE_NAME = "oauth";
+        String STATE_LOGGED_IN = "logged_in";
+        String LOGIN = "user_login";
+        String AVATAR_URL = "avatar_url";
+    }
 
-    private static String SHARED_PREFERENCE_FILE_NAME = "oauth";
-    private static String STATE_LOGGED_IN = "logged_in";
-
-    private static String LOGIN = "user_login";
+    public final String EMPTY_TOKEN = "";
 
     private static SharedPreferences.Editor mEditor;
     private static SharedPreferences mPref;
-
-    private static OAuthManager mOAuthManager;
+    private static OAuthManager mInstance;
 
     private OAuthManager() {
         Log.d(TAG, "construct");
         mEditor = MyApplication.getInstance()
-                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
+                .getSharedPreferences(Keys.SP_FILE_NAME, Context.MODE_PRIVATE).edit();
         mPref = MyApplication.getInstance()
-                .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
+                .getSharedPreferences(Keys.SP_FILE_NAME, Context.MODE_PRIVATE);
     }
 
-    public static synchronized OAuthManager getInstance() {
-        if (mOAuthManager == null) {
-            mOAuthManager = new OAuthManager();
+    public static OAuthManager getInstance() {
+        if (mInstance == null) {
+            synchronized (OAuthManager.class) {
+                if (mInstance == null) {
+                    mInstance = new OAuthManager();
+                }
+            }
         }
-        return mOAuthManager;
+        return mInstance;
     }
 
-    private static synchronized SharedPreferences.Editor getEditor() {
+    private synchronized SharedPreferences.Editor getEditor() {
         Log.d(TAG, "getEditor()");
         if (mEditor == null) {
             mEditor = MyApplication.getInstance()
-                    .getSharedPreferences(SHARED_PREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
+                    .getSharedPreferences(Keys.SP_FILE_NAME, Context.MODE_PRIVATE).edit();
         }
         return mEditor;
     }
 
-    public static void saveLoggedInState(boolean loggedIn) {
-        getEditor().putBoolean(STATE_LOGGED_IN, loggedIn);
+    public void saveLoggedInState(boolean loggedIn) {
+        getEditor().putBoolean(Keys.STATE_LOGGED_IN, loggedIn);
         getEditor().commit();
     }
 
-    public static boolean getLoggedInState() {
-        return mPref.getBoolean(STATE_LOGGED_IN, false);
+    public boolean isLoggedIn() {
+        return mPref.getBoolean(Keys.STATE_LOGGED_IN, false);
     }
 
-    public static void saveAccessTokenString(String accessTokenString) {
-        getEditor().putString(ACCESS_TOKEN, accessTokenString);
+    public void saveAccessTokenString(String accessTokenString) {
+        getEditor().putString(Keys.ACCESS_TOKEN, accessTokenString);
         getEditor().commit();
     }
 
-    public static String getAccessTokenString() {
-        return mPref.getString(ACCESS_TOKEN, "");
+    public String getAccessTokenString() {
+        return mPref.getString(Keys.ACCESS_TOKEN, "");
     }
 
-    public static void revokeAccessToken() {
-        getEditor().putString(ACCESS_TOKEN, EMPTY_TOKEN);
+    public void revokeAccessToken() {
+        getEditor().putString(Keys.ACCESS_TOKEN, EMPTY_TOKEN);
         getEditor().commit();
     }
 
-    public static void saveUserLogin(String login) {
-        getEditor().putString(LOGIN, login);
+    public void saveUserLogin(String login) {
+        getEditor().putString(Keys.LOGIN, login);
         getEditor().commit();
         Log.d(TAG + " save ", login);
     }
 
-    public static String getUserLogin() {
-        return mPref.getString(LOGIN, "");
+    public String getUserLogin() {
+        return mPref.getString(Keys.LOGIN, "");
     }
 
-    public static void logOut() {
+    public void logOut() {
         RubyChinaApiWrapper.revoke(new RubyChinaApiListener() {
             @Override
             public void onSuccess(Object data) {
@@ -101,5 +104,13 @@ public class OAuthManager {
         revokeAccessToken();
         saveUserLogin("");
         saveLoggedInState(false);
+    }
+
+    public void saveAvatarUrl(String url) {
+        mEditor.putString(Keys.AVATAR_URL, url);
+        mEditor.commit();
+    }
+    public String getAvatarUrl() {
+        return mPref.getString(Keys.AVATAR_URL, "");
     }
 }

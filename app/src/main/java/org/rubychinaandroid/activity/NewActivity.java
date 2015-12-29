@@ -74,7 +74,7 @@ public class NewActivity extends BaseActivity {
         mToolbar.getMenu().getItem(1).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (!OAuthManager.getInstance().getLoggedInState()) {
+                if (!OAuthManager.getInstance().isLoggedIn()) {
                     Utility.showToast("还没有在主页面登录哦");
                     return false;
                 }

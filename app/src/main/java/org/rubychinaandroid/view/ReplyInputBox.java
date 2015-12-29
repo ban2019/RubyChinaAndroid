@@ -47,7 +47,7 @@ public class ReplyInputBox extends LinearLayout {
             @Override
             public void onClick(View v) {
 
-                if (!OAuthManager.getLoggedInState()) {
+                if (!OAuthManager.getInstance().isLoggedIn()) {
                     Utility.showToast("还没有在主页面登录哦");
                     return;
                 }

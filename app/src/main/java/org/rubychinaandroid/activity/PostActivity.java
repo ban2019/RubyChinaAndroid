@@ -76,7 +76,7 @@ public class PostActivity extends BaseActivity {
     }
 
     private void configMenuItem(final String topicId) {
-        if (!OAuthManager.getLoggedInState()) {
+        if (!OAuthManager.getInstance().isLoggedIn()) {
             mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
