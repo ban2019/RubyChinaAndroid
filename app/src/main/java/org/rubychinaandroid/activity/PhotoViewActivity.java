@@ -46,7 +46,7 @@ public class PhotoViewActivity extends BaseActivity
         context.startActivity(intent);
         assert(context instanceof Activity);
         Activity activity = (Activity) context;
-        activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+        activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
     }
 
     @Override

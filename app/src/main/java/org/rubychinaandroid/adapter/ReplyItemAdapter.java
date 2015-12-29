@@ -57,8 +57,8 @@ public class ReplyItemAdapter extends RecyclerView.Adapter<ReplyItemAdapter.View
                 Intent intent = new Intent(mContext, ProfileActivity.class);
                 intent.putExtra(RubyChinaArgKeys.USER_LOGIN, userLogin);
                 mContext.startActivity(intent);
-                ((ReplyActivity) mContext).
-                        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                ((ReplyActivity) mContext)
+                        .overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
         });
 

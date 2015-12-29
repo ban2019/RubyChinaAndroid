@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NewActivity.class);
                 startActivityForResult(intent, NEW_ACTIVITY_REQUEST_CODE);
-                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
         });
 
@@ -195,11 +195,11 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, ProfileActivity.class);
                     intent.putExtra(RubyChinaArgKeys.USER_LOGIN, OAuthManager.getInstance().getUserLogin());
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_in);
                 } else {
                     intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
-                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                    overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_in);
                 }
 
                 mDrawerLayout.closeDrawers();
@@ -215,15 +215,15 @@ public class MainActivity extends AppCompatActivity {
                         if (menuItem.getItemId() == R.id.favourite) {
                             Intent intent = new Intent(MainActivity.this, FavouriteActivity.class);
                             startActivity(intent);
-                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                         } else if (menuItem.getItemId() == R.id.all_nodes) {
                             Intent intent = new Intent(MainActivity.this, AllNodesActivity.class);
                             startActivity(intent);
-                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                         } else if (menuItem.getItemId() == R.id.setting) {
                             Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                             startActivityForResult(intent, SETTING_ACTIVITY_REQUEST_CODE);
-                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                            overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                         }
 
                         mDrawerLayout.closeDrawers();

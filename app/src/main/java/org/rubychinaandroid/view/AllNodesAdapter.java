@@ -66,7 +66,7 @@ public class AllNodesAdapter extends RecyclerView.Adapter<AllNodesAdapter.ViewHo
                 intent.putExtra(RubyChinaArgKeys.NODE_NAME, node.getName());
                 intent.putExtra(RubyChinaArgKeys.NODE_ID, node.getId());
                 mContext.startActivity(intent);
-                ((AllNodesActivity) mContext).overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                ((AllNodesActivity) mContext).overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
             }
         });
 

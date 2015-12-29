@@ -50,7 +50,7 @@ public class AllNodesActivity extends BaseActivity
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestNode(true);
+                requestNode();
             }
         });
         mSwipeLayout.setColorScheme(android.R.color.holo_blue_bright,
@@ -61,7 +61,7 @@ public class AllNodesActivity extends BaseActivity
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
 
         mSwipeLayout.setRefreshing(true);
-        requestNode(false);
+        requestNode();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AllNodesActivity extends BaseActivity
         Utility.showToast(error);
     }
 
-    private void requestNode(boolean refresh) {
+    private void requestNode() {
         RubyChinaApiWrapper.getAllNodes(this);
     }
 }

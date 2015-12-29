@@ -62,4 +62,9 @@ abstract public class BaseActivity extends SwipeBackActivity {
         super.onDestroy();
         removeActivity(this);
     }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
+    }
 }

@@ -98,7 +98,7 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
                     intent = new Intent(mainActivity, PostActivity.class);
                     intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
                     mainActivity.startActivity(intent);
-                    mainActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                    mainActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                 } else {
                     if (mContext instanceof ProfileActivity) {
                         swipeActivity = (ProfileActivity) mContext;
@@ -112,7 +112,7 @@ public class TopicItemAdapter extends RecyclerView.Adapter<TopicItemAdapter.View
                     intent = new Intent(swipeActivity, PostActivity.class);
                     intent.putExtra(RubyChinaArgKeys.TOPIC_ID, topic.getTopicId());
                     swipeActivity.startActivity(intent);
-                    swipeActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                    swipeActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                 }
             }
         });

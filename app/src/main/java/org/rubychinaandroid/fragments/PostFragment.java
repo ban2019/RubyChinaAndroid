@@ -134,7 +134,7 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
                         Intent intent = new Intent(mHostActivity, ProfileActivity.class);
                         intent.putExtra(RubyChinaArgKeys.USER_LOGIN, userLogin);
                         startActivity(intent);
-                        mHostActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+                        mHostActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                     }
                 });
             }
