@@ -21,6 +21,7 @@ import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.model.ReplyModel;
 import org.rubychinaandroid.utils.RubyChinaArgKeys;
 import org.rubychinaandroid.utils.Utility;
+import org.rubychinaandroid.utils.oauth.OAuthManager;
 import org.rubychinaandroid.view.FootUpdate.FootUpdate;
 import org.rubychinaandroid.view.FootUpdate.HeaderViewRecyclerAdapter;
 import org.rubychinaandroid.view.JumpToolbar;
@@ -46,7 +47,8 @@ public class ReplyFragment extends Fragment implements JumpToolbar.ScrollCallbac
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reply, container, false);
 
         // keep the soft input keyboard away from covering the reply list
@@ -57,10 +59,14 @@ public class ReplyFragment extends Fragment implements JumpToolbar.ScrollCallbac
 
         mReplyInputBox = (ReplyInputBox) view.findViewById(R.id.reply_input_box);
         mReplyInputBox.setTopicId(mTopicId);
+        if (!OAuthManager.getInstance().isLoggedIn()) {
+            mReplyInputBox.setVisibility(View.GONE);
+        }
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mHostActivity));
-        mRecyclerViewAdapter = new ReplyItemAdapter(mHostActivity, mReplyList, new ReplyItemOnClickListener() {
+        mRecyclerViewAdapter = new ReplyItemAdapter(mHostActivity, mReplyList,
+                new ReplyItemOnClickListener() {
             @Override
             public void onClick(int floor, String userLogin) {
                 mReplyInputBox.hintReplyTo(floor, userLogin);
@@ -68,7 +74,8 @@ public class ReplyFragment extends Fragment implements JumpToolbar.ScrollCallbac
         });
         HeaderViewRecyclerAdapter mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
         mRecyclerView.setAdapter(mHeaderAdapter);
-        mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(mHostActivity), new FootUpdate.LoadMore() {
+        mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(mHostActivity),
+                new FootUpdate.LoadMore() {
             @Override
             public void loadMore() {
                 //requestMoreReplies();
