@@ -13,11 +13,10 @@ import in.uncod.android.bypass.Bypass;
 
 
 public class PreviewActivity extends BaseActivity {
-
     @Override
     public void configToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        toolbar.setTitle("预览");
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        mToolbar.setTitle("预览");
         setToolbarBackButton();
     }
     @Override

@@ -81,7 +81,7 @@ public class AllNodesActivity extends BaseActivity
     @Override
     public void onFailure(String error) {
         mSwipeLayout.setRefreshing(false);
-        Utility.showToast(error);
+        Utility.showToast("加载节点失败");
     }
 
     private void requestNode() {

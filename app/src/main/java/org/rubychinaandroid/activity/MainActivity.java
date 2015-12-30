@@ -150,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
             case SETTING_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RubyChinaArgKeys.RESULT_LOGGED_OUT) {
                     // Reset drawer.
-                    mDrawerUsername.setText("未命名");
+                    mDrawerUsername.setText(OAuthManager.getInstance().getUserLogin());
                     ImageLoader.getInstance().displayImage(
-                            "drawable://" + R.drawable.avatar_default,
+                            OAuthManager.getInstance().getAvatarUrl(),
                             mDrawerAvatar,
                             MyApplication.getInstance().getImageLoaderOptions());
                 }

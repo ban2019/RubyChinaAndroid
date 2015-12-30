@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.rubychinaandroid.MyApplication;
+import org.rubychinaandroid.R;
 import org.rubychinaandroid.api.RubyChinaApiListener;
 import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.utils.Utility;
@@ -81,7 +82,6 @@ public class OAuthManager {
     public void saveUserLogin(String login) {
         getEditor().putString(Keys.LOGIN, login);
         getEditor().commit();
-        Log.d(TAG + " save ", login);
     }
 
     public String getUserLogin() {
@@ -93,17 +93,17 @@ public class OAuthManager {
             @Override
             public void onSuccess(Object data) {
                 Utility.showToast("注销成功");
+                revokeAccessToken();
+                saveUserLogin("");
+                saveLoggedInState(false);
+                saveAvatarUrl("drawable://" + R.drawable.avatar_default);
             }
 
             @Override
             public void onFailure(String data) {
                 Utility.showToast("注销失败");
-                Log.d(TAG, data);
             }
         });
-        revokeAccessToken();
-        saveUserLogin("");
-        saveLoggedInState(false);
     }
 
     public void saveAvatarUrl(String url) {
