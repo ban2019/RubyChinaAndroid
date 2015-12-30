@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="未登录"
+            android:text="@string/default_username"
             android:textColor="@color/white"
             android:textSize="25sp" />
 

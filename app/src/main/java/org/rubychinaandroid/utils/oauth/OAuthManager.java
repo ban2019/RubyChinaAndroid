@@ -94,7 +94,7 @@ public class OAuthManager {
             public void onSuccess(Object data) {
                 Utility.showToast("注销成功");
                 revokeAccessToken();
-                saveUserLogin("");
+                saveUserLogin("drawable://" + R.string.default_username);
                 saveLoggedInState(false);
                 saveAvatarUrl("drawable://" + R.drawable.avatar_default);
             }

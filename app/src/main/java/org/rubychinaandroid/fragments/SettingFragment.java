@@ -159,7 +159,6 @@ public class SettingFragment extends PreferenceFragment {
     }
 
     private void showAboutMe() {
-        Utility.showToast("感谢使用");
+        Utility.showToast("(´ΘωΘ`)");
     }
-
 }

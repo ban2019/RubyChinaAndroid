@@ -100,7 +100,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         // If browsing topics by node, the topics are got from HTML parsed by JSoup.
         // In browser, ?page=0 has the same effect as ?page=1, so, if mPageIndex is 0-based,
         // the first page will be loaded twice. So, mPageIndex must be 1-based for this case.
-        mPageIndex = mGetTopicsByWhat == BY_NODE ? 1 : 0;
+        //mPageIndex = mGetTopicsByWhat == BY_NODE ? 1 : 0;
+        mPageIndex = 0;
     }
 
     @Override
@@ -164,7 +165,6 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 }
                 mDBManager.saveTopics(topicModelList, mCategory, mPageIndex);
             }
-
             ++mPageIndex;
             isFailToLoadMore = false;
         }
@@ -193,6 +193,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onRefresh() {
         mNoMore = false;
+        resetPageIndex();
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 // start refresh anim
@@ -218,8 +219,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void requestTopics() {
         isClearDB = true;
-        resetPageIndex();
         mTopicList.clear();
+        mFootUpdate.dismiss();
 
         if (mGetTopicsByWhat == BY_CATEGORY) {
             requestTopicsByCategory();
@@ -259,7 +260,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void requestTopicsByNode() {
-        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mPageIndex,
+        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mPageIndex + 1,
                 new TopicListHttpCallbackListener());
     }
 
