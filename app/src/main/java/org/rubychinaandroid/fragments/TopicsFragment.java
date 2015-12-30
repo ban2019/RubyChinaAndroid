@@ -33,13 +33,11 @@ import java.util.ArrayList;
 public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         OnScrollToBottomListener, JumpToolbar.ScrollCallback {
     private final String LOG_TAG = "TopicsFragment";
-
-    private Context mContext;
-
     private final String HINT_CACHE = "尝试从缓存加载";
     private final String HINT_FAIL = "加载话题列表失败";
     private String mErrorHint = HINT_FAIL;
 
+    private Context mContext;
     RecyclerView mRecyclerView;
     HeaderViewRecyclerAdapter mHeaderAdapter;
     protected TopicItemAdapter mRecyclerViewAdapter;
@@ -81,8 +79,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         if (value != NO_MAPPING) {
             mGetTopicsByWhat = BY_CATEGORY;
         } else if (mUserLogin != null) {
-            boolean isFromFavouriteActivity = args.
-                    getBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY);
+            boolean isFromFavouriteActivity = args
+                    .getBoolean(RubyChinaArgKeys.IS_FROM_FAVOURITE_ACTIVITY);
             if (!isFromFavouriteActivity) {
                 mGetTopicsByWhat = BY_USER;
             } else {
@@ -106,7 +104,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         mContext = getActivity();
         mDBManager = RubyChinaDBManager.getInstance(mContext);
 
@@ -118,7 +117,8 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         mHeaderAdapter = new HeaderViewRecyclerAdapter(mRecyclerViewAdapter);
         mRecyclerView.setAdapter(mHeaderAdapter);
-        mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(getActivity()), new FootUpdate.LoadMore() {
+        mFootUpdate.init(mHeaderAdapter, LayoutInflater.from(getActivity()),
+                new FootUpdate.LoadMore() {
             @Override
             public void loadMore() {
                 requestMoreTopics();
@@ -127,23 +127,28 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+        mSwipeRefreshLayout.setColorScheme(
+                android.R.color.holo_red_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light);
         mSwipeRefreshLayout.setRefreshing(true);
 
         parseArguments();
         resetPageIndex();
-
         requestTopics();
         return view;
     }
 
-    public class TopicListHttpCallbackListener implements RubyChinaApiListener<ArrayList<TopicModel>> {
+    public class TopicListHttpCallbackListener implements
+            RubyChinaApiListener<ArrayList<TopicModel>> {
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
+            mFootUpdate.showLoading();
             // If it run out of topics, no more topics can be received.
             if (topicModelList.size() == 0) {
                 mNoMore = true;
+                mFootUpdate.dismiss();
             }
 
             mSwipeRefreshLayout.setRefreshing(false); // Stop refresh anim.
@@ -166,6 +171,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         @Override
         public void onFailure(String error) {
+            mFootUpdate.showFail();
             if (!"Internal Server Error".equals(error)) {
                 Utility.showToast(mErrorHint);
             }
@@ -207,6 +213,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             mErrorHint = HINT_CACHE;
             requestMoreTopics();
         }
+
     }
 
     private void requestTopics() {
@@ -242,19 +249,23 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void requestTopicsByCategory() {
-        RubyChinaApiWrapper.getTopicsByCategory(mCategory, mPageIndex, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getTopicsByCategory(mCategory, mPageIndex,
+                new TopicListHttpCallbackListener());
     }
 
     private void requestTopicsByUserLogin() {
-        RubyChinaApiWrapper.getUserTopics(mUserLogin, mPageIndex, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getUserTopics(mUserLogin, mPageIndex,
+                new TopicListHttpCallbackListener());
     }
 
     private void requestTopicsByNode() {
-        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mPageIndex, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mPageIndex,
+                new TopicListHttpCallbackListener());
     }
 
     private void requestTopicsByFavourite() {
-        RubyChinaApiWrapper.getFavouriteTopics(mUserLogin, mPageIndex, new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getFavouriteTopics(mUserLogin, mPageIndex,
+                new TopicListHttpCallbackListener());
     }
 
     @Override
