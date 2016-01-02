@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -40,8 +41,9 @@ public class PostActivity extends BaseActivity {
         // set click listener correspondingly.
         final Intent intent = getIntent();
         mTopicId = intent.getStringExtra(RubyChinaArgKeys.TOPIC_ID);
-        ((JumpToolbar)mToolbar).attachTo(createFragment(mTopicId));
-        configMenuItem(mTopicId);
+        PostFragment fragment = createFragment(mTopicId);
+        ((JumpToolbar) mToolbar).attachTo(fragment);
+        configMenuItem(mTopicId, fragment);
     }
 
     private PostFragment createFragment(String topicId) {
@@ -75,12 +77,12 @@ public class PostActivity extends BaseActivity {
         return mReplyButton;
     }
 
-    private void configMenuItem(final String topicId) {
+    private void configMenuItem(final String topicId, final PostFragment fragment) {
         if (!OAuthManager.getInstance().isLoggedIn()) {
             mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.favourite) {
+                    if (item.getItemId() == R.id.menu_item_favourite) {
                         Utility.showToast("还没有登录哦");
                     }
                     return false;
@@ -98,7 +100,7 @@ public class PostActivity extends BaseActivity {
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.favourite) {
+                if (item.getItemId() == R.id.menu_item_favourite) {
                     if (mIsFavourite) {
                         item.setIcon(R.drawable.ic_post_favourite);
                         mIsFavourite = false;
@@ -147,6 +149,18 @@ public class PostActivity extends BaseActivity {
                                 dialog.dismiss();
                             }
                         });
+                    }
+                } else if (item.getItemId() == R.id.menu_item_share) {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_TITLE, fragment.getTitle());
+                    intent.putExtra(Intent.EXTRA_TEXT, fragment.getContent());
+                    String title = getResources().getString(R.string.shareto);
+                    Intent chooser = Intent.createChooser(intent, title);
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(chooser);
+                    } else {
+                        Utility.showToast("未找到可分享的应用程序");
                     }
                 }
                 return false;

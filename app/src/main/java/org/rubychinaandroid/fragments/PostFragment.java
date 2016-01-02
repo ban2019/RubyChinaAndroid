@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +48,7 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ObservableScrollView mScrollView;
     private Activity mHostActivity;
+    private String mBody;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -116,6 +119,7 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
                 mSwipeRefreshLayout.setRefreshing(false);
                 mTitle.setText(data.getTopic().getTitle());
                 boolean displayImage = Utility.isDisplayImageNow();
+                mBody = data.getBody();
                 mContent.setRichText(data.getBodyHtml(), displayImage);
                 Log.d("Post", "Image to be loaded: " + data.getTopic().getUserAvatarUrl());
                 ImageLoader.getInstance().displayImage(data.getTopic().getUserAvatarUrl(),
@@ -150,5 +154,12 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
 
     public void scrollTo(int direction) {
         mScrollView.fullScroll(direction);
+    }
+
+    public String getTitle() {
+        return mTitle.getText().toString();
+    }
+    public String getContent() {
+        return mBody;
     }
 }

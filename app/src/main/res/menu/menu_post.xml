@@ -5,9 +5,12 @@
     tools:context=".PostActivity">
 
     <item
-        android:id="@+id/favourite"
+        android:id="@+id/menu_item_favourite"
         android:title="@string/favorite"
         app:showAsAction="withText|ifRoom"
         android:icon="@drawable/ic_post_favourite"/>
-
+    <item
+        android:id="@+id/menu_item_share"
+        app:showAsAction="never"
+        android:title="@string/share"/>
 </menu>
