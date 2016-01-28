@@ -85,7 +85,9 @@ public class FavouriteUtils {
                             msg.arg1, new RubyChinaApiListener<ArrayList<TopicModel>>() {
                                 @Override
                                 public void onSuccess(ArrayList<TopicModel> data) {
-                                    Log.d(LOG_TAG, Integer.toString(data.size()));
+                                    if (data.size() == 0) {
+                                        return;
+                                    }
                                     for (int i = 0; i < data.size(); i++) {
                                         recordFavourite(data.get(i).getTopicId());
                                     }

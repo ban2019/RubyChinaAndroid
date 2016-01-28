@@ -144,13 +144,11 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             RubyChinaApiListener<ArrayList<TopicModel>> {
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
-            Log.d(LOG_TAG, "mark0");
             mFootUpdate.showLoading();
             // If it run out of topics, no more topics can be received.
             if (topicModelList.size() == 0) {
                 mNoMore = true;
                 mFootUpdate.dismiss();
-                Log.d(LOG_TAG, "mark1");
             }
 
             mSwipeRefreshLayout.setRefreshing(false); // Stop refresh anim.
