@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mAddButton;
 
     private ImageView mDrawerAvatar;
-    private NavigationView mDrawer;
+    private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private TextView mDrawerUsername;
@@ -163,8 +164,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configDrawer() {
-        mDrawerAvatar = (ImageView) findViewById(R.id.avatar);
-        mDrawerUsername = (TextView) findViewById(R.id.username);
+        mNavigationView = (NavigationView) findViewById(R.id.navi_view);
+        mNavigationView.inflateMenu(R.menu.menu_drawer);
+        View header = LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
+        mNavigationView.addHeaderView(header);
+
+        mDrawerAvatar = (ImageView) header.findViewById(R.id.avatar);
+        mDrawerUsername = (TextView) header.findViewById(R.id.username);
 
         if (OAuthManager.getInstance().isLoggedIn()) {
             String url = OAuthManager.getInstance().getAvatarUrl();
@@ -208,9 +214,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mDrawer = (NavigationView) findViewById(R.id.drawer);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawer.setNavigationItemSelectedListener(
+        mNavigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {

@@ -128,11 +128,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorScheme(
-                android.R.color.holo_red_dark,
-                android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_orange_light);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.swipe_blue,
+                R.color.swipe_green,
+                R.color.swipe_red);
         mSwipeRefreshLayout.setRefreshing(true);
 
         parseArguments();
@@ -145,19 +144,20 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             RubyChinaApiListener<ArrayList<TopicModel>> {
         @Override
         public void onSuccess(ArrayList<TopicModel> topicModelList) {
+            Log.d(LOG_TAG, "mark0");
             mFootUpdate.showLoading();
             // If it run out of topics, no more topics can be received.
             if (topicModelList.size() == 0) {
                 mNoMore = true;
                 mFootUpdate.dismiss();
+                Log.d(LOG_TAG, "mark1");
             }
 
             mSwipeRefreshLayout.setRefreshing(false); // Stop refresh anim.
-            mRecyclerViewAdapter.setAllItemsEnabled(true);
             mTopicList.addAll(topicModelList);
             mRecyclerViewAdapter.notifyDataSetChanged();
 
-            assert(mGetTopicsByWhat != INVALID);
+            if ((mGetTopicsByWhat == INVALID)) throw new AssertionError();
             // Update the displayed topics
             if (mGetTopicsByWhat == BY_CATEGORY) {
                 if (isClearDB) {
@@ -177,7 +177,6 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
 
             mSwipeRefreshLayout.setRefreshing(false);
-            mRecyclerViewAdapter.setAllItemsEnabled(true);
 
             if (mGetTopicsByWhat == BY_CATEGORY) {
                 ArrayList<TopicModel> topics = mDBManager.query(mCategory, mPageIndex);
@@ -194,11 +193,11 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public void onRefresh() {
         mNoMore = false;
         resetPageIndex();
+
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 // start refresh anim
                 mSwipeRefreshLayout.setRefreshing(true);
-                mRecyclerViewAdapter.setAllItemsEnabled(false);
                 requestTopics();
             }
         }, 500);
@@ -250,6 +249,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     }
 
     private void requestTopicsByCategory() {
+        //Log.d(LOG_TAG, "category=" + mCategory);
         RubyChinaApiWrapper.getTopicsByCategory(mCategory, mPageIndex,
                 new TopicListHttpCallbackListener());
     }

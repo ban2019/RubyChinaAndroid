@@ -35,7 +35,7 @@
     <string name="title_activity_all_nodes">AllNodesActivity</string>
     <string name="title_activity_node">NodeActivity</string>
     <string name="title_activity_setting">SettingActivity</string>
-    <string name="default_username">(♡˙︶˙♡)</string>
+    <string name="default_username">你好，Ruby</string>
 
     <string name="share">分享</string>
     <string name="shareto">分享到</string>

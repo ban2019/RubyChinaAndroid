@@ -32,7 +32,6 @@ public class RubyChinaCategory {
     }
 
     public String getExpr() {
-        Log.d(TAG, Integer.toString(this.value));
         return EXPRESSIONS[this.value + OFFSET];
     }
 }

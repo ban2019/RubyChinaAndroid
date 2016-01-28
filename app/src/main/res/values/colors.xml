@@ -13,6 +13,11 @@
 
     <color name="photo_crop_dim_color">#cc000000</color>
     <color name="photo_crop_highlight_color">#fff</color>
+
+    <color name="swipe_blue">#3F51BF</color>
+    <color name="swipe_green">#12E231</color>
+    <color name="swipe_red">#E90D11</color>
+
 </resources>
 
 <!--

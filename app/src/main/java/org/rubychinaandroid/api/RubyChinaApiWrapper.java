@@ -4,9 +4,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.TextHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,6 +22,8 @@ import org.rubychinaandroid.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class RubyChinaApiWrapper {
@@ -89,14 +91,14 @@ public class RubyChinaApiWrapper {
         String urlString = String.format(API_NODE_TOPICS_URL, nodeId, page);
         asyncHttpClient.addHeader("Referer", getBaseUrl());
         asyncHttpClient.addHeader("Content-Type", "application/x-www-form-urlencoded");
-        asyncHttpClient.get(urlString, new TextHttpResponseHandler() {
+        asyncHttpClient.get(urlString, new AsyncHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, final String responseBody) {
+            public void onSuccess(int statusCode, Header[] headers, final byte[] responseBody) {
                 new AsyncTask<Void, Void, ArrayList<TopicModel>>() {
                     @Override
                     protected ArrayList<TopicModel> doInBackground(Void... params) {
                         try {
-                            return parseFromNodeEntry(responseBody, null);
+                            return parseFromNodeEntry(responseBody.toString(), null);
                         } catch (Exception e) {
                             e.printStackTrace();
                             return null;
@@ -115,8 +117,8 @@ public class RubyChinaApiWrapper {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String error, Throwable throwable) {
-                SafeHandler.onFailure(listener, error);
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
+                SafeHandler.onFailure(listener, responseBody.toString());
             }
         });
     }

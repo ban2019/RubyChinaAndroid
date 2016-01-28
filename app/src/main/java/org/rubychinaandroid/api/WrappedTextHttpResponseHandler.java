@@ -2,12 +2,13 @@ package org.rubychinaandroid.api;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.rubychinaandroid.model.BaseModel;
 
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by yw on 2015/5/2.
