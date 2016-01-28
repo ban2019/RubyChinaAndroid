@@ -129,9 +129,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.swipe_blue,
-                R.color.swipe_green,
-                R.color.swipe_red);
+                android.R.color.holo_red_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light);
         mSwipeRefreshLayout.setRefreshing(true);
 
         parseArguments();

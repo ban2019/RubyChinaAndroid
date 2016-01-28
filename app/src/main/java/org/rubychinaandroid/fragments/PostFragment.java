@@ -75,8 +75,11 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
                 }, 500);
             }
         });
-        mSwipeRefreshLayout.setColorScheme(android.R.color.holo_red_dark, android.R.color.holo_green_light,
-                android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_red_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light);
 
         ((PostActivity) mHostActivity).getFloatingActionButton().attachToScrollView(mScrollView);
         return view;
@@ -115,16 +118,15 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
             public void onSuccess(PostModel data) {
                 mCardView.setVisibility(View.VISIBLE);
                 mFrameLayout.setVisibility(View.VISIBLE);
+
                 // stop the swipe refresh layout's animation
                 mSwipeRefreshLayout.setRefreshing(false);
                 mTitle.setText(data.getTopic().getTitle());
                 boolean displayImage = Utility.isDisplayImageNow();
                 mBody = data.getBody();
                 mContent.setRichText(data.getBodyHtml(), displayImage);
-                Log.d("Post", "Image to be loaded: " + data.getTopic().getUserAvatarUrl());
                 ImageLoader.getInstance().displayImage(data.getTopic().getUserAvatarUrl(),
                         mAvatar, MyApplication.getInstance().getImageLoaderOptions());
-                Log.d("Post", "Image has been loaded: " + data.getTopic().getUserAvatarUrl());
                 final String userName = data.getTopic().getUserName();
                 final String userLogin = data.getTopic().getUserLogin();
                 String author = ("".equals(userName) ? userLogin : userLogin + "(" + userName + ")");
@@ -141,6 +143,14 @@ public class PostFragment extends Fragment implements JumpToolbar.ScrollCallback
                         mHostActivity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
                     }
                 });
+
+                mSwipeRefreshLayout.setAlpha(0f);
+                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                final long duration = 300;
+                mSwipeRefreshLayout.animate()
+                        .alpha(1f)
+                        .setDuration(duration)
+                        .setListener(null).start();
             }
 
             @Override
