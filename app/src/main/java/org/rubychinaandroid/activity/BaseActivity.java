@@ -1,10 +1,20 @@
 package org.rubychinaandroid.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import org.rubychinaandroid.R;
+import org.rubychinaandroid.api.RubyChinaApiWrapper;
 import org.rubychinaandroid.fragments.TopicsFragment;
 import org.rubychinaandroid.view.JumpToolbar;
 
@@ -13,12 +23,15 @@ import java.util.List;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
-class NullToolbarException extends RuntimeException {}
+class NullToolbarException extends RuntimeException {
+}
 
 abstract public class BaseActivity extends SwipeBackActivity {
     public static List<BaseActivity> activities = new ArrayList<BaseActivity>();
     protected Toolbar mToolbar;
+
     abstract void configToolbar();
+
     protected void setToolbarBackButton() {
         if (mToolbar == null) {
             throw new NullToolbarException();
@@ -31,6 +44,7 @@ abstract public class BaseActivity extends SwipeBackActivity {
             }
         });
     }
+
     protected void attachToolbar(TopicsFragment fragment) {
         if (mToolbar == null) {
             throw new NullToolbarException();
@@ -39,12 +53,15 @@ abstract public class BaseActivity extends SwipeBackActivity {
             ((JumpToolbar) mToolbar).attachTo(fragment);
         }
     }
+
     public static void addActivity(BaseActivity activity) {
         activities.add(activity);
     }
+
     public static void removeActivity(BaseActivity activity) {
         activities.remove(activity);
     }
+
     public static void finishAll() {
         for (BaseActivity activity : activities) {
             if (!activity.isFinishing()) {
@@ -52,19 +69,26 @@ abstract public class BaseActivity extends SwipeBackActivity {
             }
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addActivity(this);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         removeActivity(this);
     }
+
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
     }
+
+
+
+
 }

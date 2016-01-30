@@ -10,12 +10,6 @@
             android:key="pref_noimage_nowifi"
             android:summary="@string/settings_no_image_no_wifi_summary"
             android:title="@string/settings_no_image_no_wifi" />
-        <!--
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="pref_effect"
-            android:title="@string/settings_use_effect"/>
-            -->
     </PreferenceCategory>
 
     <PreferenceCategory

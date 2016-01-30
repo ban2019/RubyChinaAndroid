@@ -29,6 +29,7 @@ import org.rubychinaandroid.view.FootUpdate.OnScrollToBottomListener;
 import org.rubychinaandroid.view.JumpToolbar;
 
 import java.util.ArrayList;
+import java.util.TooManyListenersException;
 
 public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         OnScrollToBottomListener, JumpToolbar.ScrollCallback {
@@ -52,6 +53,9 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private boolean isClearDB = false;
     private RubyChinaDBManager mDBManager;
     private int mPageIndex = 0;
+
+    private TopicListHttpCallbackListener mListener = new TopicListHttpCallbackListener();
+    private boolean noConnection = false;
 
     // These member variables should be assigned by parameters passed by parent activity,
     // and at most one of the three is not null.
@@ -107,6 +111,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onCreateView()");
         mContext = getActivity();
         mDBManager = RubyChinaDBManager.getInstance(mContext);
 
@@ -127,6 +132,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
+        Log.d(LOG_TAG, "swipealyout is assigned");
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_red_dark,
@@ -137,7 +143,12 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
         parseArguments();
         resetPageIndex();
-        requestTopics();
+        if (!noConnection) {
+            requestTopics();
+        } else {
+            Utility.showToast("未联网");
+            mListener.onFailure("no network");
+        }
         return view;
     }
 
@@ -175,6 +186,7 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 Utility.showToast(mErrorHint);
             }
 
+            Log.d(LOG_TAG, "swipelayout refresh false");
             mSwipeRefreshLayout.setRefreshing(false);
 
             if (mGetTopicsByWhat == BY_CATEGORY) {
@@ -190,6 +202,12 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onRefresh() {
+        if (noConnection) {
+            Utility.showToast("未联网");
+            mSwipeRefreshLayout.setRefreshing(false);
+            return;
+        }
+
         mNoMore = false;
         resetPageIndex();
 
@@ -249,23 +267,19 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private void requestTopicsByCategory() {
         //Log.d(LOG_TAG, "category=" + mCategory);
-        RubyChinaApiWrapper.getTopicsByCategory(mCategory, mPageIndex,
-                new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getTopicsByCategory(mCategory, mPageIndex, mListener);
     }
 
     private void requestTopicsByUserLogin() {
-        RubyChinaApiWrapper.getUserTopics(mUserLogin, mPageIndex,
-                new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getUserTopics(mUserLogin, mPageIndex, mListener);
     }
 
     private void requestTopicsByNode() {
-        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mPageIndex + 1,
-                new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getNodeTopicsFromBrowser(mNodeId, mPageIndex + 1, mListener);
     }
 
     private void requestTopicsByFavourite() {
-        RubyChinaApiWrapper.getFavouriteTopics(mUserLogin, mPageIndex,
-                new TopicListHttpCallbackListener());
+        RubyChinaApiWrapper.getFavouriteTopics(mUserLogin, mPageIndex, mListener);
     }
 
     @Override
@@ -275,5 +289,10 @@ public class TopicsFragment extends Fragment implements SwipeRefreshLayout.OnRef
         } else if (direction == View.FOCUS_UP) {
             mRecyclerView.scrollToPosition(0);
         }
+    }
+
+    public void disconnect(boolean disconnected) {
+        //mListener.onFailure("No network");
+        noConnection = disconnected;
     }
 }

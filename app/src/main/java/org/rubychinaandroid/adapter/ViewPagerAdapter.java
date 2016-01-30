@@ -14,25 +14,29 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
 
+    TopicsFragment fragments[];
+
     // Build a Constructor and assign the passed Values to appropriate values in the class
     public ViewPagerAdapter(FragmentManager fm,CharSequence mTitles[], int mNumbOfTabsumb) {
         super(fm);
 
         this.Titles = mTitles;
         this.NumbOfTabs = mNumbOfTabsumb;
+        fragments = new TopicsFragment[NumbOfTabs];
     }
 
     //This method return the fragment for the every position in the View Pager
     @Override
     public Fragment getItem(int position) {
-
-        TopicsFragment TopicsFragment = new TopicsFragment();
-
+        if (fragments[position] != null) {
+            return fragments[position];
+        }
+        TopicsFragment topicsFragment = new TopicsFragment();
         Bundle args = new Bundle();
         args.putInt(RubyChinaArgKeys.TOPIC_CATEGORY, new RubyChinaCategory(position).getValue());
-        TopicsFragment.setArguments(args);
-
-        return TopicsFragment;
+        topicsFragment.setArguments(args);
+        fragments[position] = topicsFragment;
+        return topicsFragment;
     }
 
     // This method return the titles for the Tabs in the Tab Strip

@@ -76,12 +76,13 @@ public class Utility {
     }
 
     public static boolean isDisplayImageNow() {
+        /*
         boolean isDisplayIfMobile = MyConfig.getInstance()
                 .getBooleanPreference(RubyChinaArgKeys.DISPLAY_IMAGE_IF_MOBILE);
-        boolean isMobile = NetWorkHelper.isMobile(MyApplication.getInstance());
+        boolean isMobile = NetWorkHelper.isConnected();
         if (!isDisplayIfMobile && isMobile) {
             return false;
-        }
+        }*/
         return true;
     }
 }

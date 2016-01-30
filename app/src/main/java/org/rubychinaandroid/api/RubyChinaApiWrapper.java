@@ -353,4 +353,8 @@ public class RubyChinaApiWrapper {
                     }
                 });
     }
+
+    public static void cancelAllRequests() {
+        asyncHttpClient.cancelAllRequests(false);
+    }
 }
